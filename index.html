@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dagobert</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/twemoji@14.0.2/dist/twemoji.min.js"></script>
     <style>
         :root {
@@ -17,6 +18,7 @@
             --border-color: #262626;
             --base-font-size: 15px;
             --logo-yellow: #fbbf24;
+            --sidebar-width: 260px;
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -26,32 +28,68 @@
             color: var(--text-main);
             font-family: 'Outfit', sans-serif;
             margin: 0;
-            padding: 20px 16px;
+            padding: 0;
             -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
         }
 
-        .container { max-width: 500px; margin: 0 auto; display: flex; flex-direction: column; }
+        /* --- SIDEBAR & OVERLAY --- */
+        .sidebar {
+            position: fixed; top: 0; left: calc(-1 * var(--sidebar-width));
+            width: var(--sidebar-width); height: 100%;
+            background: var(--card-bg); border-right: 1px solid var(--border-color);
+            z-index: 1000; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 40px 20px;
+        }
+        .sidebar.open { transform: translateX(var(--sidebar-width)); }
 
-        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
-        .title-area { display: flex; align-items: center; gap: 14px; }
-        .logo-svg { width: 44px; height: 44px; image-rendering: pixelated; }
+        .overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7); backdrop-filter: blur(4px);
+            z-index: 999; display: none;
+        }
+        .overlay.active { display: block; }
+
+        .menu-item {
+            padding: 16px; margin-bottom: 8px; border-radius: 12px;
+            cursor: pointer; font-weight: 600; color: var(--text-dim);
+            transition: all 0.2s ease; display: flex; align-items: center; gap: 12px;
+        }
+        .menu-item:hover, .menu-item.active { background: #1a1a1a; color: var(--text-main); }
+        .menu-item.active { border-left: 4px solid var(--logo-yellow); }
+
+        /* --- HEADER --- */
+        .app-shell { padding: 20px 16px; max-width: 500px; margin: 0 auto; }
+        header { display: grid; grid-template-columns: 44px 1fr 44px; align-items: center; margin-bottom: 24px; }
+        
+        .nav-trigger { background: none; border: none; color: var(--text-main); cursor: pointer; padding: 0; display: flex; align-items: center; }
+        .title-area { display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .logo-svg { width: 38px; height: 38px; image-rendering: pixelated; }
         
         #money-hand { transform-origin: 22px 17px; animation: money-wave 2.5s ease-in-out infinite; }
         @keyframes money-wave { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(-8deg); } 75% { transform: rotate(8deg); } }
 
+        /* GEÄNDERT: Neue Schriftart und CSS-Rendering für Pixel-Art */
         h1 { 
-            margin: 0; font-size: 1.3rem; font-weight: 700; color: var(--logo-yellow);
-            letter-spacing: -1px; display: flex; align-items: center;
+            margin: 0; 
+            font-size: 1.6rem; /* VT323 braucht etwas mehr Größe */
+            font-weight: 400; /* VT323 hat kein echtes Bold */
+            font-family: 'VT323', monospace; /* Pixel-Schriftart anwenden */
+            color: var(--logo-yellow); 
+            letter-spacing: 0px; /* Kein negativer Spacing für Pixel-Fonts */
+            display: flex; 
+            align-items: center;
+            image-rendering: pixelated; /* Scharfe Kanten erzwingen */
         }
         h1 .bracket { color: var(--text-dim); font-weight: 400; opacity: 0.6; }
         h1::after { content: '_'; animation: blink 1s step-end infinite; color: var(--logo-yellow); margin-left: 2px; }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
         .refresh-btn {
-            background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-            color: var(--text-main); border: 1px solid var(--border-color); width: 44px; height: 44px; border-radius: 14px;
+            background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px);
+            color: var(--text-main); border: 1px solid var(--border-color); 
+            width: 44px; height: 44px; border-radius: 14px; 
             cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
         .refresh-btn:active { transform: scale(0.92); }
         .refresh-btn svg { width: 20px; height: 20px; stroke: currentColor; stroke-width: 2.5; fill: none; }
@@ -63,98 +101,138 @@
             100% { transform: rotate(360deg); stroke: #3b82f6; }
         }
 
-        .filter-bar {
-            display: flex; position: relative; background: var(--card-bg); 
-            padding: 4px; border-radius: 14px; margin-bottom: 24px; 
-            border: 1px solid var(--border-color); overflow: hidden;
-        }
-        .nav-indicator {
-            position: absolute; height: calc(100% - 8px); top: 4px; left: 0;
-            background: #262626; border-radius: 10px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); z-index: 1;
-        }
-        .filter-btn {
-            position: relative; flex: 1; min-width: 80px; background: transparent; 
-            color: var(--text-dim); border: none; padding: 10px; border-radius: 10px; 
-            cursor: pointer; font-size: var(--base-font-size); font-weight: 600; z-index: 2; text-align: center;
-        }
+        /* --- PAGES --- */
+        #page-portfolio, #page-analyse { display: none; }
+        .page-active { display: block !important; }
+
+        /* --- PORTFOLIO UI --- */
+        .filter-bar { display: flex; position: relative; background: var(--card-bg); padding: 4px; border-radius: 14px; margin-bottom: 24px; border: 1px solid var(--border-color); overflow: hidden; }
+        .nav-indicator { position: absolute; height: calc(100% - 8px); top: 4px; left: 0; background: #262626; border-radius: 10px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); z-index: 1; }
+        .filter-btn { position: relative; flex: 1; min-width: 80px; background: transparent; color: var(--text-dim); border: none; padding: 10px; border-radius: 10px; cursor: pointer; font-size: var(--base-font-size); font-weight: 600; z-index: 2; text-align: center; }
         .filter-btn.active { color: var(--text-main); }
 
-        .total-box {
-            background: var(--card-bg); padding: 32px 24px; border-radius: 24px;
-            text-align: center; margin-bottom: 24px; border: 1px solid var(--border-color);
-        }
+        .total-box { background: var(--card-bg); padding: 32px 24px; border-radius: 24px; text-align: center; margin-bottom: 24px; border: 1px solid var(--border-color); }
         .total-label { font-size: var(--base-font-size); font-weight: 600; color: var(--text-dim); text-transform: uppercase; margin-bottom: 8px; letter-spacing: 1px; }
         .total-value { font-size: 2.8rem; font-weight: 700; margin-bottom: 4px; color: var(--text-main); }
+        
         .total-change { font-size: 1.1rem; font-weight: 600; margin-bottom: 14px; }
         .total-change.positive { color: var(--positive); }
         .total-change.negative { color: var(--negative); }
 
-        .last-update { display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 11px; color: var(--text-dim); opacity: 0.6; }
-        .pulse-dot { width: 6px; height: 6px; background-color: var(--positive); border-radius: 50%; animation: pulse 2s infinite; }
-        .is-loading .pulse-dot { animation: pulse 0.5s infinite, color-cycle 2s linear infinite; }
+        /* Farb-Klassen für die Werte in der Liste */
+        .text-green { color: var(--positive); }
+        .text-red { color: var(--negative); }
 
-        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6); } 70% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); } 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); } }
-        @keyframes color-cycle { 0% { background-color: #ef4444; } 50% { background-color: #fbbf24; } 100% { background-color: #10b981; } }
+        /* --- PULSING DOT ANIMATION --- */
+        .last-update { display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 11px; color: var(--text-dim); opacity: 0.6; }
+        
+        .pulse-dot { 
+            width: 8px; height: 8px; 
+            background-color: var(--positive); 
+            border-radius: 50%; 
+            animation: pulse-green 2s infinite; 
+        }
+        
+        body.is-loading .pulse-dot { 
+            animation: pulse-load 1.2s infinite; 
+        }
+
+        @keyframes pulse-green { 
+            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6); } 
+            70% { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); } 
+            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); } 
+        }
+        
+        @keyframes pulse-load { 
+            0% { background-color: #ef4444; box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.6); } 
+            25% { background-color: #fbbf24; box-shadow: 0 0 0 4px rgba(251, 191, 36, 0); } 
+            50% { background-color: #3b82f6; box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.6); } 
+            75% { background-color: #10b981; box-shadow: 0 0 0 4px rgba(16, 185, 129, 0); } 
+            100% { background-color: #ef4444; box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } 
+        }
 
         .asset-card { background: var(--card-bg); padding: 16px; border-radius: 20px; margin-bottom: 12px; border: 1px solid var(--border-color); }
         .asset-name { font-size: 1.15rem; font-weight: 700; color: var(--text-main); margin-bottom: 2px; }
         .asset-meta { font-size: 13px; color: var(--text-dim); display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
-        .asset-amount { font-size: 13px; color: var(--text-dim); } /* Farblich an ISIN angepasst */
-
+        .asset-amount { font-size: 13px; color: var(--text-dim); }
         .value-eur { font-size: 1.2rem; font-weight: 700; }
-        .text-green { color: var(--positive); }
-        .text-red { color: var(--negative); }
         .flag-circle { width: 18px; height: 18px; border-radius: 50%; overflow: hidden; display: inline-flex; align-items: center; justify-content: center; background: #1a1a1a; }
 
+        /* --- FOOTER ANIMATION --- */
         footer { 
-            padding: 40px; text-align: center; font-size: 12px; color: var(--text-dim); opacity: 0.5; 
-            display: flex; justify-content: center; align-items: center; letter-spacing: 1px;
+            padding: 40px; text-align: center; font-size: 12px; 
+            color: var(--text-dim); opacity: 0.5; display: flex; 
+            justify-content: center; align-items: center; letter-spacing: 1px; 
         }
-        .footer-content { display: flex; align-items: center; justify-content: center; perspective: 500px; }
-        .letter { display: inline-block; animation: letter-rotate 4s infinite; transform-style: preserve-3d; }
-        footer img.emoji { 
-            height: 14px !important; width: 14px !important; margin: 0 4px !important; 
-            vertical-align: text-bottom !important; 
-            animation: letter-rotate 4s infinite; 
+        .footer-content { display: inline-flex; align-items: center; justify-content: center; perspective: 500px; }
+        
+        .letter { 
+            display: inline-flex; align-items: center; justify-content: center; 
+            animation: letter-rotate 4s infinite; transform-style: preserve-3d; 
         }
+        
+        .letter img.emoji { 
+            height: 1.2em !important; 
+            width: 1.2em !important; 
+            margin: 0 3px !important; 
+        }
+        
         @keyframes letter-rotate { 0%, 80% { transform: rotateY(0deg); } 90% { transform: rotateY(360deg); } 100% { transform: rotateY(360deg); } }
     </style>
 </head>
 <body id="app-body">
 
-<div class="container">
+<div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+<nav class="sidebar" id="sidebar">
+    <div class="menu-item active" onclick="showPage('portfolio')">
+        <span>📊</span> Portfolio
+    </div>
+    <div class="menu-item" onclick="showPage('analyse')">
+        <span>📈</span> Analyse
+    </div>
+</nav>
+
+<div class="app-shell">
     <header>
+        <button class="nav-trigger" onclick="toggleMenu()">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        </button>
         <div class="title-area">
-            <svg class="logo-svg" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-                <rect x="10" y="2" width="10" height="8" fill="#1e1e1e"/><rect x="8" y="9" width="14" height="1" fill="#1e1e1e"/><rect x="10" y="7" width="10" height="1" fill="#ef4444"/><rect x="9" y="10" width="12" height="10" fill="#FFFFFF"/><rect x="12" y="14" width="2" height="2" fill="#000000"/><rect x="17" y="14" width="2" height="2" fill="#000000"/><rect x="8" y="17" width="14" height="3" fill="#fbbf24"/>
-                <g id="money-hand"><rect x="22" y="8" width="6" height="8" fill="#10b981"/><rect x="21" y="13" width="3" height="4" fill="#FFFFFF"/></g>
-                <rect x="9" y="20" width="12" height="8" fill="#ef4444"/><rect x="13" y="22" width="4" height="2" fill="#3b82f6"/>
+            <svg class="logo-svg" viewBox="0 0 32 32">
+                <rect x="10" y="2" width="10" height="8" fill="#1e1e1e"/><rect x="10" y="7" width="10" height="1" fill="#ef4444"/><rect x="9" y="10" width="12" height="10" fill="#FFFFFF"/><rect x="12" y="14" width="2" height="2" fill="#000000"/><rect x="17" y="14" width="2" height="2" fill="#000000"/><rect x="8" y="17" width="14" height="3" fill="#fbbf24"/><g id="money-hand"><rect x="22" y="8" width="6" height="8" fill="#10b981"/><rect x="21" y="13" width="3" height="4" fill="#FFFFFF"/></g><rect x="9" y="20" width="12" height="8" fill="#ef4444"/><rect x="13" y="22" width="4" height="2" fill="#3b82f6"/>
             </svg>
-            <h1><span class="bracket">&lt;</span>DAGOBERT<span class="bracket">&nbsp;/&gt;</span></h1>
+            <h1><span class="bracket">&lt;&nbsp;</span>DAGOBERT<span class="bracket">&nbsp;/&gt;</span></h1>
         </div>
         <button id="refresh-btn" class="refresh-btn" onclick="handleRefresh()">
-            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C14.8273 3 17.3387 4.3033 19 6.31579M19 6.31579V2M19 6.31579H14.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
+            <svg viewBox="0 0 24 24"><path d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C14.8273 3 17.3387 4.3033 19 6.31579M19 6.31579V2M19 6.31579H14.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
     </header>
 
-    <div class="filter-bar" id="filter-container">
-        <div id="nav-indicator" class="nav-indicator"></div>
-        <div id="filter-inner" style="display: flex; flex: 1; z-index: 2;"></div>
-    </div>
-    
-    <div id="total" class="total-box">
-        <div id="total-label" class="total-label">Gesamtwert</div>
-        <div id="main-value" class="total-value">0,00 €</div>
-        <div id="main-change" class="total-change">+0,00 € (+0,00%)</div>
-        <div class="last-update">
-            <div class="pulse-dot"></div>
-            <span id="update-time">Lade Daten...</span>
+    <section id="page-portfolio" class="page-active">
+        <div class="filter-bar" id="filter-container">
+            <div id="nav-indicator" class="nav-indicator"></div>
+            <div id="filter-inner" style="display: flex; flex: 1; z-index: 2;"></div>
         </div>
-    </div>
+        <div id="total" class="total-box">
+            <div id="total-label" class="total-label">Gesamtwert</div>
+            <div id="main-value" class="total-value">0,00 €</div>
+            <div id="main-change" class="total-change">+0,00 € (+0,00%)</div>
+            <div class="last-update">
+                <div class="pulse-dot"></div>
+                <span id="update-time">Lade Daten...</span>
+            </div>
+        </div>
+        <div id="list"></div>
+    </section>
 
-    <div id="list"></div>
+    <section id="page-analyse">
+        <div class="total-box">
+            <div class="total-label">Analyse</div>
+            <p style="color: var(--text-dim); margin-top: 20px;">Hier folgen bald detaillierte Auswertungen.</p>
+        </div>
+    </section>
+
     <footer id="animated-footer">MADE WITH ❤️ BY CHRISTOPH</footer>
 </div>
 
@@ -165,40 +243,43 @@
 
     let allData = [], currentFilter = 'alle';
 
-    function matrixEffect(element, targetValue) {
-        const chars = "0123456789$#%@&*";
-        const duration = 800;
-        const speed = 50;
-        const steps = duration / speed;
-        let iteration = 0;
-        const interval = setInterval(() => {
-            element.innerText = targetValue.split("").map((char, index) => {
-                if (index < (iteration / steps) * targetValue.length) return targetValue[index];
-                return chars[Math.floor(Math.random() * chars.length)];
-            }).join("");
-            if (iteration >= steps) { element.innerText = targetValue; clearInterval(interval); }
-            iteration++;
-        }, speed);
-    }
-
+    /* ANIMATIONS */
     function setupFooterAnimation() {
         const footer = document.getElementById('animated-footer');
-        const text = footer.innerText;
+        const text = "MADE WITH ❤️ BY CHRISTOPH";
         footer.innerHTML = '';
         const wrap = document.createElement('div');
         wrap.className = 'footer-content';
         [...text].forEach((char, i) => {
             const span = document.createElement('span');
             span.style.animationDelay = `${i * 0.1}s`;
-            if (char === ' ') span.innerHTML = '&nbsp;';
-            else if (char === '❤️') span.innerText = char;
-            else span.innerText = char;
             span.className = 'letter';
+            if (char === ' ') span.innerHTML = '&nbsp;';
+            else span.innerText = char;
             wrap.appendChild(span);
         });
         footer.appendChild(wrap);
+        if (window.twemoji) twemoji.parse(footer, { folder: 'svg', ext: '.svg' });
     }
 
+    /* NAVIGATION */
+    function toggleMenu() {
+        document.getElementById('sidebar').classList.toggle('open');
+        document.getElementById('overlay').classList.toggle('active');
+    }
+
+    function showPage(pageId) {
+        document.getElementById('page-portfolio').classList.remove('page-active');
+        document.getElementById('page-analyse').classList.remove('page-active');
+        document.getElementById('page-' + pageId).classList.add('page-active');
+        document.querySelectorAll('.menu-item').forEach(item => {
+            item.classList.remove('active');
+            if(item.innerText.toLowerCase().includes(pageId)) item.classList.add('active');
+        });
+        toggleMenu();
+    }
+
+    /* DATA */
     async function handleRefresh() {
         const btn = document.getElementById('refresh-btn');
         const body = document.getElementById('app-body');
@@ -219,10 +300,6 @@
         }
         return "";
     }
-
-    function parseMenge(t) { return parseFloat((t||"0").toString().replace(/[€$£\s]/g, '').replace(/\./g, '').replace(',', '.')) || 0; }
-    function getFlag(isin, kat) { return (kat||"").toLowerCase().includes('etf') ? '🌍' : (countryToFlag[isin?.substring(0, 2).toUpperCase()] || '🌍'); }
-    function formatStueck(n) { return Number.isInteger(n) ? n.toString() : n.toFixed(2).replace('.', ','); }
 
     async function loadData() {
         const csv = await tryFetch(SHEET_URL);
@@ -250,9 +327,8 @@
         }
         
         const now = new Date();
-        const dateStr = now.toLocaleDateString('de-DE');
-        const timeStr = now.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-        document.getElementById('update-time').innerText = `Aktualisiert: ${dateStr} • ${timeStr} Uhr`;
+        const timeString = now.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        document.getElementById('update-time').innerText = `Aktualisiert: ${now.toLocaleDateString('de-DE')} • ${timeString} Uhr`;
         
         updateFilters(depots);
         render();
@@ -262,10 +338,8 @@
         const container = document.getElementById('filter-inner');
         const list = ['alle', ...Array.from(set).sort()];
         container.innerHTML = list.map(d => `<button class="filter-btn ${d === currentFilter ? 'active' : ''}" onclick="setFilter(this, '${d}')">${d}</button>`).join('');
-        setTimeout(() => {
-            const activeBtn = Array.from(container.querySelectorAll('.filter-btn')).find(b => b.innerText === currentFilter);
-            if(activeBtn) moveIndicator(activeBtn);
-        }, 50);
+        const activeBtn = Array.from(container.querySelectorAll('.filter-btn')).find(b => b.innerText === currentFilter);
+        if(activeBtn) moveIndicator(activeBtn);
     }
 
     function setFilter(btn, value) {
@@ -274,7 +348,7 @@
         btn.classList.add('active');
         moveIndicator(btn);
         document.getElementById('total-label').innerText = (value === 'alle') ? 'Gesamtwert' : `Depot ${value}`;
-        render(true);
+        render();
     }
 
     function moveIndicator(btn) {
@@ -283,7 +357,7 @@
         indicator.style.left = btn.offsetLeft + 'px';
     }
 
-    function render(withMatrix = false) {
+    function render() {
         let filtered = currentFilter === 'alle' ? allData : allData.filter(d => d.depot === currentFilter);
         let tW = 0, tE = 0, html = '';
         filtered.sort((a,b) => a.name.localeCompare(b.name)).forEach(item => {
@@ -294,19 +368,17 @@
         document.getElementById('list').innerHTML = html;
         const diff = tW - tE, perc = tE ? (diff / tE) * 100 : 0;
         
-        const valEl = document.getElementById('main-value');
-        if (withMatrix) matrixEffect(valEl, fC(tW)); else valEl.innerText = fC(tW);
+        document.getElementById('main-value').innerText = fC(tW);
 
         document.getElementById('main-change').innerText = `${diff >= 0 ? '+' : ''}${fC(diff)} (${perc.toFixed(2)}%)`;
         document.getElementById('main-change').className = `total-change ${diff >= 0 ? 'positive' : 'negative'}`;
-        
-        if (window.twemoji) {
-            twemoji.parse(document.body, { folder: 'svg', ext: '.svg' });
-            document.querySelectorAll('footer img.emoji').forEach((img, i) => { img.style.animationDelay = `${(i + 10) * 0.1}s`; });
-        }
+        if (window.twemoji) twemoji.parse(document.body, { folder: 'svg', ext: '.svg' });
     }
 
     function fC(v) { return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(v); }
+    function parseMenge(t) { return parseFloat((t||"0").toString().replace(/[€$£\s]/g, '').replace(/\./g, '').replace(',', '.')) || 0; }
+    function getFlag(isin, kat) { return (kat||"").toLowerCase().includes('etf') ? '🌍' : (countryToFlag[isin?.substring(0, 2).toUpperCase()] || '🌍'); }
+    function formatStueck(n) { return Number.isInteger(n) ? n.toString() : n.toFixed(2).replace('.', ','); }
     function parseCSV(t) {
         const rows = []; let cur = [], v = '', q = false;
         for (let i = 0; i < t.length; i++) {
