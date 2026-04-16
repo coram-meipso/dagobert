@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dagobert v1.2</title>
     
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22><rect x=%2210%22 y=%222%22 width=%2210%22 height=%228%22 fill=%22%231e1e1e%22/><rect x=%2210%22 y=%227%22 width=%2210%22 height=%221%22 fill=%22%23ef4444%22/><rect x=%229%22 y=%2210%22 width=%2212%22 height=%2210%22 fill=%22%23FFFFFF%22/><rect x=%2212%22 y=%2214%22 width=%222%22 height=%222%22 fill=%22%23000000%22/><rect x=%2217%22 y=%2214%22 width=%222%22 height=%222%22 fill=%22%23000000%22/><rect x=%228%22 y=%2217%22 width=%2214%22 height=%223%22 fill=%22%23fbbf24%22/><rect x=%2222%22 y=%228%22 width=%226%22 height=%228%22 fill=%22%2310b981%22/><rect x=%2221%22 y=%2213%22 width=%223%22 height=%224%22 fill=%22%23FFFFFF%22/><rect x=%229%22 y=%2220%22 width=%2212%22 height=%228%22 fill=%22%23ef4444%22/><rect x=%2213%22 y=%2222%22 width=%224%22 height=%222%22 fill=%22%233b82f6%22/></svg>">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3QgeD0iMTAiIHk9IjIiIHdpZHRoPSIxMCIgaGVpZ2h0PSI4IiBmaWxsPSIjMWUxZTFlIi8+PHJlY3QgeD0iMTAiIHk9IjciIHdpZHRoPSIxMCIgaGVpZ2h0PSIxIiBmaWxsPSIjZWY0NDQ0Ii8+PHJlY3QgeD0iOSIgeT0iMTAiIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMCIgZmlsbD0iI0ZGRkZGRiIvPjxyZWN0IHg9IjEyIiB5PSIxNCIgd2lkdGg9IjIiIGhlaWdodD0iMiIgZmlsbD0iIzAwMDAwMCIvPjxyZWN0IHg9IjE3IiB5PSIxNCIgd2lkdGg9IjIiIGhlaWdodD0iMiIgZmlsbD0iIzAwMDAwMCIvPjxyZWN0IHg9IjgiIHk9IjE3IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNCIgaGVpZ2h0PSIzIiBmaWxsPSIjZmJiZjI0Ii8+PGcgaWQ9Im1vbmV5LWhhbmQiPjxyZWN0IHg9IjIyIiB5PSI4IiB3aWR0aD0iNiIgaGVpZ2h0PSI4IiBmaWxsPSIjMTBiOTgxIi8+PHJlY3QgeD0iMjEiIHk9IjEzIiB3aWR0aD0iMyIgaGVpZ2h0PSI0IiBmaWxsPSIjRkZGRkZGIi8+PC9nPjxyZWN0IHg9IjkiIHk9IjIwIiB3aWR0aD0iMTIiIGhlaWdodD0iOCIgZmlsbD0iI2VmNDQ0NCIvPjxyZWN0IHg9IjEzIiB5PSIyMiIgd2lkdGg9IjQiIGhlaWdodD0iMiIgZmlsbD0iIzNiODJmNiIvPjwvc3ZnPg==">
 
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
@@ -537,7 +537,7 @@
         document.getElementById('main-change').innerText = `${diff >= 0 ? '+' : ''}${fC(diff)} (${perc.toFixed(2)}%)`;
         document.getElementById('main-change').className = `total-change ${diff >= 0 ? 'positive' : 'negative'}`;
 
-        renderAnalyse(aktieSum, etfSum, tW, countries);
+        renderAnalyse(aktien, etfs, gesamt, countries);
 
         if (window.twemoji) twemoji.parse(document.body, { folder: 'svg', ext: '.svg' });
     }
