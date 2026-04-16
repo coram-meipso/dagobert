@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dagobert v1.1</title>
+    <title>Dagobert v1.2</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/twemoji@14.0.2/dist/twemoji.min.js"></script>
@@ -201,7 +200,7 @@
         .asset-name { font-size: 1.15rem; font-weight: 700; color: var(--text-main); margin-bottom: 2px; }
         .asset-meta { font-size: 13px; color: var(--text-dim); display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
         .asset-amount { font-size: 13px; color: var(--text-dim); }
-        .value-eur { font-size: 1.2rem; font-weight: 700; }
+        .value-eur { font-size: 1.15rem; font-weight: 700; color: var(--text-main); }
         .flag-circle { width: 18px; height: 18px; border-radius: 50%; overflow: hidden; display: inline-flex; align-items: center; justify-content: center; background: #1a1a1a; }
 
         .text-green { color: var(--positive); }
@@ -246,7 +245,7 @@
             <svg class="logo-svg" viewBox="0 0 32 32">
                 <rect x="10" y="2" width="10" height="8" fill="#1e1e1e"/><rect x="10" y="7" width="10" height="1" fill="#ef4444"/><rect x="9" y="10" width="12" height="10" fill="#FFFFFF"/><rect x="12" y="14" width="2" height="2" fill="#000000"/><rect x="17" y="14" width="2" height="2" fill="#000000"/><rect x="8" y="17" width="14" height="3" fill="#fbbf24"/><g id="money-hand"><rect x="22" y="8" width="6" height="8" fill="#10b981"/><rect x="21" y="13" width="3" height="4" fill="#FFFFFF"/></g><rect x="9" y="20" width="12" height="8" fill="#ef4444"/><rect x="13" y="22" width="4" height="2" fill="#3b82f6"/>
             </svg>
-            <h1><span class="bracket">&lt;&nbsp;</span>DAGOBERT v1.1<span class="bracket">&nbsp;/&gt;</span></h1>
+            <h1><span class="bracket">&lt;&nbsp;</span>DAGOBERT v1.2<span class="bracket">&nbsp;/&gt;</span></h1>
         </div>
         <button id="refresh-btn" class="refresh-btn" onclick="handleRefresh()">
             <svg viewBox="0 0 24 24"><path d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C14.8273 3 17.3387 4.3033 19 6.31579M19 6.31579V2M19 6.31579H14.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -275,7 +274,7 @@
                 <div style="display: flex; flex: 1; z-index: 2;">
                     <button class="filter-btn active" onclick="setSort('name', this)">Name</button>
                     <button class="filter-btn" onclick="setSort('value', this)">Kurswert</button>
-                    <button class="filter-btn" onclick="setSort('gain', this)">Veränderung</button>
+                    <button class="filter-btn" onclick="setSort('gain', this)">Performance</button>
                 </div>
             </div>
             <button id="sort-dir-btn" class="dir-btn" onclick="toggleSortDir()">↑</button>
@@ -354,6 +353,15 @@
 
     function setSort(type, btn) {
         currentSort = type;
+        
+        if (type === 'name') {
+            sortAsc = true;
+            document.getElementById('sort-dir-btn').innerText = '↑';
+        } else {
+            sortAsc = false;
+            document.getElementById('sort-dir-btn').innerText = '↓';
+        }
+
         document.querySelectorAll('.sort-bar-container .filter-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         moveSortIndicator(btn);
@@ -495,7 +503,29 @@
             }
 
             const isP = item.diff >= 0;
-            html += `<div class="asset-card"><div style="display:flex; justify-content:space-between; align-items:center;"><div><div class="asset-name">${item.name}</div><div class="asset-meta"><span>${item.isin}</span><div class="flag-circle">${getFlag(item.isin, item.kategorie)}</div></div><div class="asset-amount">${formatStueck(item.stück)} Stück</div></div><div style="text-align:right;"><div class="value-eur ${isP?'text-green':'text-red'}">${fC(item.kurswert)}</div><div style="font-size:0.95rem; font-weight:600" class="${isP?'text-green':'text-red'}">${isP?'+':''}${item.diffP.toFixed(2)}%</div></div></div></div>`;
+            const kaufkurs = item.stück ? (item.einstand / item.stück) : 0;
+            html += `
+                <div class="asset-card">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <div>
+                            <div class="asset-name">${item.name}</div>
+                            <div class="asset-meta">
+                                <span>${item.isin}</span>
+                                <div class="flag-circle">${getFlag(item.isin, item.kategorie)}</div>
+                            </div>
+                            <div class="asset-amount">${formatStueck(item.stück)} Stk. &middot; Kaufkurs ${fC(kaufkurs)} &middot; Kaufwert ${fC(item.einstand)}</div>
+                        </div>
+                        <div style="text-align:right;">
+                            <div class="value-eur">${fC(item.kurswert)}</div>
+                            <div style="font-size:0.85rem; font-weight:600; margin-top: 4px;" class="${isP?'text-green':'text-red'}">
+                                ${isP?'+':''}${fC(item.diff)}
+                            </div>
+                            <div style="font-size:0.85rem; font-weight:600" class="${isP?'text-green':'text-red'}">
+                                ${isP?'+':''}${item.diffP.toFixed(2)}%
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
         });
         document.getElementById('list').innerHTML = html;
         const diff = tW - tE, perc = tE ? (diff / tE) * 100 : 0;
@@ -514,7 +544,7 @@
         const pEtf = gesamt ? (etfs / gesamt * 100) : 0;
         
         const chart = document.getElementById('allocation-chart');
-        chart.style.background = `conic-gradient(var(--color-aktie) 0% ${pAktie}%, var(--color-etf) ${pAktie}% 100%)`;
+        chart.style.background = `conic-gradient(var(--color-aktie) 0% ${pAktie}%, var(--color-etf) ${pEtf}% 100%)`;
         
         document.getElementById('allocation-legend').innerHTML = `
             <div class="legend-item">
