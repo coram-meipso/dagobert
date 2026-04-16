@@ -114,14 +114,14 @@
             font-size: 1.6rem; 
             font-weight: 400; 
             font-family: 'VT323', monospace; 
-            color: var(--logo-yellow); 
             letter-spacing: 0px; 
             display: flex; 
             align-items: center;
-            image-rendering: pixelated; 
         }
+        h1 .title-dagobert { color: var(--negative); text-transform: none; }
+        h1 .title-version { color: var(--logo-yellow); }
         h1 .bracket { color: var(--text-dim); font-weight: 400; opacity: 0.6; }
-        h1::after { content: '_'; animation: blink 1s step-end infinite; color: var(--logo-yellow); margin-left: 2px; }
+        h1::after { content: '_'; animation: blink 1s step-end infinite; color: var(--positive); margin-left: 2px; }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
         .refresh-btn {
@@ -157,9 +157,11 @@
         
         /* --- STATUS DOT --- */
         .pulse-dot { width: 8px; height: 8px; background-color: var(--positive); border-radius: 50%; animation: pulse-green 2s infinite; transition: background-color 0.3s ease; }
+        .pulse-dot.stale { background-color: var(--logo-yellow); animation: pulse-yellow 2s infinite; }
         .pulse-dot.loading { background-color: var(--negative); animation: pulse-red 0.4s infinite alternate; }
 
         @keyframes pulse-green { 0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6); } 70% { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); } 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); } }
+        @keyframes pulse-yellow { 0% { box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.6); } 70% { box-shadow: 0 0 0 6px rgba(251, 191, 36, 0); } 100% { box-shadow: 0 0 0 0 rgba(251, 191, 36, 0); } }
         @keyframes pulse-red { 0% { opacity: 1; transform: scale(1); } 100% { opacity: 0.5; transform: scale(1.3); box-shadow: 0 0 8px var(--negative); } }
 
         /* --- ANALYSE SPECIFIC --- */
@@ -167,13 +169,13 @@
         .analyse-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 20px; color: var(--text-main); text-align: left; }
         
         .chart-container { display: flex; align-items: center; gap: 30px; }
-        .pie-chart { 
-            width: 120px; height: 120px; border-radius: 50%; 
-            background: conic-gradient(var(--color-aktie) 0% 50%, var(--color-etf) 50% 100%); 
-            flex-shrink: 0;
-            box-shadow: inset 0 0 0 15px var(--card-bg);
-        }
         
+        /* SVG Pie Chart Fix */
+        .pie-wrapper { width: 120px; height: 120px; flex-shrink: 0; position: relative; }
+        .pie-wrapper svg { transform: rotate(-90deg); border-radius: 50%; width: 100%; height: 100%; }
+        .pie-bg { fill: none; stroke: var(--color-etf); stroke-width: 32; }
+        .pie-segment { fill: none; stroke: var(--color-aktie); stroke-width: 32; stroke-dasharray: 0 100; transition: stroke-dasharray 0.5s ease; }
+
         .legend { flex: 1; display: flex; flex-direction: column; gap: 12px; }
         .legend-item { display: flex; align-items: flex-start; gap: 10px; }
         .dot { width: 12px; height: 12px; border-radius: 3px; margin-top: 4px; }
@@ -202,7 +204,7 @@
         .asset-card { background: var(--card-bg); padding: 16px; border-radius: 20px; margin-bottom: 12px; border: 1px solid var(--border-color); }
         .asset-name { font-size: 1.15rem; font-weight: 700; color: var(--text-main); margin-bottom: 2px; }
         .asset-meta { font-size: 13px; color: var(--text-dim); display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
-        .asset-amount { font-size: 13px; color: var(--text-dim); }
+        .asset-amount { font-size: 12.5px; color: var(--text-dim); }
         .value-eur { font-size: 1.15rem; font-weight: 700; color: var(--text-main); }
         .flag-circle { width: 18px; height: 18px; border-radius: 50%; overflow: hidden; display: inline-flex; align-items: center; justify-content: center; background: #1a1a1a; }
 
@@ -210,14 +212,35 @@
         .text-red { color: var(--negative); }
 
         footer { 
-            padding: 40px; text-align: center; font-size: 12px; 
+            padding: 40px 40px 10px 40px; text-align: center; font-size: 12px; 
             color: var(--text-dim); opacity: 0.5; display: flex; 
             justify-content: center; align-items: center; letter-spacing: 1px; 
         }
         .footer-content { display: inline-flex; align-items: center; justify-content: center; perspective: 500px; }
         .letter { display: inline-flex; align-items: center; justify-content: center; animation: letter-rotate 4s infinite; transform-style: preserve-3d; }
-        .letter img.emoji { height: 1.2em !important; width: 1.2em !important; margin: 0 3px !important; }
+        
+        /* Pixel Heart Styling - Erhöhter Abstand durch margin-left/right */
+        .pixel-heart { 
+            width: 14px; 
+            height: 14px; 
+            margin: 0 8px; /* Vergrößerter seitlicher Abstand (vorher 0 oder 4px) */
+            display: inline-block; 
+            vertical-align: middle; 
+            position: relative; 
+            top: -1px;
+        }
+        .pixel-heart svg { width: 100%; height: 100%; fill: var(--negative); image-rendering: pixelated; }
+
         @keyframes letter-rotate { 0%, 80% { transform: rotateY(0deg); } 90% { transform: rotateY(360deg); } 100% { transform: rotateY(360deg); } }
+
+        .footer-version {
+            text-align: center;
+            font-size: 10px;
+            color: var(--text-dim);
+            opacity: 0.3;
+            padding-bottom: 40px;
+            letter-spacing: 0.5px;
+        }
     </style>
 </head>
 <body id="app-body">
@@ -248,7 +271,7 @@
             <svg class="logo-svg" viewBox="0 0 32 32">
                 <rect x="10" y="2" width="10" height="8" fill="#1e1e1e"/><rect x="10" y="7" width="10" height="1" fill="#ef4444"/><rect x="9" y="10" width="12" height="10" fill="#FFFFFF"/><rect x="12" y="14" width="2" height="2" fill="#000000"/><rect x="17" y="14" width="2" height="2" fill="#000000"/><rect x="8" y="17" width="14" height="3" fill="#fbbf24"/><g id="money-hand"><rect x="22" y="8" width="6" height="8" fill="#10b981"/><rect x="21" y="13" width="3" height="4" fill="#FFFFFF"/></g><rect x="9" y="20" width="12" height="8" fill="#ef4444"/><rect x="13" y="22" width="4" height="2" fill="#3b82f6"/>
             </svg>
-            <h1><span class="bracket">&lt;&nbsp;</span>DAGOBERT v1.2<span class="bracket">&nbsp;/&gt;</span></h1>
+            <h1><span class="bracket">&lt;&nbsp;</span><span class="title-dagobert">Dagobert</span>&nbsp;<span class="title-version">v1.2</span><span class="bracket">&nbsp;/&gt;</span></h1>
         </div>
         <button id="refresh-btn" class="refresh-btn" onclick="handleRefresh()">
             <svg viewBox="0 0 24 24"><path d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C14.8273 3 17.3387 4.3033 19 6.31579M19 6.31579V2M19 6.31579H14.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -289,7 +312,12 @@
         <div class="analyse-card">
             <div class="analyse-title">Asset Allocation</div>
             <div class="chart-container">
-                <div id="allocation-chart" class="pie-chart"></div>
+                <div class="pie-wrapper">
+                    <svg viewBox="0 0 32 32">
+                        <circle class="pie-bg" r="16" cx="16" cy="16"></circle>
+                        <circle id="pie-segment-aktie" class="pie-segment" r="16" cx="16" cy="16"></circle>
+                    </svg>
+                </div>
                 <div class="legend" id="allocation-legend"></div>
             </div>
         </div>
@@ -303,32 +331,47 @@
     <section id="page-dividenden">
     </section>
 
-    <footer id="animated-footer">MADE WITH ❤️ BY CHRISTOPH</footer>
+    <footer id="animated-footer">MADE WITH ❤️ BY CM</footer>
+    <div class="footer-version">v1.2 &middot; 16.04.2026</div>
 </div>
 
 <script>
     const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRLJWMGwbMH9JkTW2S0ZI6tnhjxokOKjylOzuGdI2KvQEJ2FB3VsDowH3bJzPSF54bbAZhZagyda1Xk/pub?gid=0&single=true&output=csv';
     const PROXIES = ['https://api.allorigins.win/raw?url=', 'https://api.codetabs.com/v1/proxy?quest='];
-    const countryToFlag = {'DE': '🇩🇪', 'US': '🇺🇸', 'GB': '🇬🇧', 'FR': '🇫🇷', 'NL': '🇳🇱', 'IE': '🇮🇪', 'LU': '🇱🇺', 'CH': '🇨🇭', 'JP': '🇯🇵', 'CN': '🇨🇳', 'KR': '🇰🇷', 'IN': '🇮🇳', 'BR': '🇧🇷', 'CA': '🇨🇦', 'AU': '🇦🇺', 'SG': '🇸🇬', 'HK': '🇭🇰', 'SE': '🇸🇪', 'NO': '🇳🇴', 'DK': '🇩🇰', 'FI': '🇫🇮', 'AT': '🇦Ť', 'BE': '🇧🇪', 'ES': '🇪🇸', 'IT': '🇮🇹', 'PT': '🇵🇹', 'GR': '🇬🇷', 'PL': '🇵🇱', 'CZ': '🇨🇿', 'HU': '🇭🇺', 'TW': '🇹🇼', 'MX': '🇲🇽', 'ZA': '🇿🇦', 'SA': '🇸🇦', 'AE': '🇦🇪', 'IL': '🇮🇱'};
+    const countryToFlag = {'DE': '🇩🇪', 'US': '🇺🇸', 'GB': '🇬🇧', 'FR': '🇫🇷', 'NL': '🇳🇱', 'IE': '🇮🇪', 'LU': '🇱🇺', 'CH': '🇨🇭', 'JP': '🇯🇵', 'CN': '🇨🇳', 'KR': '🇰🇷', 'IN': '🇮🇳', 'BR': '🇧🇷', 'CA': '🇨🇦', 'AU': '🇦🇺', 'SG': '🇸🇬', 'HK': '🇭🇰', 'SE': '🇸🇪', 'NO': '🇳🇴', 'DK': '🇩🇰', 'FI': '🇫🇮', 'AT': '🇦Ť', 'BE': '🇧🇪', 'ES': '🇪🇸', 'IT': '🇮🇹', 'PT': '🇵🇹', 'GR': '🇬🇷', 'PL': '🇵🇱', 'CZ': '🇨🇿', 'HU': '🇭🇺', 'TW': '🇹🇼', 'MX': '🇲🇽', 'ZA': '🇿🇦', 'SA': '🇸🇦', 'AE': '🇦ZW', 'IL': '🇮🇱'};
 
     let allData = [], currentFilter = 'alle', currentSort = 'name', sortAsc = true;
+    let lastFetchTime = null;
+
+    // Pixel Heart SVG Content
+    const pixelHeartSvg = `<span class="pixel-heart"><svg viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="1" width="3" height="1"/><rect x="7" y="1" width="3" height="1"/><rect x="1" y="2" width="5" height="1"/><rect x="6" y="2" width="5" height="1"/><rect x="0" y="3" width="12" height="1"/><rect x="0" y="4" width="12" height="1"/><rect x="0" y="5" width="12" height="1"/><rect x="1" y="6" width="10" height="1"/><rect x="2" y="7" width="8" height="1"/><rect x="3" y="8" width="6" height="1"/><rect x="4" y="9" width="4" height="1"/><rect x="5" y="10" width="2" height="1"/></svg></span>`;
 
     function setupFooterAnimation() {
         const footer = document.getElementById('animated-footer');
-        const text = "MADE WITH ❤️ BY CHRISTOPH";
+        // parts including the heart
+        const parts = ["M", "A", "D", "E", " ", "W", "I", "T", "H", " ", "❤️", " ", "B", "Y", " ", "C", "M"];
+        
         footer.innerHTML = '';
         const wrap = document.createElement('div');
         wrap.className = 'footer-content';
-        [...text].forEach((char, i) => {
+        
+        parts.forEach((char, i) => {
             const span = document.createElement('span');
             span.style.animationDelay = `${i * 0.1}s`;
-            span.className = 'letter';
-            if (char === ' ') span.innerHTML = '&nbsp;';
-            else span.innerText = char;
+            
+            if (char === "❤️") {
+                span.className = 'letter'; 
+                span.innerHTML = pixelHeartSvg; 
+            } else if (char === ' ') {
+                span.className = 'letter';
+                span.innerHTML = '&nbsp;';
+            } else {
+                span.className = 'letter';
+                span.innerText = char;
+            }
             wrap.appendChild(span);
         });
         footer.appendChild(wrap);
-        if (window.twemoji) twemoji.parse(footer, { folder: 'svg', ext: '.svg' });
     }
 
     function toggleMenu() {
@@ -356,15 +399,8 @@
 
     function setSort(type, btn) {
         currentSort = type;
-        
-        if (type === 'name') {
-            sortAsc = true;
-            document.getElementById('sort-dir-btn').innerText = '↑';
-        } else {
-            sortAsc = false;
-            document.getElementById('sort-dir-btn').innerText = '↓';
-        }
-
+        if (type === 'name') { sortAsc = true; document.getElementById('sort-dir-btn').innerText = '↑'; } 
+        else { sortAsc = false; document.getElementById('sort-dir-btn').innerText = '↓'; }
         document.querySelectorAll('.sort-bar-container .filter-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         moveSortIndicator(btn);
@@ -379,29 +415,22 @@
 
     function moveSortIndicator(btn) {
         const indicator = document.getElementById('sort-indicator');
-        if(indicator && btn) {
-            indicator.style.width = btn.offsetWidth + 'px';
-            indicator.style.left = btn.offsetLeft + 'px';
-        }
+        if(indicator && btn) { indicator.style.width = btn.offsetWidth + 'px'; indicator.style.left = btn.offsetLeft + 'px'; }
     }
 
     async function handleRefresh() {
         const btn = document.getElementById('refresh-btn');
         const dot = document.getElementById('status-dot');
         const body = document.getElementById('app-body');
-        
         if(btn.classList.contains('spinning')) return;
-        
         btn.classList.add('spinning');
-        dot.classList.add('loading');
+        dot.className = 'pulse-dot loading';
         body.classList.add('is-loading');
-        
         await loadData();
-        
         setTimeout(() => { 
             btn.classList.remove('spinning'); 
-            dot.classList.remove('loading');
             body.classList.remove('is-loading'); 
+            checkDataFreshness();
         }, 1200);
     }
 
@@ -442,17 +471,28 @@
         }
         
         const now = new Date();
+        lastFetchTime = now;
         const timeString = now.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
         document.getElementById('update-time').innerText = `Aktualisiert: ${now.toLocaleDateString('de-DE')} • ${timeString} Uhr`;
         
         updateFilters(depots);
         render();
+        checkDataFreshness();
 
         setTimeout(() => {
             const activeSortBtn = document.querySelector('.sort-bar-container .filter-btn.active');
             if (activeSortBtn) moveSortIndicator(activeSortBtn);
         }, 100);
     }
+
+    function checkDataFreshness() {
+        if (!lastFetchTime) return;
+        const dot = document.getElementById('status-dot');
+        const diffMinutes = (new Date() - lastFetchTime) / 1000 / 60;
+        if (diffMinutes >= 5) { dot.className = 'pulse-dot stale'; } 
+        else { dot.className = 'pulse-dot'; }
+    }
+    setInterval(checkDataFreshness, 30000);
 
     function updateFilters(set) {
         const container = document.getElementById('filter-inner');
@@ -473,15 +513,11 @@
 
     function moveIndicator(btn) {
         const indicator = document.getElementById('nav-indicator');
-        if (indicator && btn) {
-            indicator.style.width = btn.offsetWidth + 'px';
-            indicator.style.left = btn.offsetLeft + 'px';
-        }
+        if (indicator && btn) { indicator.style.width = btn.offsetWidth + 'px'; indicator.style.left = btn.offsetLeft + 'px'; }
     }
 
     function render() {
         let filtered = currentFilter === 'alle' ? allData : allData.filter(d => d.depot === currentFilter);
-        
         let portfolioData = [...filtered];
         portfolioData.sort((a, b) => {
             let res = 0;
@@ -496,17 +532,13 @@
 
         portfolioData.forEach(item => {
             tW += item.kurswert; tE += item.einstand;
-            
-            if(item.kategorie.toLowerCase().includes('etf')) {
-                etfSum += item.kurswert;
-            } else {
+            if(item.kategorie.toLowerCase().includes('etf')) { etfSum += item.kurswert; } 
+            else { 
                 aktieSum += item.kurswert;
                 const cCode = item.isin?.substring(0, 2).toUpperCase() || '🌍';
                 countries[cCode] = (countries[cCode] || 0) + item.kurswert;
             }
-
             const isP = item.diff >= 0;
-            const kaufkurs = item.stück ? (item.einstand / item.stück) : 0;
             html += `
                 <div class="asset-card">
                     <div style="display:flex; justify-content:space-between; align-items:center;">
@@ -516,7 +548,9 @@
                                 <span>${item.isin}</span>
                                 <div class="flag-circle">${getFlag(item.isin, item.kategorie)}</div>
                             </div>
-                            <div class="asset-amount">${formatStueck(item.stück)} Stk. &middot; Kaufkurs ${fC(kaufkurs)} &middot; Kaufwert ${fC(item.einstand)}</div>
+                            <div class="asset-amount">
+                                ${formatStueck(item.stück)} Stk. &middot; Kaufwert ${fC(item.einstand)}
+                            </div>
                         </div>
                         <div style="text-align:right;">
                             <div class="value-eur">${fC(item.kurswert)}</div>
@@ -532,13 +566,10 @@
         });
         document.getElementById('list').innerHTML = html;
         const diff = tW - tE, perc = tE ? (diff / tE) * 100 : 0;
-        
         document.getElementById('main-value').innerText = fC(tW);
         document.getElementById('main-change').innerText = `${diff >= 0 ? '+' : ''}${fC(diff)} (${perc.toFixed(2)}%)`;
         document.getElementById('main-change').className = `total-change ${diff >= 0 ? 'positive' : 'negative'}`;
-
-        renderAnalyse(aktien, etfs, gesamt, countries);
-
+        renderAnalyse(aktieSum, etfSum, tW, countries);
         if (window.twemoji) twemoji.parse(document.body, { folder: 'svg', ext: '.svg' });
     }
 
@@ -546,42 +577,18 @@
         const pAktie = gesamt ? (aktien / gesamt * 100) : 0;
         const pEtf = gesamt ? (etfs / gesamt * 100) : 0;
         
-        const chart = document.getElementById('allocation-chart');
-        chart.style.background = `conic-gradient(var(--color-aktie) 0% ${pAktie}%, var(--color-etf) ${pEtf}% 100%)`;
-        
-        document.getElementById('allocation-legend').innerHTML = `
-            <div class="legend-item">
-                <div class="dot" style="background: var(--color-aktie)"></div>
-                <div class="legend-info">
-                    <span class="legend-name">Aktien</span>
-                    <span class="legend-value">${fC(aktien)}</span>
-                    <span class="legend-perc">${pAktie.toFixed(1)}%</span>
-                </div>
-            </div>
-            <div class="legend-item">
-                <div class="dot" style="background: var(--color-etf)"></div>
-                <div class="legend-info">
-                    <span class="legend-name">ETFs</span>
-                    <span class="legend-value">${fC(etfs)}</span>
-                    <span class="legend-perc">${pEtf.toFixed(1)}%</span>
-                </div>
-            </div>
-        `;
+        // Update SVG Chart
+        const segment = document.getElementById('pie-segment-aktie');
+        segment.style.strokeDasharray = `${pAktie} 100`;
 
+        document.getElementById('allocation-legend').innerHTML = `
+            <div class="legend-item"><div class="dot" style="background: var(--color-aktie)"></div><div class="legend-info"><span class="legend-name">Aktien</span><span class="legend-value">${fC(aktien)}</span><span class="legend-perc">${pAktie.toFixed(1)}%</span></div></div>
+            <div class="legend-item"><div class="dot" style="background: var(--color-etf)"></div><div class="legend-info"><span class="legend-name">ETFs</span><span class="legend-value">${fC(etfs)}</span><span class="legend-perc">${pEtf.toFixed(1)}%</span></div></div>`;
         const sortedCountries = Object.entries(countries).sort((a, b) => b[1] - a[1]);
         document.getElementById('country-legend').innerHTML = sortedCountries.map(([code, val]) => {
             const p = gesamt ? (val / gesamt * 100) : 0;
             const formattedVal = fC(val).split(',')[0] + ' €'; 
-            return `
-                <div class="legend-item">
-                    <div class="flag-box">${countryToFlag[code] || '🌍'}</div>
-                    <div class="legend-info">
-                        <span class="legend-name">${code}</span>
-                        <span class="legend-value">${formattedVal}</span>
-                        <span class="legend-perc">${p.toFixed(1)}%</span>
-                    </div>
-                </div>
-            `;
+            return `<div class="legend-item"><div class="flag-box">${countryToFlag[code] || '🌍'}</div><div class="legend-info"><span class="legend-name">${code}</span><span class="legend-value">${formattedVal}</span><span class="legend-perc">${p.toFixed(1)}%</span></div></div>`;
         }).join('');
     }
 
@@ -592,16 +599,11 @@
     function parseCSV(t) {
         const rows = []; let cur = [], v = '', q = false;
         for (let i = 0; i < t.length; i++) {
-            const c = t[i];
-            if (c === '"') q = !q;
-            else if (c === ',' && !q) { cur.push(v.trim()); v = ''; }
-            else if ((c === '\n' || c === '\r') && !q) { cur.push(v.trim()); rows.push(cur); cur = []; v = ''; if(c==='\r'&&t[i+1]==='\n')i++; }
-            else v += c;
+            const c = t[i]; if (c === '"') q = !q; else if (c === ',' && !q) { cur.push(v.trim()); v = ''; } else if ((c === '\n' || c === '\r') && !q) { cur.push(v.trim()); rows.push(cur); cur = []; v = ''; if(c==='\r'&&t[i+1]==='\n')i++; } else v += c;
         }
         if (v || cur.length) { cur.push(v.trim()); rows.push(cur); }
         return rows;
     }
-
     setupFooterAnimation();
     handleRefresh();
 </script>
