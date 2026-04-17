@@ -12,7 +12,7 @@
     <script src="https://cdn.jsdelivr.net/npm/twemoji@14.0.2/dist/twemoji.min.js"></script>
     <style>
         :root {
-            --bg-color: #050505; 
+            --bg-color: #050505;
             --card-bg: #121212; 
             --text-main: #ffffff;
             --text-dim: #94a3b8;
@@ -40,16 +40,19 @@
 
         /* --- SIDEBAR & OVERLAY --- */
         .sidebar {
-            position: fixed; top: 0; left: calc(-1 * var(--sidebar-width));
+            position: fixed;
+            top: 0; left: calc(-1 * var(--sidebar-width));
             width: var(--sidebar-width); height: 100%;
             background: var(--card-bg); border-right: 1px solid var(--border-color);
-            z-index: 1000; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             padding: 40px 16px;
         }
         .sidebar.open { transform: translateX(var(--sidebar-width)); }
 
         .overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.7); backdrop-filter: blur(4px);
             z-index: 999; display: none;
         }
@@ -110,7 +113,7 @@
         @keyframes money-wave { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(-8deg); } 75% { transform: rotate(8deg); } }
 
         h1 { 
-            margin: 0; 
+            margin: 0;
             font-size: 1.6rem; 
             font-weight: 400; 
             font-family: 'VT323', monospace; 
@@ -125,10 +128,12 @@
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
         .refresh-btn {
-            background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
             color: var(--text-main); border: 1px solid var(--border-color); 
             width: 44px; height: 44px; border-radius: 14px; 
-            cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease;
+            cursor: pointer; display: flex; align-items: center;
+            justify-content: center; transition: all 0.3s ease;
         }
         .refresh-btn:active { transform: scale(0.92); }
         .refresh-btn svg { width: 20px; height: 20px; stroke: currentColor; stroke-width: 2.5; fill: none; }
@@ -170,7 +175,6 @@
         
         .chart-container { display: flex; align-items: center; gap: 30px; }
         
-        /* SVG Pie Chart Fix */
         .pie-wrapper { width: 120px; height: 120px; flex-shrink: 0; position: relative; }
         .pie-wrapper svg { transform: rotate(-90deg); border-radius: 50%; width: 100%; height: 100%; }
         .pie-bg { fill: none; stroke: var(--color-etf); stroke-width: 32; }
@@ -191,8 +195,41 @@
             gap: 16px 12px;
         }
 
+        /* --- DEVELOPMENT CHART (Grouped Bars) --- */
+        .chart-bars-container {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            height: 220px;
+            padding: 20px 0 30px 0;
+            margin-top: 20px;
+            position: relative;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .month-group {
+            flex: 1;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 2px;
+            height: 100%;
+            position: relative;
+        }
+        .bar {
+            width: 8px;
+            border-radius: 2px 2px 0 0;
+            transition: height 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .month-label {
+            position: absolute;
+            bottom: -22px;
+            font-size: 10px;
+            color: var(--text-dim);
+            text-transform: uppercase;
+        }
+
         /* --- PAGES --- */
-        #page-portfolio, #page-analyse, #page-dividenden { display: none; }
+        #page-portfolio, #page-analyse, #page-dividenden, #page-div-entwicklung { display: none; }
         .page-active { display: block !important; }
 
         /* --- SORT SPECIFIC --- */
@@ -217,7 +254,6 @@
         .footer-content { display: inline-flex; align-items: center; justify-content: center; perspective: 500px; }
         .letter { display: inline-flex; align-items: center; justify-content: center; animation: letter-rotate 4s infinite; transform-style: preserve-3d; }
         
-        /* Pixel Heart Styling */
         .pixel-heart { 
             width: 14px; 
             height: 14px; 
@@ -261,6 +297,9 @@
         </button>
         <button class="menu-item" onclick="showPage('dividenden', 2)">
             <span></span> Dividenden
+        </button>
+        <button class="menu-item" onclick="showPage('div-entwicklung', 3)">
+            <span></span> Dividendenentwicklung
         </button>
     </div>
 </nav>
@@ -344,18 +383,31 @@
         <div id="div-list"></div>
     </section>
 
+    <section id="page-div-entwicklung">
+        <div class="analyse-card">
+            <div class="analyse-title">Monatlicher Dividendenvergleich</div>
+            <div id="development-chart" class="chart-bars-container"></div>
+            <div style="display: flex; justify-content: center; gap: 15px; margin-top: 30px; font-size: 11px; font-weight: 600; color: var(--text-dim);">
+                <div style="display: flex; align-items: center; gap: 5px;"><div style="width: 10px; height: 10px; background: #3b82f6; border-radius: 2px;"></div> 2024</div>
+                <div style="display: flex; align-items: center; gap: 5px;"><div style="width: 10px; height: 10px; background: #8b5cf6; border-radius: 2px;"></div> 2025</div>
+                <div style="display: flex; align-items: center; gap: 5px;"><div style="width: 10px; height: 10px; background: #10b981; border-radius: 2px;"></div> 2026</div>
+            </div>
+        </div>
+    </section>
+
     <footer id="animated-footer">MADE WITH ❤️ BY CM</footer>
     <div class="footer-version">v1.3 &middot; 17.04.2026</div>
 </div>
 
 <script>
     const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRLJWMGwbMH9JkTW2S0ZI6tnhjxokOKjylOzuGdI2KvQEJ2FB3VsDowH3bJzPSF54bbAZhZagyda1Xk/pub?gid=0&single=true&output=csv';
+    const SHEET_URL_DEV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQDeKsNj-NeNlTHvdzVLV8SiD-hd3fswyQz1vfWznzmJ_3WKv8gm4Q-3qYhoj5u6DRnr7XSs5tk1Bbk/pub?gid=318812401&single=true&output=csv';
     const PROXIES = ['https://api.allorigins.win/raw?url=', 'https://api.codetabs.com/v1/proxy?quest='];
     const countryToFlag = {'DE': '🇩🇪', 'US': '🇺🇸', 'GB': '🇬🇧', 'FR': '🇫🇷', 'NL': '🇳🇱', 'IE': '🇮🇪', 'LU': '🇱🇺', 'CH': '🇨🇭', 'JP': '🇯🇵', 'CN': '🇨🇳', 'KR': '🇰🇷', 'IN': '🇮🇳', 'BR': '🇧🇷', 'CA': '🇨🇦', 'AU': '🇦🇺', 'SG': '🇸🇬', 'HK': '🇭🇰', 'SE': '🇸🇪', 'NO': '🇳🇴', 'DK': '🇩🇰', 'FI': '🇫🇮', 'AT': '🇦Ť', 'BE': '🇧🇪', 'ES': '🇪🇸', 'IT': '🇮🇹', 'PT': '🇵🇹', 'GR': '🇬🇷', 'PL': '🇵🇱', 'CZ': '🇨🇿', 'HU': '🇭🇺', 'TW': '🇹🇼', 'MX': '🇲🇽', 'ZA': '🇿🇦', 'SA': '🇸🇦', 'AE': '🇦ZW', 'IL': '🇮🇱'};
 
     const eurFormatter = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' });
 
-    let allData = [], currentFilter = 'alle', currentSort = 'name', sortAsc = true;
+    let allData = [], devData = [], currentFilter = 'alle', currentSort = 'name', sortAsc = true;
     let lastFetchTime = null;
     let totalDividendsSold = 0; 
 
@@ -387,13 +439,18 @@
         document.getElementById('page-portfolio').classList.remove('page-active');
         document.getElementById('page-analyse').classList.remove('page-active');
         document.getElementById('page-dividenden').classList.remove('page-active');
+        document.getElementById('page-div-entwicklung').classList.remove('page-active');
+        
         document.getElementById('page-' + pageId).classList.add('page-active');
+        
         const menuItems = document.querySelectorAll('.menu-item');
         menuItems.forEach(item => item.classList.remove('active'));
         menuItems[index].classList.add('active');
+        
         const indicator = document.getElementById('sidebar-indicator');
         indicator.style.transform = `translateY(${index * 52}px)`;
         toggleMenu();
+        
         const activeFilterBtn = document.querySelector('#filter-inner .filter-btn.active');
         if(activeFilterBtn) moveIndicator(activeFilterBtn);
         render(); 
@@ -470,8 +527,9 @@
     }
 
     async function loadData() {
-        const csv = await tryFetch(SHEET_URL);
+        const [csv, csvDev] = await Promise.all([tryFetch(SHEET_URL), tryFetch(SHEET_URL_DEV)]);
         if(!csv) return;
+        
         const rows = parseCSV(csv);
         const head = rows[0].map(x => x.toLowerCase().trim());
         const m = {
@@ -516,6 +574,8 @@
             allData.push(item); 
             depots.add(item.depot);
         }
+
+        if(csvDev) devData = parseCSV(csvDev);
         
         const now = new Date();
         lastFetchTime = now;
@@ -565,6 +625,52 @@
     function moveIndicator(btn) {
         const indicator = document.getElementById('nav-indicator');
         if (indicator && btn) { indicator.style.width = btn.offsetWidth + 'px'; indicator.style.left = btn.offsetLeft + 'px'; }
+    }
+
+    function renderDevChart() {
+        if (!devData || devData.length < 2) return;
+        const container = document.getElementById('development-chart');
+        container.innerHTML = '';
+        
+        const months = ['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
+        const years = ['2024', '2025', '2026'];
+        const colors = { '2024': '#3b82f6', '2025': '#8b5cf6', '2026': '#10b981' };
+        
+        let maxVal = 1;
+        years.forEach(y => {
+            const row = devData.find(r => r[0] && r[0].trim() === y);
+            if(row) {
+                for(let i=1; i<=12; i++) {
+                    maxVal = Math.max(maxVal, parseMenge(row[i]));
+                }
+            }
+        });
+
+        months.forEach((mName, i) => {
+            const group = document.createElement('div');
+            group.className = 'month-group';
+            
+            years.forEach(year => {
+                const row = devData.find(r => r[0] && r[0].trim() === year);
+                const val = row ? parseMenge(row[i+1]) : 0;
+                const height = (val / maxVal) * 100;
+                
+                const bar = document.createElement('div');
+                bar.className = 'bar';
+                bar.style.height = `${height}%`;
+                bar.style.backgroundColor = colors[year];
+                if(val > 0) {
+                    bar.title = `${year} ${mName}: ${fC(val)}`;
+                }
+                group.appendChild(bar);
+            });
+
+            const label = document.createElement('div');
+            label.className = 'month-label';
+            label.innerText = mName;
+            group.appendChild(label);
+            container.appendChild(group);
+        });
     }
 
     function render() {
@@ -647,6 +753,7 @@
         });
 
         const isDivPage = document.getElementById('page-dividenden').classList.contains('page-active');
+        const isDevPage = document.getElementById('page-div-entwicklung').classList.contains('page-active');
         const updateContainer = document.getElementById('last-update-container');
         const mainChange = document.getElementById('main-change');
 
@@ -666,13 +773,11 @@
                 mainChange.innerHTML = `
                     <div class="total-label" style="margin-bottom: 4px;">DAVON IN 2026</div>
                     <div style="color: ${dynamicColor}; font-size: 1.6rem; font-weight: 700; transition: color 0.5s ease;">${fC(sumDiv2026)}</div>
-                    
                     <div style="display: flex; align-items: center; justify-content: center; margin-top: 14px;">
                         <div style="flex: 1; max-width: 250px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); border-radius: 8px; height: 10px; overflow: hidden;">
                             <div style="width: ${balkenBreite}%; background-color: ${dynamicColor}; background-image: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.4) 50%, transparent 100%); background-size: 200% 100%; height: 100%; border-radius: 8px; transition: width 1s ease, background-color 0.5s ease; animation: glow-sheen 2s linear infinite;"></div>
                         </div>
                     </div>
-
                     <div style="font-size: 11px; color: var(--text-dim); margin-top: 10px; font-weight: 600; letter-spacing: 0.5px; display: flex; align-items: center; justify-content: center; gap: 6px;">
                         <span>JAHRESZIEL: 15.000 €</span>
                         <span style="font-size: 14px;">&middot;</span>
@@ -686,6 +791,53 @@
                 `;
             }
             updateContainer.style.display = 'none';
+            
+        } else if (isDevPage) {
+            let devTotal = 0;
+            let dev2024 = 0;
+            let dev2025 = 0;
+            let dev2026 = 0;
+            
+            if (devData && devData.length > 0) {
+                devData.forEach(row => {
+                    const year = row[0] ? row[0].trim() : '';
+                    if (year && !isNaN(parseInt(year))) {
+                        let yearlySum = 0;
+                        for(let i=1; i<=12; i++) {
+                            yearlySum += parseMenge(row[i]);
+                        }
+                        devTotal += yearlySum; 
+                        if (year === '2024') dev2024 = yearlySum;
+                        else if (year === '2025') dev2025 = yearlySum;
+                        else if (year === '2026') dev2026 = yearlySum;
+                    }
+                });
+            }
+
+            document.getElementById('total-label').innerText = "GESAMTDIVIDENDE";
+            document.getElementById('main-value').innerText = fC(devTotal);
+            mainChange.className = 'total-change'; 
+            mainChange.style.marginTop = "24px";
+            
+            mainChange.innerHTML = `
+                <div style="display: flex; justify-content: space-around; margin-top: 8px;">
+                    <div>
+                        <div class="total-label" style="margin-bottom: 4px; font-size: 11px;">DAVON IN 2024</div>
+                        <div style="color: #3b82f6; font-size: 1.2rem; font-weight: 700;">${fC(dev2024)}</div>
+                    </div>
+                    <div>
+                        <div class="total-label" style="margin-bottom: 4px; font-size: 11px;">DAVON IN 2025</div>
+                        <div style="color: #8b5cf6; font-size: 1.2rem; font-weight: 700;">${fC(dev2025)}</div>
+                    </div>
+                    <div>
+                        <div class="total-label" style="margin-bottom: 4px; font-size: 11px;">DAVON IN 2026</div>
+                        <div style="color: #10b981; font-size: 1.2rem; font-weight: 700;">${fC(dev2026)}</div>
+                    </div>
+                </div>
+            `;
+            updateContainer.style.display = 'none';
+            renderDevChart();
+            
         } else {
             document.getElementById('total-label').innerText = (currentFilter === 'alle') ? 'Gesamtwert' : `Depot ${currentFilter}`;
             document.getElementById('main-value').innerText = fC(tW);
