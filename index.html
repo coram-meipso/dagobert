@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dagobert v1.7</title>
+    <title>Dagobert v1.8</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3QgeD0iMTAiIHk9IjIiIHdpZHRoPSIxMCIgaGVpZ2h0PSI4IiBmaWxsPSIjMWUxZTFlIi8+PHJlY3QgeD0iMTAiIHk9IjciIHdpZHRoPSIxMCIgaGVpZ2h0PSIxIiBmaWxsPSIjZWY0NDQ0Ii8+PHJlY3QgeD0iOSIgeT0iMTAiIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMCIgZmlsbD0iI0ZGRkZGRiIvPjxyZWN0IHg9IjEyIiB5PSIxNCIgd2lkdGg9IjIiIGhlaWdodD0iMiIgZmlsbD0iIzAwMDAwMCIvPjxyZWN0IHg9IjE3IiB5PSIxNCIgd2lkdGg9IjIiIGhlaWdodD0iMiIgZmlsbD0iIzAwMDAwMCIvPjxyZWN0IHg9IjgiIHk9IjE3IiB3aWR0aD0iMTQiIGhlaWdodD0iMyIgZmlsbD0iI2ZiYmYyNCIvPjxnIGlkPSJtb25leS1oYW5kIj48cmVjdCB4PSIyMiIgeT0iOCIgd2lkdGg9IjYiIGhlaWdodD0iOCIgZmlsbD0iIzEwYjk4MSIvPjxyZWN0IHg9IjIxIiB5PSIxMyIgd2lkdGg9IjMiIGhlaWdodD0iNCIgZmlsbD0iI0ZGRkZGRiIvPjwvZz48cmVjdCB4PSI5IiB5PSIyMCIgd2lkdGg9IjEyIiBoZWlnaHQ9IjgiIGZpbGw9IiNlZjQ0NDQiLz48cmVjdCB4PSIxMyIgeT0iMjIiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiIGZpbGw9IiMzYjgyZjYiLz48L3N2Zz4=">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
@@ -26,7 +26,7 @@
         .menu-item { position: relative; padding: 14px 16px; border-radius: 10px; cursor: pointer; font-weight: 600; color: var(--text-dim); transition: color 0.2s ease; display: flex; align-items: center; gap: 12px; z-index: 2; background: transparent; border: none; width: 100%; font-family: inherit; font-size: 15px; }
         .menu-item.active { color: var(--text-main); }
         .app-shell { padding: 20px 16px; max-width: 500px; margin: 0 auto; }
-        header { display: grid; grid-template-columns: 44px 1fr 44px; align-items: center; margin-bottom: 24px; }
+        header { display: grid; grid-template-columns: 44px 1fr 44px 44px; align-items: center; margin-bottom: 24px; gap: 8px; }
         .nav-trigger { background: none; border: none; color: var(--text-main); cursor: pointer; padding: 0; display: flex; align-items: center; }
         .title-area { display: flex; align-items: center; justify-content: center; gap: 10px; }
         .logo-svg { width: 38px; height: 38px; image-rendering: pixelated; }
@@ -103,6 +103,31 @@
         @keyframes letter-rotate { 0%,80%{transform:rotateY(0deg)} 90%{transform:rotateY(360deg)} 100%{transform:rotateY(360deg)} }
         @keyframes glow-sheen { 0%{background-position:100% 0} 100%{background-position:-100% 0} }
         .footer-version { text-align: center; font-size: 10px; color: var(--text-dim); opacity: 0.3; padding-bottom: 40px; letter-spacing: 0.5px; }
+
+        /* --- LIGHT THEME --- */
+        body.light {
+            --bg-color: #f1f5f9;
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-dim: #64748b;
+            --positive: #059669;
+            --negative: #dc2626;
+            --border-color: #e2e8f0;
+            --logo-yellow: #d97706;
+            --color-aktie: #2563eb;
+            --color-etf: #ea580c;
+        }
+        body.light .sidebar { box-shadow: 4px 0 20px rgba(0,0,0,0.08); }
+        body.light .total-box,
+        body.light .analyse-card,
+        body.light .asset-card,
+        body.light .filter-bar,
+        body.light .sort-bar-container { box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+        body.light .nav-indicator,
+        body.light .sidebar-indicator { background: #e2e8f0; }
+        body.light h1 .title-dagobert { color: #dc2626; }
+        body.light .pulse-dot { box-shadow: none; }
+        body.light .roi-modal-box { box-shadow: 0 8px 32px rgba(0,0,0,0.12); }
     </style>
 </head>
 <body id="app-body">
@@ -136,8 +161,11 @@
             <svg class="logo-svg" viewBox="0 0 32 32">
                 <rect x="10" y="2" width="10" height="8" fill="#1e1e1e"/><rect x="10" y="7" width="10" height="1" fill="#ef4444"/><rect x="9" y="10" width="12" height="10" fill="#FFFFFF"/><rect x="12" y="14" width="2" height="2" fill="#000000"/><rect x="17" y="14" width="2" height="2" fill="#000000"/><rect x="8" y="17" width="14" height="3" fill="#fbbf24"/><g id="money-hand"><rect x="22" y="8" width="6" height="8" fill="#10b981"/><rect x="21" y="13" width="3" height="4" fill="#FFFFFF"/></g><rect x="9" y="20" width="12" height="8" fill="#ef4444"/><rect x="13" y="22" width="4" height="2" fill="#3b82f6"/>
             </svg>
-            <h1><span class="bracket">&lt;&nbsp;</span><span class="title-dagobert">Dagobert</span>&nbsp;<span class="title-version">v1.7</span><span class="bracket">&nbsp;/&gt;</span></h1>
+            <h1><span class="bracket">&lt;&nbsp;</span><span class="title-dagobert">Dagobert</span>&nbsp;<span class="title-version">v1.8</span><span class="bracket">&nbsp;/&gt;</span></h1>
         </div>
+        <button id="theme-btn" class="refresh-btn" onclick="toggleTheme()" title="Theme wechseln">
+            <svg id="theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        </button>
         <button id="refresh-btn" class="refresh-btn" onclick="handleRefresh()">
             <svg viewBox="0 0 24 24"><path d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C14.8273 3 17.3387 4.3033 19 6.31579M19 6.31579V2M19 6.31579H14.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
@@ -208,6 +236,7 @@
 
     <section id="page-div-entwicklung">
         <div id="avg-income-card"></div>
+        <div id="rolling-avg-card"></div>
         <div id="heatmap-card"></div>
         <div id="linechart-card"></div>
         <div class="analyse-card">
@@ -222,7 +251,7 @@
     </section>
 
     <footer id="animated-footer">MADE WITH ❤️ BY CM</footer>
-    <div class="footer-version">v1.7 &middot; 20.04.2026</div>
+    <div class="footer-version">v1.8 &middot; 21.04.2026</div>
 </div>
 
 <script>
@@ -408,6 +437,91 @@
         if (ind && btn) { ind.style.width = btn.offsetWidth + 'px'; ind.style.left = btn.offsetLeft + 'px'; }
     }
 
+    var rollingPoints = [], rollingChartParams = {};
+
+    function handleRollClick(e) {
+        var pts = rollingPoints, p = rollingChartParams;
+        if (!pts || pts.length < 2) return;
+        var svg = e.currentTarget.ownerSVGElement;
+        var svgPt = svg.createSVGPoint();
+        svgPt.x = e.clientX; svgPt.y = e.clientY;
+        var localPt = svgPt.matrixTransform(e.currentTarget.getScreenCTM().inverse());
+        var idx = Math.round((localPt.x - p.pl) / p.cW * (pts.length - 1));
+        idx = Math.max(0, Math.min(pts.length - 1, idx));
+        var cx = p.pl + (idx / (pts.length - 1)) * p.cW;
+        var cy = p.pt + (1 - pts[idx].val / p.niceMax) * p.cH;
+        var dot = document.getElementById('roll-dot');
+        dot.setAttribute('cx', cx.toFixed(1));
+        dot.setAttribute('cy', cy.toFixed(1));
+        dot.setAttribute('r', '4');
+        dot.setAttribute('opacity', '1');
+        var tipTxt = document.getElementById('roll-tip-txt');
+        var label = mNames[pts[idx].month - 1] + ' ' + pts[idx].year + ': ' + fC(pts[idx].val);
+        var anchor = cx > p.W - 100 ? 'end' : (cx < p.pl + 60 ? 'start' : 'middle');
+        tipTxt.setAttribute('x', cx.toFixed(1));
+        tipTxt.setAttribute('y', (cy - 10).toFixed(1));
+        tipTxt.setAttribute('text-anchor', anchor);
+        tipTxt.textContent = label;
+        tipTxt.setAttribute('opacity', '1');
+    }
+
+    function renderRollingAvgChart() {
+        var el = document.getElementById('rolling-avg-card');
+        if (!el || !devData || devData.length < 2) return;
+        var monthlyFlat = [];
+        devData.filter(function(r) { return r[0] && !isNaN(parseInt(r[0].trim())); })
+               .sort(function(a,b) { return parseInt(a[0]) - parseInt(b[0]); })
+               .forEach(function(row) {
+                   var y = parseInt(row[0].trim());
+                   for (var mo = 1; mo <= 12; mo++) monthlyFlat.push({year:y, month:mo, val:parseMenge(row[mo])});
+               });
+        var now = new Date();
+        var cm = now.getMonth(), cy = now.getFullYear();
+        if (cm === 0) { cm = 12; cy--; }
+        var lastFullIdx = monthlyFlat.findIndex(function(e) { return e.year === cy && e.month === cm; });
+        if (lastFullIdx < 11) return;
+        rollingPoints = [];
+        for (var i = 11; i <= lastFullIdx; i++) {
+            var s = 0;
+            for (var j = i-11; j <= i; j++) s += monthlyFlat[j].val;
+            rollingPoints.push({val: s/12, year: monthlyFlat[i].year, month: monthlyFlat[i].month});
+        }
+        if (rollingPoints.length === 0) return;
+        var W = 380, H = 160, pl = 48, pr = 8, pt = 14, pb = 28;
+        var cW = W-pl-pr, cH = H-pt-pb;
+        var maxVal = Math.max.apply(null, rollingPoints.map(function(p) { return p.val; }));
+        var magnitude = Math.pow(10, Math.floor(Math.log10(maxVal/4)));
+        var niceStep = Math.ceil((maxVal/4) / magnitude) * magnitude;
+        var niceMax = niceStep * 4;
+        rollingChartParams = {pl:pl, pr:pr, pt:pt, cW:cW, cH:cH, W:W, H:H, niceMax:niceMax};
+        function xPos(i) { return pl + (i / (rollingPoints.length-1)) * cW; }
+        function yPos(v) { return pt + (1 - v/niceMax) * cH; }
+        var numFmt = new Intl.NumberFormat('de-DE', {minimumFractionDigits:0, maximumFractionDigits:0});
+        var grid = '';
+        for (var s = 0; s <= 4; s++) {
+            var gv = niceStep * s, gy = yPos(gv);
+            grid += '<line x1="'+pl+'" y1="'+gy+'" x2="'+(W-pr)+'" y2="'+gy+'" stroke="#262626" stroke-width="1" stroke-dasharray="4,3"/>';
+            grid += '<text x="'+(pl-6)+'" y="'+(gy+4)+'" text-anchor="end" font-size="9" fill="#94a3b8" font-family="Outfit,sans-serif">'+numFmt.format(gv)+'</text>';
+        }
+        var first = rollingPoints[0], last = rollingPoints[rollingPoints.length-1];
+        var xLabels = '<text x="'+xPos(0).toFixed(1)+'" y="'+(H-6)+'" text-anchor="start" font-size="8" fill="#94a3b8" font-family="Outfit,sans-serif">'+mNames[first.month-1]+' '+String(first.year).slice(2)+'</text>';
+        xLabels += '<text x="'+xPos(rollingPoints.length-1).toFixed(1)+'" y="'+(H-6)+'" text-anchor="end" font-size="8" fill="#94a3b8" font-family="Outfit,sans-serif">'+mNames[last.month-1]+' '+String(last.year).slice(2)+'</text>';
+        var pathD = rollingPoints.map(function(p,i) { return (i===0?'M':'L')+xPos(i).toFixed(1)+','+yPos(p.val).toFixed(1); }).join(' ');
+        var areaD = pathD+' L'+xPos(rollingPoints.length-1).toFixed(1)+','+(pt+cH)+' L'+pl+','+(pt+cH)+' Z';
+        el.innerHTML = '<div class="analyse-card">'
+            +'<div class="analyse-title">Rollierendes \u00d8-Monatseinkommen<br>(12 Monate)</div>'
+            +'<svg viewBox="0 0 '+W+' '+(H+20)+'" style="width:100%;display:block;">'
+            +'<defs><linearGradient id="rollGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#10b981" stop-opacity="0.25"/><stop offset="100%" stop-color="#10b981" stop-opacity="0.02"/></linearGradient></defs>'
+            +'<g transform="translate(0,20)">'+grid+xLabels
+            +'<path d="'+areaD+'" fill="url(#rollGrad)"/>'
+            +'<path d="'+pathD+'" fill="none" stroke="#10b981" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/>'
+            +'<line x1="'+pl+'" y1="'+pt+'" x2="'+pl+'" y2="'+(pt+cH)+'" stroke="#262626" stroke-width="1"/>'
+            +'<circle id="roll-dot" r="0" fill="#10b981" opacity="0"/>'
+            +'<text id="roll-tip-txt" font-size="10" fill="#94a3b8" font-family="Outfit,sans-serif" font-weight="600" opacity="0"></text>'
+            +'<rect x="'+pl+'" y="'+pt+'" width="'+cW+'" height="'+cH+'" fill="transparent" style="cursor:crosshair;" onclick="handleRollClick(event)"/>'
+            +'</g></svg></div>';
+    }
+
     function renderHeatmap() {
         var el = document.getElementById('heatmap-card');
         if (!el || !devData || devData.length < 2) return;
@@ -423,15 +537,25 @@
             }
         });
         var numFmt = new Intl.NumberFormat('de-DE', {minimumFractionDigits:0, maximumFractionDigits:0});
+        var isLight = document.getElementById('app-body').classList.contains('light');
         function cellColor(val) {
-            if (!val || maxVal === 0) return 'background:#1a1a1a;color:#444;';
+            if (!val || maxVal === 0) return isLight ? 'background:#f1f5f9;color:#cbd5e1;' : 'background:#1a1a1a;color:#444;';
             var t = val / maxVal;
-            if (t < 0.1)  return 'background:hsl(220,60%,15%);color:#4a6fa5;';
-            if (t < 0.25) return 'background:hsl(210,60%,22%);color:#7aafd4;';
-            if (t < 0.45) return 'background:hsl(170,55%,22%);color:#6ecfb8;';
-            if (t < 0.65) return 'background:hsl(142,60%,25%);color:#6ee7a0;';
-            if (t < 0.80) return 'background:hsl(130,65%,30%);color:#86efac;';
-            return 'background:hsl(120,70%,35%);color:#052e16;';
+            if (isLight) {
+                if (t < 0.1)  return 'background:#dbeafe;color:#93c5fd;';
+                if (t < 0.25) return 'background:#bfdbfe;color:#3b82f6;';
+                if (t < 0.45) return 'background:#a7f3d0;color:#059669;';
+                if (t < 0.65) return 'background:#6ee7b7;color:#065f46;';
+                if (t < 0.80) return 'background:#34d399;color:#064e3b;';
+                return 'background:#10b981;color:#ffffff;';
+            } else {
+                if (t < 0.1)  return 'background:hsl(220,60%,15%);color:#7aa3d4;';
+                if (t < 0.25) return 'background:hsl(210,60%,22%);color:#93c5e8;';
+                if (t < 0.45) return 'background:hsl(170,55%,22%);color:#86dfd0;';
+                if (t < 0.65) return 'background:hsl(142,60%,25%);color:#86efac;';
+                if (t < 0.80) return 'background:hsl(130,65%,30%);color:#bbf7d0;';
+                return 'background:hsl(120,70%,35%);color:#f0fdf4;';
+            }
         }
         var html = '<div class="analyse-card"><div class="analyse-title">Dividenden-Heatmap</div>'
             + '<div style="overflow-x:auto;-webkit-overflow-scrolling:touch;">'
@@ -455,31 +579,36 @@
         if (!el || !devData || devData.length < 2) return;
         var lineYears  = ['2023','2024','2025','2026'];
         var lineColors = {'2023':'#ec4899','2024':'#3b82f6','2025':'#8b5cf6','2026':'#10b981'};
-        var W = 340, H = 180, pl = 44, pr = 10, pt = 14, pb = 28;
+        var W = 380, H = 180, pl = 48, pr = 8, pt = 14, pb = 28;
         var cW = W - pl - pr, cH = H - pt - pb;
         var data = {}, maxVal = 1;
         lineYears.forEach(function(y) {
             var row = devData.find(function(r) { return r[0] && r[0].trim() === y; });
             data[y] = [];
+            var cum = 0;
             for (var mo = 1; mo <= 12; mo++) {
-                var v = row ? parseMenge(row[mo]) : 0;
-                data[y].push(v);
-                if (v > maxVal) maxVal = v;
+                cum += row ? parseMenge(row[mo]) : 0;
+                data[y].push(cum);
+                if (cum > maxVal) maxVal = cum;
             }
         });
         function xPos(i) { return pl + (i / 11) * cW; }
-        function yPos(v) { return pt + (1 - v / maxVal) * cH; }
+        var rawStep = maxVal / 4;
+        var magnitude = Math.pow(10, Math.floor(Math.log10(rawStep)));
+        var niceStep = Math.ceil(rawStep / magnitude) * magnitude;
+        var niceMax = niceStep * 4;
+        function yPos(v) { return pt + (1 - v / niceMax) * cH; }
         var numFmt = new Intl.NumberFormat('de-DE', {minimumFractionDigits:0, maximumFractionDigits:0});
         var grid = '';
         for (var s = 0; s <= 4; s++) {
-            var gv = (maxVal / 4) * s;
+            var gv = niceStep * s;
             var gy = yPos(gv);
-            grid += '<line x1="' + pl + '" y1="' + gy + '" x2="' + (W - pr) + '" y2="' + gy + '" stroke="#262626" stroke-width="1"/>';
-            grid += '<text x="' + (pl - 4) + '" y="' + (gy + 4) + '" text-anchor="end" font-size="8" fill="#64748b">' + numFmt.format(Math.round(gv)) + '</text>';
+            grid += '<line x1="' + pl + '" y1="' + gy + '" x2="' + (W - pr) + '" y2="' + gy + '" stroke="#262626" stroke-width="1" stroke-dasharray="4,3"/>';
+            grid += '<text x="' + (pl - 6) + '" y="' + (gy + 4) + '" text-anchor="end" font-size="9" fill="#94a3b8" font-family="Outfit,sans-serif">' + numFmt.format(gv) + '</text>';
         }
         var xLabels = '';
         mNames.forEach(function(mn, i) {
-            xLabels += '<text x="' + xPos(i).toFixed(1) + '" y="' + (H - 6) + '" text-anchor="middle" font-size="8" fill="#64748b">' + mn + '</text>';
+            xLabels += '<text x="' + xPos(i).toFixed(1) + '" y="' + (H - 6) + '" text-anchor="middle" font-size="9" fill="#94a3b8" font-family="Outfit,sans-serif">' + mn + '</text>';
         });
         var lines = '';
         lineYears.forEach(function(y) {
@@ -487,12 +616,9 @@
             var col = lineColors[y];
             var pathD = pts.map(function(v, i) { return (i === 0 ? 'M' : 'L') + xPos(i).toFixed(1) + ',' + yPos(v).toFixed(1); }).join(' ');
             lines += '<path d="' + pathD + '" fill="none" stroke="' + col + '" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round" opacity="0.9"/>';
-            pts.forEach(function(v, i) {
-                if (v > 0) lines += '<circle cx="' + xPos(i).toFixed(1) + '" cy="' + yPos(v).toFixed(1) + '" r="2.5" fill="' + col + '"><title>' + y + ' ' + mNames[i] + ': ' + fC(v) + '</title></circle>';
-            });
         });
         var legendItems = lineYears.map(function(y, i) {
-            return '<g transform="translate(' + (i * 72) + ',0)"><rect x="0" y="0" width="10" height="10" rx="2" fill="' + lineColors[y] + '"/><text x="14" y="9" font-size="9" fill="#94a3b8" font-weight="600">' + y + '</text></g>';
+            return '<g transform="translate(' + (i * 80) + ',0)"><rect x="0" y="0" width="10" height="10" rx="2" fill="' + lineColors[y] + '"/><text x="14" y="9" font-size="10" fill="#94a3b8" font-weight="600" font-family="Outfit,sans-serif">' + y + '</text></g>';
         }).join('');
         el.innerHTML = '<div class="analyse-card">'
             + '<div class="analyse-title">Dividendenentwicklung im Jahresvergleich</div>'
@@ -674,7 +800,10 @@
                         + '<div style="width:34px;font-size:11px;font-weight:600;color:var(--text-dim);text-align:right;flex-shrink:0;">' + y + '</div>'
                         + '<div style="flex:1;background:rgba(255,255,255,0.05);border-radius:4px;height:10px;overflow:hidden;">'
                         + '<div style="width:' + pct + '%;background:' + col + ';height:100%;border-radius:4px;transition:width 0.8s cubic-bezier(0.4,0,0.2,1);"></div></div>'
-                        + '<div style="text-align:right;flex-shrink:0;"><span style="font-size:12px;font-weight:700;color:' + (val>0?col:'var(--text-dim)') + ';">' + (val>0?fC(val):'–') + '</span>' + yoyHtml + '</div>'
+                        + '<div style="width:90px;text-align:right;flex-shrink:0;">'
+                        + '<div style="font-size:12px;font-weight:700;color:var(--text-dim);">' + (val>0?fC(val):'–') + '</div>'
+                        + (yoyHtml ? '<div style="font-size:10px;font-weight:600;color:' + (((val-(yearTotals[String(parseInt(y)-1)]||0))/(yearTotals[String(parseInt(y)-1)]||1))>=0?'var(--positive)':'var(--negative)') + ';">' + (((val-(yearTotals[String(parseInt(y)-1)]||0))/(yearTotals[String(parseInt(y)-1)]||1))>=0?'+':'') + (((val-(yearTotals[String(parseInt(y)-1)]||0))/(yearTotals[String(parseInt(y)-1)]||1))*100).toFixed(1) + '%</div>' : '')
+                        + '</div>'
                         + '</div>';
                 }).join('') + '</div>';
             updateContainer.style.display = 'none';
@@ -730,6 +859,7 @@
                 + '<div style="font-size:11px;color:var(--text-dim);margin-top:2px;opacity:0.7;">' + bestPeriod + '</div>'
                 + '</div></div>';
 
+            renderRollingAvgChart();
             renderHeatmap();
             renderLineChart();
             renderDevChart();
@@ -797,7 +927,24 @@
         return rows;
     }
 
+    function toggleTheme() {
+        var body = document.getElementById('app-body');
+        var isLight = body.classList.toggle('light');
+        localStorage.setItem('dagobert-theme', isLight ? 'light' : 'dark');
+        var icon = document.getElementById('theme-icon');
+        if (isLight) {
+            icon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+        } else {
+            icon.innerHTML = '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
+        }
+    }
+
     setupFooterAnimation();
+    // Theme aus localStorage wiederherstellen
+    if (localStorage.getItem('dagobert-theme') === 'light') {
+        document.getElementById('app-body').classList.add('light');
+        document.getElementById('theme-icon').innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+    }
     handleRefresh();
 </script>
 </body>
