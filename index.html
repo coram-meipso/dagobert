@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dagobert v1.11</title>
+    <title>Dagobert v1.12</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3QgeD0iMTAiIHk9IjIiIHdpZHRoPSIxMCIgaGVpZ2h0PSI4IiBmaWxsPSIjMWUxZTFlIi8+PHJlY3QgeD0iMTAiIHk9IjciIHdpZHRoPSIxMCIgaGVpZ2h0PSIxIiBmaWxsPSIjZWY0NDQ0Ii8+PHJlY3QgeD0iOSIgeT0iMTAiIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMCIgZmlsbD0iI0ZGRkZGRiIvPjxyZWN0IHg9IjEyIiB5PSIxNCIgd2lkdGg9IjIiIGhlaWdodD0iMiIgZmlsbD0iIzAwMDAwMCIvPjxyZWN0IHg9IjE3IiB5PSIxNCIgd2lkdGg9IjIiIGhlaWdodD0iMiIgZmlsbD0iIzAwMDAwMCIvPjxyZWN0IHg9IjgiIHk9IjE3IiB3aWR0aD0iMTQiIGhlaWdodD0iMyIgZmlsbD0iI2ZiYmYyNCIvPjxnIGlkPSJtb25leS1oYW5kIj48cmVjdCB4PSIyMiIgeT0iOCIgd2lkdGg9IjYiIGhlaWdodD0iOCIgZmlsbD0iIzEwYjk4MSIvPjxyZWN0IHg9IjIxIiB5PSIxMyIgd2lkdGg9IjMiIGhlaWdodD0iNCIgZmlsbD0iI0ZGRkZGRiIvPjwvZz48cmVjdCB4PSI5IiB5PSIyMCIgd2lkdGg9IjEyIiBoZWlnaHQ9IjgiIGZpbGw9IiNlZjQ0NDQiLz48cmVjdCB4PSIxMyIgeT0iMjIiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiIGZpbGw9IiMzYjgyZjYiLz48L3N2Zz4=">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
@@ -21,17 +21,18 @@
         .menu-item{position:relative;padding:14px 16px;border-radius:10px;cursor:pointer;font-weight:600;color:var(--text-dim);transition:color 0.2s ease;display:flex;align-items:center;gap:12px;z-index:2;background:transparent;border:none;width:100%;font-family:inherit;font-size:15px;}
         .menu-item.active{color:var(--text-main);}
         .app-shell{padding:20px 16px;max-width:500px;margin:0 auto;}
-        header{display:grid;grid-template-columns:44px 1fr 44px 44px;align-items:center;margin-bottom:24px;gap:8px;}
+        header{display:grid;grid-template-columns:44px 1fr 44px 44px;align-items:center;margin-bottom:24px;gap:8px;overflow:visible;}
         .nav-trigger{background:none;border:none;color:var(--text-main);cursor:pointer;padding:0;display:flex;align-items:center;}
-        .title-area{display:flex;align-items:center;justify-content:center;gap:10px;}
-        .logo-svg{width:38px;height:38px;image-rendering:pixelated;}
+        .title-area{display:flex;align-items:center;justify-content:center;}
+        .logo-svg{width:32px;height:32px;image-rendering:pixelated;margin:0 1px;}
         #money-hand{transform-origin:22px 17px;animation:money-wave 2.5s ease-in-out infinite;}
         @keyframes money-wave{0%,100%{transform:rotate(0deg)}25%{transform:rotate(-8deg)}75%{transform:rotate(8deg)}}
-        h1{margin:0;font-size:1.6rem;font-weight:400;font-family:'VT323',monospace;display:flex;align-items:center;}
-        h1 .title-dagobert{color:var(--negative);}h1 .title-version{color:var(--logo-yellow);}
-        h1 .bracket{color:var(--text-dim);font-weight:400;opacity:0.6;}
-        h1::after{content:'_';animation:blink 1s step-end infinite;color:var(--positive);margin-left:2px;}
-        @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+        h1{margin:0;font-size:1.9rem;font-weight:900;font-family:'Outfit',sans-serif;letter-spacing:2px;display:flex;align-items:flex-end;text-transform:uppercase;line-height:1;overflow:visible;}
+        h1 .dag-word{color:var(--text-main);}
+        h1 .title-version{font-size:0.6rem;font-weight:600;color:var(--logo-yellow);align-self:flex-start;margin-top:0;margin-left:2px;letter-spacing:0.5px;}
+        h1::after{content:none;}
+        body.light h1 .dag-word{color:#1e293b;}
+        body.blue h1 .dag-word{color:#e2eaf6;}
         .refresh-btn{background:rgba(255,255,255,0.05);backdrop-filter:blur(10px);color:var(--text-main);border:1px solid var(--border-color);width:44px;height:44px;border-radius:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.3s ease;}
         .refresh-btn:active{transform:scale(0.92);}
         .refresh-btn svg{width:20px;height:20px;stroke:currentColor;stroke-width:2;fill:none;}
@@ -145,14 +146,21 @@
 
 <div class="app-shell">
     <header>
-        <button class="nav-trigger" onclick="toggleMenu()">
+        <button class="nav-trigger" onclick="toggleMenu()" style="position:relative;">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+            <span id="header-dot" style="position:absolute;top:50%;right:0px;transform:translateY(-50%);width:8px;height:8px;border-radius:50%;display:none;"></span>
         </button>
         <div class="title-area">
-            <svg class="logo-svg" viewBox="0 0 32 32">
-                <rect x="10" y="2" width="10" height="8" fill="#1e1e1e"/><rect x="10" y="7" width="10" height="1" fill="#ef4444"/><rect x="9" y="10" width="12" height="10" fill="#FFFFFF"/><rect x="12" y="14" width="2" height="2" fill="#000000"/><rect x="17" y="14" width="2" height="2" fill="#000000"/><rect x="8" y="17" width="14" height="3" fill="#fbbf24"/><g id="money-hand"><rect x="22" y="8" width="6" height="8" fill="#10b981"/><rect x="21" y="13" width="3" height="4" fill="#FFFFFF"/></g><rect x="9" y="20" width="12" height="8" fill="#ef4444"/><rect x="13" y="22" width="4" height="2" fill="#3b82f6"/>
-            </svg>
-            <h1><span class="bracket">&lt;&nbsp;</span><span class="title-dagobert">Dagobert</span>&nbsp;<span class="title-version">v1.11</span><span class="bracket">&nbsp;/&gt;</span></h1>
+            <h1>
+                <span class="dag-word">DAG</span><span style="position:relative;display:inline-block;">
+                    <span class="dag-word" style="visibility:hidden;">O</span>
+                    <span class="dag-word" style="position:absolute;top:0;left:0;clip-path:inset(0 0 52% 0);z-index:1;">O</span>
+                    <svg style="position:absolute;bottom:-6px;left:50%;transform:translateX(-50%);width:26px;height:48px;image-rendering:pixelated;z-index:2;" viewBox="0 0 32 32">
+                        <rect x="10" y="2" width="10" height="8" fill="#1e1e1e"/><rect x="10" y="7" width="10" height="1" fill="#ef4444"/><rect x="9" y="10" width="12" height="10" fill="#FFFFFF"/><rect x="12" y="14" width="2" height="2" fill="#000000"/><rect x="17" y="14" width="2" height="2" fill="#000000"/><rect x="8" y="17" width="14" height="3" fill="#fbbf24"/><g id="money-hand"><rect x="22" y="8" width="6" height="8" fill="#10b981"/><rect x="21" y="13" width="3" height="4" fill="#FFFFFF"/></g><rect x="9" y="20" width="12" height="8" fill="#ef4444"/><rect x="13" y="22" width="4" height="2" fill="#3b82f6"/>
+                    </svg>
+                    <span class="dag-word" style="position:absolute;top:0;left:0;clip-path:inset(48% 0 0 0);z-index:3;">O</span>
+                </span><span class="dag-word">BERT</span><span class="title-version">v1.12</span>
+            </h1>
         </div>
         <button id="theme-btn" class="refresh-btn" onclick="toggleTheme()">
             <svg id="theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
@@ -229,6 +237,7 @@
 
     <section id="page-div-entwicklung">
         <div id="ttm-card"></div>
+        <div id="rolling-yield-card"></div>
         <div id="avg-income-card"></div>
         <div id="rolling-avg-card"></div>
         <div id="heatmap-card"></div>
@@ -245,7 +254,7 @@
     </section>
 
     <footer id="animated-footer">MADE WITH ❤️ BY CM</footer>
-    <div class="footer-version">v1.11 &middot; 25.04.2026</div>
+    <div class="footer-version">v1.12 &middot; 26.04.2026</div>
     <div style="text-align:center;padding-bottom:40px;">
         <button id="desktop-btn" onclick="toggleDesktop()" style="background:none;border:1px solid var(--border-color);color:var(--text-dim);font-family:inherit;font-size:10px;padding:4px 12px;border-radius:8px;cursor:pointer;opacity:0.4;letter-spacing:0.5px;">🖥 Desktop-Ansicht</button>
     </div>
@@ -266,7 +275,9 @@ var allData = [], devData = [], histData = [];
 var currentFilter = 'alle', currentSort = 'name', sortAsc = true;
 var lastFetchTime = null, totalDividendsSold = 0;
 var rollingPoints = [], rollingChartParams = {};
-
+var yieldPoints = [], yieldChartParams = {};
+var depotChartPoints = [], depotChartParams = {};
+var lineChartData = {}, lineChartParams = {};
 var pixelHeartSvg = '<span class="pixel-heart"><svg viewBox="0 0 12 12"><rect x="2" y="1" width="3" height="1"/><rect x="7" y="1" width="3" height="1"/><rect x="1" y="2" width="5" height="1"/><rect x="6" y="2" width="5" height="1"/><rect x="0" y="3" width="12" height="1"/><rect x="0" y="4" width="12" height="1"/><rect x="0" y="5" width="12" height="1"/><rect x="1" y="6" width="10" height="1"/><rect x="2" y="7" width="8" height="1"/><rect x="3" y="8" width="6" height="1"/><rect x="4" y="9" width="4" height="1"/><rect x="5" y="10" width="2" height="1"/></svg></span>';
 
 function setupFooterAnimation() {
@@ -400,7 +411,10 @@ async function loadData() {
 function checkDataFreshness() {
     if(!lastFetchTime)return;
     var d=(new Date()-lastFetchTime)/60000;
-    document.getElementById('status-dot').className=d>=5?'pulse-dot stale':'pulse-dot';
+    var cls=d>=5?'pulse-dot stale':'pulse-dot';
+    document.getElementById('status-dot').className=cls;
+    var hd=document.getElementById('header-dot');
+    if(hd&&hd.style.display!=='none'){hd.className=cls;}
 }
 setInterval(checkDataFreshness,30000);
 
@@ -418,14 +432,85 @@ function moveIndicator(btn) {
     var ind=document.getElementById('nav-indicator');if(ind&&btn){ind.style.width=btn.offsetWidth+'px';ind.style.left=btn.offsetLeft+'px';}
 }
 
-function handleRollClick(e) {
+function handleYieldMove(e) {
+    var pts=yieldPoints,p=yieldChartParams;if(!pts||pts.length<2)return;
+    var svg=e.currentTarget.ownerSVGElement,svgPt=svg.createSVGPoint();svgPt.x=e.clientX;svgPt.y=e.clientY;
+    var lp=svgPt.matrixTransform(e.currentTarget.getScreenCTM().inverse());
+    var idx=Math.max(0,Math.min(pts.length-1,Math.round((lp.x-p.pl)/p.cW*(pts.length-1))));
+    var cx=p.pl+(idx/(pts.length-1))*p.cW,cy=p.pt+(1-pts[idx].val/p.niceMax)*p.cH;
+    var anch=cx>(p.pl+p.cW-70)?'end':(cx<p.pl+70?'start':'middle');
+    var nf=new Intl.NumberFormat('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2});
+    var vl=document.getElementById('yield-vline');if(vl){vl.setAttribute('x1',cx.toFixed(1));vl.setAttribute('x2',cx.toFixed(1));vl.setAttribute('y1',p.pt);vl.setAttribute('y2',p.pt+p.cH);vl.setAttribute('opacity','0.4');}
+    var dot=document.getElementById('yield-dot');dot.setAttribute('cx',cx.toFixed(1));dot.setAttribute('cy',cy.toFixed(1));dot.setAttribute('r','3.5');dot.setAttribute('opacity','1');
+    var tl=document.getElementById('yield-tip-label');if(tl){tl.setAttribute('x',cx.toFixed(1));tl.setAttribute('text-anchor',anch);tl.setAttribute('opacity','1');tl.textContent=mNames[pts[idx].month-1]+' '+pts[idx].year;}
+    var tv=document.getElementById('yield-tip-txt');tv.setAttribute('x',cx.toFixed(1));tv.setAttribute('text-anchor',anch);tv.setAttribute('opacity','1');tv.textContent=nf.format(pts[idx].val)+'%';
+}
+function handleYieldLeave(){['yield-vline','yield-dot','yield-tip-label','yield-tip-txt'].forEach(function(id){var el=document.getElementById(id);if(el)el.setAttribute('opacity','0');});}
+
+function handleRollMove(e) {
     var pts=rollingPoints,p=rollingChartParams;if(!pts||pts.length<2)return;
     var svg=e.currentTarget.ownerSVGElement,svgPt=svg.createSVGPoint();svgPt.x=e.clientX;svgPt.y=e.clientY;
     var lp=svgPt.matrixTransform(e.currentTarget.getScreenCTM().inverse());
     var idx=Math.max(0,Math.min(pts.length-1,Math.round((lp.x-p.pl)/p.cW*(pts.length-1))));
     var cx=p.pl+(idx/(pts.length-1))*p.cW,cy=p.pt+(1-pts[idx].val/p.niceMax)*p.cH;
-    var dot=document.getElementById('roll-dot');dot.setAttribute('cx',cx.toFixed(1));dot.setAttribute('cy',cy.toFixed(1));dot.setAttribute('r','4');dot.setAttribute('opacity','1');
-    var tip=document.getElementById('roll-tip-txt');tip.setAttribute('x',cx.toFixed(1));tip.setAttribute('y',(cy-10).toFixed(1));tip.setAttribute('text-anchor',cx>p.W-100?'end':(cx<p.pl+60?'start':'middle'));tip.textContent=mNames[pts[idx].month-1]+' '+pts[idx].year+': '+fC(pts[idx].val);tip.setAttribute('opacity','1');
+    var anch=cx>p.W-100?'end':(cx<p.pl+70?'start':'middle');
+    var vl=document.getElementById('roll-vline');if(vl){vl.setAttribute('x1',cx.toFixed(1));vl.setAttribute('x2',cx.toFixed(1));vl.setAttribute('y1',p.pt);vl.setAttribute('y2',p.pt+p.cH);vl.setAttribute('opacity','0.4');}
+    var dot=document.getElementById('roll-dot');dot.setAttribute('cx',cx.toFixed(1));dot.setAttribute('cy',cy.toFixed(1));dot.setAttribute('r','3.5');dot.setAttribute('opacity','1');
+    var tl=document.getElementById('roll-tip-label');if(tl){tl.setAttribute('x',cx.toFixed(1));tl.setAttribute('text-anchor',anch);tl.setAttribute('opacity','1');tl.textContent=mNames[pts[idx].month-1]+' '+pts[idx].year;}
+    var tv=document.getElementById('roll-tip-txt');tv.setAttribute('x',cx.toFixed(1));tv.setAttribute('text-anchor',anch);tv.setAttribute('opacity','1');tv.textContent=fC(pts[idx].val);
+}
+function handleRollLeave(){['roll-vline','roll-dot','roll-tip-label','roll-tip-txt'].forEach(function(id){var el=document.getElementById(id);if(el)el.setAttribute('opacity','0');});}
+
+function handleLineMove(e) {
+    var d=lineChartData,p=lineChartParams;if(!p.cW)return;
+    var svg=e.currentTarget.ownerSVGElement,svgPt=svg.createSVGPoint();svgPt.x=e.clientX;svgPt.y=e.clientY;
+    var lp=svgPt.matrixTransform(e.currentTarget.getScreenCTM().inverse());
+    var idx=Math.max(0,Math.min(11,Math.round((lp.x-p.pl)/p.cW*11)));
+    var cx=p.pl+(idx/11)*p.cW;
+    var anch=cx>p.pl+p.cW-90?'end':(cx<p.pl+90?'start':'middle');
+    var nf=new Intl.NumberFormat('de-DE',{minimumFractionDigits:0,maximumFractionDigits:0});
+    var vl=document.getElementById('line-vline');if(vl){vl.setAttribute('x1',cx.toFixed(1));vl.setAttribute('x2',cx.toFixed(1));vl.setAttribute('y1',p.pt);vl.setAttribute('y2',p.pt+p.cH);vl.setAttribute('opacity','0.4');}
+    var tl=document.getElementById('line-tip-label');if(tl){tl.setAttribute('x',cx.toFixed(1));tl.setAttribute('text-anchor',anch);tl.setAttribute('opacity','1');tl.textContent=mNames[idx];}
+    ['2023','2024','2025','2026'].forEach(function(y){
+        var dot=document.getElementById('line-dot-'+y),tip=document.getElementById('line-tip-'+y);
+        if(!d[y])return;
+        var v=d[y][idx],cy2=p.pt+(1-v/p.niceMax)*p.cH;
+        if(dot){dot.setAttribute('cx',cx.toFixed(1));dot.setAttribute('cy',cy2.toFixed(1));dot.setAttribute('r','3.5');dot.setAttribute('opacity','1');}
+        if(tip){tip.setAttribute('x',cx.toFixed(1));tip.setAttribute('text-anchor',anch);tip.setAttribute('opacity','1');tip.textContent=y+': '+nf.format(v)+' €';}
+    });
+}
+function handleLineLeave(){['line-vline','line-tip-label','line-dot-2023','line-dot-2024','line-dot-2025','line-dot-2026','line-tip-2023','line-tip-2024','line-tip-2025','line-tip-2026'].forEach(function(id){var el=document.getElementById(id);if(el)el.setAttribute('opacity','0');});}
+
+function handleDepotMove(e) {
+    var pts=depotChartPoints,p=depotChartParams;if(!pts||pts.length<2)return;
+    var svg=e.currentTarget.ownerSVGElement,svgPt=svg.createSVGPoint();svgPt.x=e.clientX;svgPt.y=e.clientY;
+    var lp=svgPt.matrixTransform(e.currentTarget.getScreenCTM().inverse());
+    var idx=Math.max(0,Math.min(pts.length-1,Math.round((lp.x-p.pl)/p.cW*(pts.length-1))));
+    var cx=p.pl+(idx/(pts.length-1))*p.cW;
+    var cyDep=p.pt+(1-pts[idx].dep/p.niceMax)*p.cH;
+    var cyEin=p.pt+(1-pts[idx].ein/p.niceMax)*p.cH;
+    var nf=new Intl.NumberFormat('de-DE',{minimumFractionDigits:0,maximumFractionDigits:0});
+    var vl=document.getElementById('depot-vline');
+    vl.setAttribute('x1',cx.toFixed(1));vl.setAttribute('x2',cx.toFixed(1));
+    vl.setAttribute('y1',p.pt);vl.setAttribute('y2',p.pt+p.cH);vl.setAttribute('opacity','0.4');
+    var dd=document.getElementById('depot-dot-dep');
+    dd.setAttribute('cx',cx.toFixed(1));dd.setAttribute('cy',cyDep.toFixed(1));dd.setAttribute('r','3.5');dd.setAttribute('opacity','1');
+    var de=document.getElementById('depot-dot-ein');
+    de.setAttribute('cx',cx.toFixed(1));de.setAttribute('cy',cyEin.toFixed(1));de.setAttribute('r','3.5');de.setAttribute('opacity','1');
+    var anch=cx>p.pl+p.cW-90?'end':(cx<p.pl+90?'start':'middle');
+    var xStr=cx.toFixed(1);
+    var tl=document.getElementById('depot-tip-label');
+    tl.setAttribute('x',xStr);tl.setAttribute('text-anchor',anch);tl.setAttribute('opacity','1');
+    tl.textContent=pts[idx].label;
+    var te=document.getElementById('depot-tip-ein');
+    te.setAttribute('x',xStr);te.setAttribute('text-anchor',anch);te.setAttribute('opacity','1');
+    te.textContent='Einstand: '+nf.format(pts[idx].ein)+' €';
+    var td=document.getElementById('depot-tip-dep');
+    td.setAttribute('x',xStr);td.setAttribute('text-anchor',anch);td.setAttribute('opacity','1');
+    td.textContent='Depot: '+nf.format(pts[idx].dep)+' €';
+}
+function handleDepotLeave() {
+    ['depot-vline','depot-dot-dep','depot-dot-ein','depot-tip-label','depot-tip-ein','depot-tip-dep'].forEach(function(id){var el=document.getElementById(id);if(el)el.setAttribute('opacity','0');});
 }
 
 function buildMonthlyFlat() {
@@ -436,6 +521,36 @@ function buildMonthlyFlat() {
 
 function getLastFullMonth() {
     var now=new Date(),cm=now.getMonth(),cy=now.getFullYear();if(cm===0){cm=12;cy--;}return{cm:cm,cy:cy};
+}
+
+function buildCombinedDonut(outerSegs, tW) {
+    var aktieV=0,etfV=0;
+    allData.forEach(function(item){if(item.kategorie.toLowerCase().indexOf('etf')>-1)etfV+=item.kurswert;else aktieV+=item.kurswert;});
+    var total=aktieV+etfV;
+    // Inner ring radii
+    var hcx=100,hcy=110,iro=56,iri=34;
+    var hX=function(r,deg){return(hcx+r*Math.cos(deg*Math.PI/180)).toFixed(2);};
+    var hY=function(r,deg){return(hcy+r*Math.sin(deg*Math.PI/180)).toFixed(2);};
+    var outerBg='M '+hX(88,180)+' '+hY(88,180)+' A 88 88 0 0 1 '+hX(88,360)+' '+hY(88,360)+' L '+hX(62,360)+' '+hY(62,360)+' A 62 62 0 0 0 '+hX(62,180)+' '+hY(62,180)+' Z';
+    var innerBg='M '+hX(iro,180)+' '+hY(iro,180)+' A '+iro+' '+iro+' 0 0 1 '+hX(iro,360)+' '+hY(iro,360)+' L '+hX(iri,360)+' '+hY(iri,360)+' A '+iri+' '+iri+' 0 0 0 '+hX(iri,180)+' '+hY(iri,180)+' Z';
+    var innerSegs='',gap=0.8;
+    if(total>0){
+        [[aktieV,'#3b82f6'],[etfV,'#f97316']].forEach(function(s,i){
+            var start=i===0?180+gap/2:180+(aktieV/total*180)+gap/2;
+            var end=i===0?180+(aktieV/total*180)-gap/2:360-gap/2;
+            var sw=end-start;if(sw<=0)return;
+            var lg=sw>180?1:0;
+            innerSegs+='<path d="M '+hX(iro,start)+' '+hY(iro,start)+' A '+iro+' '+iro+' 0 '+lg+' 1 '+hX(iro,end)+' '+hY(iro,end)+' L '+hX(iri,end)+' '+hY(iri,end)+' A '+iri+' '+iri+' 0 '+lg+' 0 '+hX(iri,start)+' '+hY(iri,start)+' Z" fill="'+s[1]+'"/>';
+        });
+    }
+    var pA=total?(aktieV/total*100).toFixed(0):'–',pE=total?(etfV/total*100).toFixed(0):'–';
+    return '<svg viewBox="0 0 200 110" style="width:100%;max-width:300px;display:block;margin:0 auto;">'
+        +'<path d="'+outerBg+'" fill="#1a1a1a"/>'
+        +'<path d="'+innerBg+'" fill="#1a1a1a"/>'
+        +outerSegs
+        +innerSegs
+        +'<text x="100" y="105" text-anchor="middle" font-size="9" fill="#94a3b8" font-family="Outfit,sans-serif" font-weight="600">'+pA+'% / '+pE+'%</text>'
+        +'</svg>';
 }
 
 function buildDepotChart(slot) {
@@ -459,23 +574,39 @@ function buildDepotChart(slot) {
     var xLabels='<text x="'+xP(0).toFixed(1)+'" y="'+(H-6)+'" text-anchor="start" font-size="8" fill="#94a3b8" font-family="Outfit,sans-serif">'+firstYearStr+'</text>';
     var seenYears={};seenYears[firstYearStr]=true;
     var lastYearStr=points[points.length-1].label.match(/\d{4}/)?points[points.length-1].label.match(/\d{4}/)[0]:'';
-    seenYears[lastYearStr]=true;
     points.forEach(function(p,i){
         if(i===0||i===points.length-1)return;
         var m=p.label.match(/\d{4}/);if(!m)return;var yr=m[0];
         if(!seenYears[yr]){
             seenYears[yr]=true;var x=xP(i);
-            if(x>xP(points.length-1)-40||x<xP(0)+20)return;
+            if(yr!=='2026'&&(x>xP(points.length-1)-40||x<xP(0)+20))return;
             xLabels+='<line x1="'+x.toFixed(1)+'" y1="'+pt+'" x2="'+x.toFixed(1)+'" y2="'+(pt+cH)+'" stroke="#262626" stroke-width="1" stroke-dasharray="2,4"/>';
             xLabels+='<text x="'+x.toFixed(1)+'" y="'+(H-6)+'" text-anchor="middle" font-size="8" fill="#94a3b8" font-family="Outfit,sans-serif">'+yr+'</text>';
         }
     });
+    // Always show 2026 start if it exists and wasn't shown as first point
+    if(firstYearStr!=='2026'){
+        for(var k=1;k<points.length;k++){
+            var lm=points[k].label.match(/\d{4}/);
+            if(lm&&lm[0]==='2026'){
+                var x26=xP(k);
+                if(!seenYears['2026']){
+                    xLabels+='<line x1="'+x26.toFixed(1)+'" y1="'+pt+'" x2="'+x26.toFixed(1)+'" y2="'+(pt+cH)+'" stroke="#262626" stroke-width="1" stroke-dasharray="2,4"/>';
+                    xLabels+='<text x="'+x26.toFixed(1)+'" y="'+(H-6)+'" text-anchor="middle" font-size="8" fill="#94a3b8" font-family="Outfit,sans-serif">2026</text>';
+                }
+                break;
+            }
+        }
+    }
     var gradStops='';
     points.forEach(function(p,i){var ratio=p.ein>0?(p.dep-p.ein)/p.ein:0,t=Math.max(0,Math.min(1,ratio*4)),hue=Math.round(t*120),color='hsl('+hue+',60%,'+(35+Math.round(t*10))+'%)';gradStops+='<stop offset="'+(i/(points.length-1)*100).toFixed(1)+'%" stop-color="'+color+'"/>';});
     var depPath=points.map(function(p,i){return(i===0?'M':'L')+xP(i).toFixed(1)+','+yP(p.dep).toFixed(1);}).join(' ');
     var einPath=points.map(function(p,i){return(i===0?'M':'L')+xP(i).toFixed(1)+','+yP(p.ein).toFixed(1);}).join(' ');
     var depArea=depPath+' L'+xP(points.length-1).toFixed(1)+','+(pt+cH)+' L'+pl+','+(pt+cH)+' Z';
-    slot.innerHTML='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;display:block;">'
+    depotChartPoints=points;
+    depotChartParams={pl:pl,pr:pr,pt:pt,cW:cW,cH:cH,W:W,H:H,niceMax:niceMax};
+    slot.innerHTML='<div style="font-size:var(--base-font-size);font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;text-align:center;margin-bottom:16px;">Depotentwicklung</div>'
+        +'<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;display:block;">'
         +'<defs><linearGradient id="depLineGrad" x1="0" y1="0" x2="1" y2="0">'+gradStops+'</linearGradient>'
         +'<linearGradient id="depAreaGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#10b981" stop-opacity="0.18"/><stop offset="100%" stop-color="#10b981" stop-opacity="0.01"/></linearGradient></defs>'
         +'<g transform="translate(0,0)">'+grid+xLabels
@@ -483,65 +614,172 @@ function buildDepotChart(slot) {
         +'<path d="'+depPath+'" fill="none" stroke="url(#depLineGrad)" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>'
         +'<path d="'+einPath+'" fill="none" stroke="#60a5fa" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/>'
         +'<line x1="'+pl+'" y1="'+pt+'" x2="'+pl+'" y2="'+(pt+cH)+'" stroke="#262626" stroke-width="1"/>'
+        +'<line id="depot-vline" x1="0" y1="0" x2="0" y2="0" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,3" opacity="0"/>'
+        +'<circle id="depot-dot-dep" r="0" fill="#10b981" stroke="#050505" stroke-width="1.5" opacity="0"/>'
+        +'<circle id="depot-dot-ein" r="0" fill="#60a5fa" stroke="#050505" stroke-width="1.5" opacity="0"/>'
+        +'<text id="depot-tip-label" font-size="9" fill="#94a3b8" font-family="Outfit,sans-serif" font-weight="600" opacity="0" y="'+(pt+12)+'"></text>'
+        +'<text id="depot-tip-ein" font-size="9" fill="#60a5fa" font-family="Outfit,sans-serif" font-weight="600" opacity="0" y="'+(pt+22)+'"></text>'
+        +'<text id="depot-tip-dep" font-size="9" fill="#10b981" font-family="Outfit,sans-serif" font-weight="600" opacity="0" y="'+(pt+32)+'"></text>'
+        +'<rect x="'+pl+'" y="'+pt+'" width="'+cW+'" height="'+cH+'" fill="transparent" style="cursor:crosshair;" onmousemove="handleDepotMove(event)" onclick="handleDepotMove(event)" onmouseleave="handleDepotLeave()"/>'
         +'</g></svg>'
         +'<div style="display:flex;justify-content:center;gap:20px;margin-top:10px;font-size:11px;font-weight:600;color:var(--text-dim);">'
-        +'<div style="display:flex;align-items:center;gap:6px;"><div style="width:10px;height:10px;border-radius:2px;background:#10b981;"></div>Depotwert</div>'
         +'<div style="display:flex;align-items:center;gap:6px;"><div style="width:10px;height:10px;border-radius:2px;background:#60a5fa;"></div>Einstandswert</div>'
+        +'<div style="display:flex;align-items:center;gap:6px;"><div style="width:10px;height:10px;border-radius:2px;background:#10b981;"></div>Depotwert</div>'
         +'</div>';
 }
 
-function renderTTMCard() {
+function renderTTMCard(ttmYield) {
     var el=document.getElementById('ttm-card');if(!el)return;
+    var hasVal=typeof ttmYield==='number'&&ttmYield>0;
+    var valColor=hasVal?'hsl('+Math.min(120,ttmYield*12)+',70%,45%)':'var(--positive)';
+    var valStr=hasVal?ttmYield.toFixed(2)+'\u00a0%':'\u2013\u00a0%';
+    var rangeHtml='';
+    if(hasVal&&yieldPoints&&yieldPoints.length>1){
+        var minV=Math.min.apply(null,yieldPoints.map(function(p){return p.val;}));
+        var maxV=Math.max.apply(null,yieldPoints.map(function(p){return p.val;}));
+        var nf=new Intl.NumberFormat('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2});
+        var pos=maxV>minV?Math.max(0,Math.min(100,(ttmYield-minV)/(maxV-minV)*100)):50;
+        rangeHtml='<div style="display:flex;align-items:center;justify-content:center;gap:4px;margin-top:14px;">'
+            +'<span style="font-size:10px;color:var(--text-dim);font-weight:600;white-space:nowrap;">'+nf.format(minV)+'%</span>'
+            +'<div style="width:180px;position:relative;height:10px;background:rgba(255,255,255,0.05);border:1px solid var(--border-color);border-radius:8px;overflow:visible;">'
+            +'<div style="position:absolute;top:50%;left:'+pos.toFixed(1)+'%;transform:translate(-50%,-50%);width:12px;height:12px;border-radius:50%;background:'+valColor+';box-shadow:0 0 6px '+valColor+';z-index:1;"></div>'
+            +'</div>'
+            +'<span style="font-size:10px;color:var(--text-dim);font-weight:600;white-space:nowrap;">'+nf.format(maxV)+'%</span>'
+            +'</div>';
+    }
+    var chartHtml=buildRollingYieldHTML();
+    var divider=chartHtml?'<div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border-color);">'+chartHtml+'</div>':'';
     el.innerHTML='<div class="analyse-card" style="text-align:center;">'
         +'<div style="display:flex;align-items:center;justify-content:center;gap:5px;margin-bottom:16px;">'
         +'<span style="font-size:var(--base-font-size);font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;">Netto-Dividendenrendite (TTM)</span>'
         +'<span onclick="document.getElementById(\'ttm-modal\').classList.add(\'active\')" style="width:14px;height:14px;border-radius:50%;border:1px solid var(--text-dim);color:var(--text-dim);font-size:9px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;">?</span>'
-        +'</div><div style="font-size:2.2rem;font-weight:700;color:var(--positive);">\u2013&nbsp;%</div></div>';
+        +'</div>'
+        +'<div style="font-size:2.2rem;font-weight:700;color:'+valColor+';">'+valStr+'</div>'
+        +rangeHtml
+        +divider
+        +'</div>';
 }
 
-function renderAvgIncomeCard(avgMonthly,avgProzent,avgColor,bestAvg,bestPeriod) {
+function renderAvgIncomeCard(avgMonthly,avgProzent,avgColor,bestAvg,bestPeriod,minAvg) {
     var el=document.getElementById('avg-income-card');if(!el)return;
+    var nfR=new Intl.NumberFormat('de-DE',{minimumFractionDigits:0,maximumFractionDigits:0});
+    var pos=bestAvg>minAvg?Math.max(0,Math.min(100,(avgMonthly-minAvg)/(bestAvg-minAvg)*100)):50;
+    var dotColor='hsl('+Math.round(pos*1.2)+',80%,45%)';
+    var rangeHtml='<div style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:14px;">'
+        +'<span style="font-size:10px;color:var(--text-dim);font-weight:600;white-space:nowrap;">'+nfR.format(minAvg)+' €</span>'
+        +'<div style="width:160px;position:relative;height:10px;background:rgba(255,255,255,0.05);border:1px solid var(--border-color);border-radius:8px;overflow:visible;">'
+        +'<div style="position:absolute;top:50%;left:'+pos.toFixed(1)+'%;transform:translate(-50%,-50%);width:12px;height:12px;border-radius:50%;background:'+dotColor+';box-shadow:0 0 6px '+dotColor+';z-index:1;"></div>'
+        +'</div>'
+        +'<span style="font-size:10px;color:var(--text-dim);font-weight:600;white-space:nowrap;">'+nfR.format(bestAvg)+' €</span>'
+        +'</div>'
+        +'<div style="font-size:10px;color:var(--text-dim);margin-top:6px;opacity:0.7;">'+bestPeriod+'</div>';
+    var rollDiv='';
+    if(devData&&devData.length>1){
+        var flatR=buildMonthlyFlat(),lfR=getLastFullMonth(),cmR=lfR.cm,cyR=lfR.cy;
+        var lastIdxR=flatR.findIndex(function(e){return e.year===cyR&&e.month===cmR;});
+        if(lastIdxR>=11){
+            rollingPoints=[];
+            for(var ri=11;ri<=lastIdxR;ri++){var rs=0;for(var rj=ri-11;rj<=ri;rj++)rs+=flatR[rj].val;rollingPoints.push({val:rs/12,year:flatR[ri].year,month:flatR[ri].month});}
+            if(rollingPoints.length>0){
+                var RW=380,RH=160,Rpl=48,Rpr=8,Rpt=14,RcW=RW-Rpl-Rpr,RcH=RH-Rpt-28;
+                var RmaxV=Math.max.apply(null,rollingPoints.map(function(p){return p.val;}));
+                var Rmag=Math.pow(10,Math.floor(Math.log10(RmaxV/4))),RnStep=Math.ceil((RmaxV/4)/Rmag)*Rmag,RnMax=RnStep*4;
+                rollingChartParams={pl:Rpl,pr:Rpr,pt:Rpt,cW:RcW,cH:RcH,W:RW,H:RH,niceMax:RnMax};
+                var RxP=function(i){return Rpl+(i/(rollingPoints.length-1))*RcW;};
+                var RyP=function(v){return Rpt+(1-v/RnMax)*RcH;};
+                var Rgrid='';
+                for(var Rsi=0;Rsi<=4;Rsi++){var Rgv=RnStep*Rsi,Rgy=RyP(Rgv);Rgrid+='<line x1="'+Rpl+'" y1="'+Rgy+'" x2="'+(RW-Rpr)+'" y2="'+Rgy+'" stroke="#262626" stroke-width="1" stroke-dasharray="4,3"/>';Rgrid+='<text x="'+(Rpl-6)+'" y="'+(Rgy+4)+'" text-anchor="end" font-size="9" fill="#94a3b8" font-family="Outfit,sans-serif">'+nfR.format(Rgv)+'</text>';}
+                var RseenYr={},RxL='',RlastX=-999;
+                rollingPoints.forEach(function(p,i){var yr=String(p.year);if(!RseenYr[yr]){var x=RxP(i);if(i>0&&x-RlastX<28)return;RseenYr[yr]=true;RlastX=x;if(i>0)RxL+='<line x1="'+x.toFixed(1)+'" y1="'+Rpt+'" x2="'+x.toFixed(1)+'" y2="'+(Rpt+RcH)+'" stroke="#262626" stroke-width="1" stroke-dasharray="2,4"/>';RxL+='<text x="'+x.toFixed(1)+'" y="'+(RH-6)+'" text-anchor="'+(i===0?'start':(x>RxP(rollingPoints.length-1)-30?'end':'middle'))+'" font-size="8" fill="#94a3b8" font-family="Outfit,sans-serif">'+yr+'</text>';}});
+                var RpathD=rollingPoints.map(function(p,i){return(i===0?'M':'L')+RxP(i).toFixed(1)+','+RyP(p.val).toFixed(1);}).join(' ');
+                var RareaD=RpathD+' L'+RxP(rollingPoints.length-1).toFixed(1)+','+(Rpt+RcH)+' L'+Rpl+','+(Rpt+RcH)+' Z';
+                rollDiv='<div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border-color);"><svg viewBox="0 0 '+RW+' '+(RH+20)+'" style="width:100%;display:block;">'
+                    +'<defs><linearGradient id="rollGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#10b981" stop-opacity="0.25"/><stop offset="100%" stop-color="#10b981" stop-opacity="0.02"/></linearGradient>'
+                    +'<linearGradient id="rollLineGrad" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#3b82f6"/><stop offset="40%" stop-color="#8b5cf6"/><stop offset="100%" stop-color="#10b981"/></linearGradient></defs>'
+                    +'<g transform="translate(0,20)">'+Rgrid+RxL
+                    +'<path d="'+RareaD+'" fill="url(#rollGrad)"/>'
+                    +'<path d="'+RpathD+'" fill="none" stroke="url(#rollLineGrad)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>'
+                    +'<line x1="'+Rpl+'" y1="'+Rpt+'" x2="'+Rpl+'" y2="'+(Rpt+RcH)+'" stroke="#262626" stroke-width="1"/>'
+                    +'<line id="roll-vline" x1="0" y1="0" x2="0" y2="0" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,3" opacity="0"/>'
+                    +'<circle id="roll-dot" r="0" fill="#10b981" stroke="#050505" stroke-width="1.5" opacity="0"/>'
+                    +'<text id="roll-tip-label" font-size="9" fill="#94a3b8" font-family="Outfit,sans-serif" font-weight="600" opacity="0" y="'+(Rpt+12)+'"></text>'
+                    +'<text id="roll-tip-txt" font-size="9" fill="#10b981" font-family="Outfit,sans-serif" font-weight="600" opacity="0" y="'+(Rpt+22)+'"></text>'
+                    +'<rect x="'+Rpl+'" y="'+Rpt+'" width="'+RcW+'" height="'+RcH+'" fill="transparent" style="cursor:crosshair;" onmousemove="handleRollMove(event)" onmouseleave="handleRollLeave()"/>'
+                    +'</g></svg></div>';
+            }
+        }
+    }
     el.innerHTML='<div class="analyse-card" style="text-align:center;">'
         +'<div style="font-size:var(--base-font-size);font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">\u2300 passives monatliches Nettoeinkommen</div>'
         +'<div style="font-size:2rem;font-weight:700;color:'+avgColor+';">'+fC(avgMonthly)+'</div>'
         +'<div style="font-size:11px;color:var(--text-dim);margin-top:6px;opacity:0.7;">auf Basis der letzten 12 Monate</div>'
         +'<div style="display:flex;align-items:center;justify-content:center;margin-top:14px;"><div style="flex:1;max-width:250px;background:rgba(255,255,255,0.05);border:1px solid var(--border-color);border-radius:8px;height:10px;overflow:hidden;"><div style="width:'+Math.min(100,avgProzent)+'%;background-color:'+avgColor+';background-image:linear-gradient(90deg,transparent 0%,rgba(255,255,255,0.4) 50%,transparent 100%);background-size:200% 100%;height:100%;border-radius:8px;animation:glow-sheen 2s linear infinite;"></div></div></div>'
         +'<div style="font-size:11px;color:var(--text-dim);margin-top:10px;font-weight:600;letter-spacing:0.5px;display:flex;align-items:center;justify-content:center;gap:6px;"><span>MONATSZIEL: 2.000 \u20ac</span><span style="font-size:14px;">&middot;</span><span style="color:'+avgColor+';">'+avgProzent.toFixed(1)+'%</span></div>'
-        +'<div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border-color);text-align:center;"><div style="font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.5px;font-weight:600;">\uD83C\uDFC6 12-Monats-Rekord</div><div style="font-size:1.3rem;font-weight:700;color:var(--logo-yellow);margin-top:2px;">'+fC(bestAvg)+'</div><div style="font-size:11px;color:var(--text-dim);margin-top:2px;opacity:0.7;">'+bestPeriod+'</div></div></div>';
+        +'<div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border-color);">'
+        +'<div style="font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.5px;font-weight:600;margin-bottom:4px;">🏆 12-Monats-Rekord</div>'
+        +rangeHtml
+        +'</div>'
+        +rollDiv
+        +'</div>';
 }
 
 function renderRollingAvgChart() {
-    var el=document.getElementById('rolling-avg-card');if(!el||!devData||devData.length<2)return;
-    var flat=buildMonthlyFlat(),lf=getLastFullMonth(),cm=lf.cm,cy=lf.cy;
-    var lastFullIdx=flat.findIndex(function(e){return e.year===cy&&e.month===cm;});if(lastFullIdx<11)return;
-    rollingPoints=[];
-    for(var i=11;i<=lastFullIdx;i++){var s=0;for(var j=i-11;j<=i;j++)s+=flat[j].val;rollingPoints.push({val:s/12,year:flat[i].year,month:flat[i].month});}
-    if(rollingPoints.length===0)return;
-    var W=380,H=160,pl=48,pr=8,pt=14,pb=28,cW=W-pl-pr,cH=H-pt-pb;
-    var maxVal=Math.max.apply(null,rollingPoints.map(function(p){return p.val;}));
-    var mag=Math.pow(10,Math.floor(Math.log10(maxVal/4))),niceStep=Math.ceil((maxVal/4)/mag)*mag,niceMax=niceStep*4;
-    rollingChartParams={pl:pl,pr:pr,pt:pt,cW:cW,cH:cH,W:W,H:H,niceMax:niceMax};
-    function xP(i){return pl+(i/(rollingPoints.length-1))*cW;}
+    var el=document.getElementById('rolling-avg-card');if(el)el.innerHTML='';
+}
+function buildRollingYieldHTML() {
+    var el=document.getElementById('rolling-yield-card');
+    if(el) el.innerHTML='';
+    if (!devData||devData.length<2||!histData||histData.length<2) return '';
+    var divFlat=buildMonthlyFlat();
+    if(divFlat.length<12) return '';
+    var lf2=getLastFullMonth(),cm2=lf2.cm,cy2=lf2.cy;
+    var lastFullIdx2=divFlat.findIndex(function(e){return e.year===cy2&&e.month===cm2;});
+    if(lastFullIdx2>=0) divFlat=divFlat.slice(0,lastFullIdx2+1);
+    if(divFlat.length<12) return '';
+    var hHead=histData[0].map(function(h){return h.toLowerCase().trim();}),hEin=-1;
+    for(var hc=0;hc<hHead.length;hc++){if(hHead[hc].indexOf('einstand')>-1)hEin=hc;}
+    if(hEin<0)hEin=1;
+    var einArr=[];
+    for(var hi=1;hi<histData.length;hi++){var hr=histData[hi];if(!hr[0])continue;var v=parseMenge(hr[hEin]);if(v>0)einArr.push(v);}
+    if(einArr.length<12) return '';
+    var len=Math.min(divFlat.length,einArr.length);
+    var divSub=divFlat.slice(divFlat.length-len),einSub=einArr.slice(einArr.length-len);
+    yieldPoints=[];
+    for(var i=11;i<len;i++){
+        var sumDiv=0,sumEin=0;
+        for(var j=i-11;j<=i;j++){sumDiv+=divSub[j].val;sumEin+=einSub[j];}
+        var avgEin=sumEin/12;
+        if(avgEin>0) yieldPoints.push({val:(sumDiv/avgEin)*100,year:divSub[i].year,month:divSub[i].month});
+    }
+    if(yieldPoints.length<2) return '';
+    var W=380,H=160,pl=52,pr=8,pt=14,pb=28,cW=W-pl-pr,cH=H-pt-pb;
+    var maxVal=Math.max.apply(null,yieldPoints.map(function(p){return p.val;}));
+    var mag=Math.pow(10,Math.floor(Math.log10(maxVal/4)));
+    var niceStep=Math.ceil((maxVal/4)/mag)*mag,niceMax=niceStep*4;
+    yieldChartParams={pl:pl,cW:cW,pt:pt,cH:cH,niceMax:niceMax,W:W};
+    function xP(i){return pl+(i/(yieldPoints.length-1))*cW;}
     function yP(v){return pt+(1-v/niceMax)*cH;}
-    var nf=new Intl.NumberFormat('de-DE',{minimumFractionDigits:0,maximumFractionDigits:0}),grid='';
-    for(var s=0;s<=4;s++){var gv=niceStep*s,gy=yP(gv);grid+='<line x1="'+pl+'" y1="'+gy+'" x2="'+(W-pr)+'" y2="'+gy+'" stroke="#262626" stroke-width="1" stroke-dasharray="4,3"/>';grid+='<text x="'+(pl-6)+'" y="'+(gy+4)+'" text-anchor="end" font-size="9" fill="#94a3b8" font-family="Outfit,sans-serif">'+nf.format(gv)+'</text>';}
-    var first=rollingPoints[0],last=rollingPoints[rollingPoints.length-1];
-    var xL='<text x="'+xP(0).toFixed(1)+'" y="'+(H-6)+'" text-anchor="start" font-size="8" fill="#94a3b8" font-family="Outfit,sans-serif">'+mNames[first.month-1]+' '+String(first.year).slice(2)+'</text>'
-          +'<text x="'+xP(rollingPoints.length-1).toFixed(1)+'" y="'+(H-6)+'" text-anchor="end" font-size="8" fill="#94a3b8" font-family="Outfit,sans-serif">'+mNames[last.month-1]+' '+String(last.year).slice(2)+'</text>';
-    var pathD=rollingPoints.map(function(p,i){return(i===0?'M':'L')+xP(i).toFixed(1)+','+yP(p.val).toFixed(1);}).join(' ');
-    var areaD=pathD+' L'+xP(rollingPoints.length-1).toFixed(1)+','+(pt+cH)+' L'+pl+','+(pt+cH)+' Z';
-    el.innerHTML='<div class="analyse-card"><div class="analyse-title">Rollierendes \u00d8-Monatseinkommen<br>(12 Monate)</div>'
-        +'<svg viewBox="0 0 '+W+' '+(H+20)+'" style="width:100%;display:block;">'
-        +'<defs><linearGradient id="rollGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#10b981" stop-opacity="0.25"/><stop offset="100%" stop-color="#10b981" stop-opacity="0.02"/></linearGradient>'
-        +'<linearGradient id="rollLineGrad" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#3b82f6"/><stop offset="40%" stop-color="#8b5cf6"/><stop offset="100%" stop-color="#10b981"/></linearGradient></defs>'
+    var nf2=new Intl.NumberFormat('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2}),grid='';
+    for(var s=0;s<=4;s++){var gv=niceStep*s,gy=yP(gv);grid+='<line x1="'+pl+'" y1="'+gy+'" x2="'+(W-pr)+'" y2="'+gy+'" stroke="#262626" stroke-width="1" stroke-dasharray="4,3"/>';grid+='<text x="'+(pl-6)+'" y="'+(gy+4)+'" text-anchor="end" font-size="9" fill="#94a3b8" font-family="Outfit,sans-serif">'+nf2.format(gv)+'%</text>';}
+    var seenYrY={},xL='',lastXY=-999;
+    yieldPoints.forEach(function(p,i){var yr=String(p.year);if(!seenYrY[yr]){var x=xP(i);if(i>0&&x-lastXY<28)return;seenYrY[yr]=true;lastXY=x;if(i>0)xL+='<line x1="'+x.toFixed(1)+'" y1="'+pt+'" x2="'+x.toFixed(1)+'" y2="'+(pt+cH)+'" stroke="#262626" stroke-width="1" stroke-dasharray="2,4"/>';xL+='<text x="'+x.toFixed(1)+'" y="'+(H-6)+'" text-anchor="'+(i===0?'start':(x>xP(yieldPoints.length-1)-30?'end':'middle'))+'" font-size="8" fill="#94a3b8" font-family="Outfit,sans-serif">'+yr+'</text>';}});
+    var pathD=yieldPoints.map(function(p,i){return(i===0?'M':'L')+xP(i).toFixed(1)+','+yP(p.val).toFixed(1);}).join(' ');
+    var areaD=pathD+' L'+xP(yieldPoints.length-1).toFixed(1)+','+(pt+cH)+' L'+pl+','+(pt+cH)+' Z';
+    return '<svg viewBox="0 0 '+W+' '+(H+20)+'" style="width:100%;display:block;">'
+        +'<defs>'
+        +'<linearGradient id="yieldAreaGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#10b981" stop-opacity="0.2"/><stop offset="100%" stop-color="#10b981" stop-opacity="0.01"/></linearGradient>'
+        +'<linearGradient id="yieldLineGrad" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#3b82f6"/><stop offset="50%" stop-color="#8b5cf6"/><stop offset="100%" stop-color="#10b981"/></linearGradient>'
+        +'</defs>'
         +'<g transform="translate(0,20)">'+grid+xL
-        +'<path d="'+areaD+'" fill="url(#rollGrad)"/>'
-        +'<path d="'+pathD+'" fill="none" stroke="url(#rollLineGrad)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>'
+        +'<path d="'+areaD+'" fill="url(#yieldAreaGrad)"/>'
+        +'<path d="'+pathD+'" fill="none" stroke="url(#yieldLineGrad)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>'
         +'<line x1="'+pl+'" y1="'+pt+'" x2="'+pl+'" y2="'+(pt+cH)+'" stroke="#262626" stroke-width="1"/>'
-        +'<circle id="roll-dot" r="0" fill="#10b981" opacity="0"/>'
-        +'<text id="roll-tip-txt" font-size="10" fill="#94a3b8" font-family="Outfit,sans-serif" font-weight="600" opacity="0"></text>'
-        +'<rect x="'+pl+'" y="'+pt+'" width="'+cW+'" height="'+cH+'" fill="transparent" style="cursor:crosshair;" onclick="handleRollClick(event)"/>'
-        +'</g></svg></div>';
+        +'<line id="yield-vline" x1="0" y1="0" x2="0" y2="0" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,3" opacity="0"/>'
+        +'<circle id="yield-dot" r="0" fill="#10b981" stroke="#050505" stroke-width="1.5" opacity="0"/>'
+        +'<text id="yield-tip-label" font-size="9" fill="#94a3b8" font-family="Outfit,sans-serif" font-weight="600" opacity="0" y="'+(pt+12)+'"></text>'
+        +'<text id="yield-tip-txt" font-size="9" fill="#10b981" font-family="Outfit,sans-serif" font-weight="600" opacity="0" y="'+(pt+22)+'"></text>'
+        +'<rect x="'+pl+'" y="'+pt+'" width="'+cW+'" height="'+cH+'" fill="transparent" style="cursor:crosshair;" onmousemove="handleYieldMove(event)" onmouseleave="handleYieldLeave()"/>'
+        +'</g></svg>';
 }
 
 function renderHeatmap() {
@@ -562,16 +800,30 @@ function renderHeatmap() {
 function renderLineChart() {
     var el=document.getElementById('linechart-card');if(!el||!devData||devData.length<2)return;
     var ly=['2023','2024','2025','2026'],lc={'2023':'#ec4899','2024':'#3b82f6','2025':'#8b5cf6','2026':'#10b981'};
-    var W=380,H=180,pl=48,pr=8,pt=14,pb=28,cW=W-pl-pr,cH=H-pt-pb,data={},maxVal=1;
+    var W=380,H=240,pl=48,pr=8,pt=14,pb=28,cW=W-pl-pr,cH=H-pt-pb,data={},maxVal=1;
     ly.forEach(function(y){var row=devData.find(function(r){return r[0]&&r[0].trim()===y;});data[y]=[];var cum=0;for(var mo=1;mo<=12;mo++){cum+=row?parseMenge(row[mo]):0;data[y].push(cum);if(cum>maxVal)maxVal=cum;}});
     var mag=Math.pow(10,Math.floor(Math.log10(maxVal/4))),niceStep=Math.ceil((maxVal/4)/mag)*mag,niceMax=niceStep*4;
+    lineChartData=data;lineChartParams={pl:pl,pr:pr,pt:pt,cW:cW,cH:cH,W:W,H:H,niceMax:niceMax};
     function xP(i){return pl+(i/11)*cW;}function yP(v){return pt+(1-v/niceMax)*cH;}
     var nf=new Intl.NumberFormat('de-DE',{minimumFractionDigits:0,maximumFractionDigits:0}),grid='';
     for(var s=0;s<=4;s++){var gv=niceStep*s,gy=yP(gv);grid+='<line x1="'+pl+'" y1="'+gy+'" x2="'+(W-pr)+'" y2="'+gy+'" stroke="#262626" stroke-width="1" stroke-dasharray="4,3"/>';grid+='<text x="'+(pl-6)+'" y="'+(gy+4)+'" text-anchor="end" font-size="9" fill="#94a3b8" font-family="Outfit,sans-serif">'+nf.format(gv)+'</text>';}
     var xL='';mNames.forEach(function(mn,i){xL+='<text x="'+xP(i).toFixed(1)+'" y="'+(H-6)+'" text-anchor="middle" font-size="9" fill="#94a3b8" font-family="Outfit,sans-serif">'+mn+'</text>';});
     var lines='';ly.forEach(function(y){var pts=data[y],col=lc[y],pd=pts.map(function(v,i){return(i===0?'M':'L')+xP(i).toFixed(1)+','+yP(v).toFixed(1);}).join(' ');lines+='<path d="'+pd+'" fill="none" stroke="'+col+'" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round" opacity="0.9"/>';});
-    var leg=ly.map(function(y,i){return'<g transform="translate('+(i*80)+',0)"><rect x="0" y="0" width="10" height="10" rx="2" fill="'+lc[y]+'"/><text x="14" y="9" font-size="10" fill="#94a3b8" font-weight="600" font-family="Outfit,sans-serif">'+y+'</text></g>';}).join('');
-    el.innerHTML='<div class="analyse-card"><div class="analyse-title">Dividendenentwicklung im Jahresvergleich</div><svg viewBox="0 0 '+W+' '+(H+20)+'" style="width:100%;display:block;"><g transform="translate(0,20)">'+grid+xL+lines+'<line x1="'+pl+'" y1="'+pt+'" x2="'+pl+'" y2="'+(pt+cH)+'" stroke="#262626" stroke-width="1"/></g><g transform="translate('+pl+',6)">'+leg+'</g></svg></div>';
+    var dots=ly.map(function(y){return'<circle id="line-dot-'+y+'" r="0" fill="'+lc[y]+'" stroke="#050505" stroke-width="1.5" opacity="0"/>';}).join('');
+    var tips='<text id="line-tip-label" font-size="9" fill="#94a3b8" font-family="Outfit,sans-serif" font-weight="600" opacity="0" y="'+(pt+12)+'"></text>'
+        +ly.map(function(y,i){return'<text id="line-tip-'+y+'" font-size="9" fill="'+lc[y]+'" font-family="Outfit,sans-serif" font-weight="600" opacity="0" y="'+(pt+22+i*10)+'"></text>';}).join('');
+    var leg=ly.map(function(y,i){return'<g transform="translate('+(i*70)+',0)"><rect x="0" y="0" width="10" height="10" rx="2" fill="'+lc[y]+'"/><text x="14" y="9" font-size="10" fill="#94a3b8" font-weight="600" font-family="Outfit,sans-serif">'+y+'</text></g>';}).join('');
+    el.innerHTML='<div class="analyse-card"><div class="analyse-title">Dividendenentwicklung im Jahresvergleich</div>'
+        +'<svg viewBox="0 0 '+W+' '+(H+20)+'" style="width:100%;display:block;">'
+        +'<g transform="translate(0,20)">'+grid+xL+lines
+        +'<line x1="'+pl+'" y1="'+pt+'" x2="'+pl+'" y2="'+(pt+cH)+'" stroke="#262626" stroke-width="1"/>'
+        +'<line id="line-vline" x1="0" y1="0" x2="0" y2="0" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,3" opacity="0"/>'
+        +dots+tips
+        +'<rect x="'+pl+'" y="'+pt+'" width="'+cW+'" height="'+cH+'" fill="transparent" style="cursor:crosshair;" onmousemove="handleLineMove(event)" onmouseleave="handleLineLeave()"/>'
+        +'</g></svg>'
+        +'<div style="display:flex;justify-content:center;gap:20px;margin-top:8px;">'
+        +ly.map(function(y){return'<div style="display:flex;align-items:center;gap:5px;"><div style="width:10px;height:10px;border-radius:2px;background:'+lc[y]+'"></div><span style="font-size:10px;font-weight:600;color:var(--text-dim);">'+y+'</span></div>';}).join('')
+        +'</div></div>';
 }
 
 function renderDevChart() {
@@ -616,6 +868,7 @@ function render() {
     var uc=document.getElementById('last-update-container'),mc=document.getElementById('main-change'),ei=document.getElementById('total-einstand');
 
     if(isDivPage){
+        var hd=document.getElementById('header-dot');if(hd){hd.style.display='block';hd.className=document.getElementById('status-dot').className;}
         ei.innerText='';
         document.getElementById('total-label').innerText='GESAMTDIVIDENDE';
         document.getElementById('main-value').innerText=fC(sumDivGesamt);
@@ -629,6 +882,7 @@ function render() {
         uc.style.display='none';
 
     } else if(isDevPage){
+        var hd=document.getElementById('header-dot');if(hd){hd.style.display='block';hd.className=document.getElementById('status-dot').className;}
         ei.innerText='';
         var chartYears=['2021','2022','2023','2024','2025','2026'],yc={'2021':'#64748b','2022':'#f59e0b','2023':'#ec4899','2024':'#3b82f6','2025':'#8b5cf6','2026':'#10b981'},yt={},devTotal=0;
         if(devData&&devData.length>0){devData.forEach(function(row){var year=row[0]?row[0].trim():'';if(year&&!isNaN(parseInt(year))){var s=0;for(var i=1;i<=12;i++)s+=parseMenge(row[i]);yt[year]=s;devTotal+=s;}});}
@@ -645,14 +899,35 @@ function render() {
         var lf=getLastFullMonth(),cm=lf.cm,cy=lf.cy,sum12=0,tm=cm,ty=cy;
         for(var i=0;i<12;i++){var dr=devData.find(function(r){return r[0]&&r[0].trim()===String(ty);});if(dr)sum12+=parseMenge(dr[tm]);tm--;if(tm===0){tm=12;ty--;}}
         var avgMonthly=sum12/12;
-        var flat=buildMonthlyFlat(),lastFullIdx=flat.findIndex(function(e){return e.year===cy&&e.month===cm;}),bestSum=0,bestStart=null,bestEnd=null;
-        for(var i=11;i<=lastFullIdx;i++){var s=0;for(var j=i-11;j<=i;j++)s+=flat[j].val;if(s>bestSum){bestSum=s;bestStart=flat[i-11];bestEnd=flat[i];}}
+        var flat=buildMonthlyFlat(),lastFullIdx=flat.findIndex(function(e){return e.year===cy&&e.month===cm;}),bestSum=0,bestStart=null,bestEnd=null,minSum=Infinity,minStart=null,minEnd=null;
+        for(var i=11;i<=lastFullIdx;i++){var s=0;for(var j=i-11;j<=i;j++)s+=flat[j].val;if(s>bestSum){bestSum=s;bestStart=flat[i-11];bestEnd=flat[i];}if(s<minSum){minSum=s;minStart=flat[i-11];minEnd=flat[i];}}
         var bestAvg=bestSum/12,bestPeriod=bestStart?mNames[bestStart.month-1]+' '+bestStart.year+' \u2013 '+mNames[bestEnd.month-1]+' '+bestEnd.year:'\u2013';
+        var minAvg=minSum===Infinity?0:minSum/12;
         var avgZiel=2000,avgProzent=Math.max(0,(avgMonthly/avgZiel)*100),avgColor='hsl('+Math.min(120,avgProzent*1.2)+',80%,45%)';
-        renderTTMCard();renderAvgIncomeCard(avgMonthly,avgProzent,avgColor,bestAvg,bestPeriod);
+        var avgEinstand = tE;
+        if (histData && histData.length > 1) {
+            var hHead = histData[0].map(function(h){return h.toLowerCase().trim();});
+            var hEin = -1;
+            for (var hc = 0; hc < hHead.length; hc++) { if (hHead[hc].indexOf('einstand') > -1) hEin = hc; }
+            if (hEin < 0) hEin = 1;
+            var dataRows = histData.slice(1).filter(function(r){return r[0] && parseMenge(r[hEin]) > 0;});
+            var last12 = dataRows.slice(-12);
+            if (last12.length > 0) {
+                var einSum = 0;
+                last12.forEach(function(r){ einSum += parseMenge(r[hEin]); });
+                avgEinstand = einSum / last12.length;
+            }
+        }
+        var ttmYield = (avgEinstand > 0) ? (sum12 / avgEinstand) * 100 : 0;
+        renderRollingYieldChart();
+        renderTTMCard(ttmYield);renderAvgIncomeCard(avgMonthly,avgProzent,avgColor,bestAvg,bestPeriod,minAvg);
         renderRollingAvgChart();renderHeatmap();renderLineChart();renderDevChart();
 
     } else {
+        var hd=document.getElementById('header-dot');if(hd){
+            if(isAnalysePage){hd.style.display='block';hd.className=document.getElementById('status-dot').className;}
+            else{hd.style.display='none';}
+        }
         document.getElementById('total-label').innerText=currentFilter==='alle'?'Gesamtwert':'Depot '+currentFilter;
         document.getElementById('main-value').innerText=fC(tW);
         ei.innerText='Einstandswert: '+fC(tE);
@@ -661,14 +936,27 @@ function render() {
         mc.innerText=(diff>=0?'+':'')+fC(diff)+' ('+perc.toFixed(2)+'%)';
         uc.style.display='flex';
         if(isAnalysePage&&currentFilter==='alle'){
+            uc.style.display='none';
             var dt={};allData.forEach(function(item){dt[item.depot]=(dt[item.depot]||0)+item.kurswert;});
             var de=Object.entries(dt).sort(function(a,b){return b[1]-a[1];}),dTotal=de.reduce(function(s,e){return s+e[1];},0),off=0;
-            var circles=de.map(function(e,i){var pct=(e[1]/dTotal)*100;var c='<circle r="16" cx="16" cy="16" fill="none" stroke="'+depotColors[i%depotColors.length]+'" stroke-width="10" stroke-dasharray="'+pct.toFixed(2)+' '+(100-pct).toFixed(2)+'" stroke-dashoffset="'+(-off).toFixed(2)+'"/>';off+=pct;return c;}).join('');
-            var legH=de.map(function(e,i){var pct=dTotal?(e[1]/dTotal*100):0;return'<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;"><div style="width:10px;height:10px;border-radius:2px;background:'+depotColors[i%depotColors.length]+';flex-shrink:0;"></div><div style="flex:1;font-size:13px;font-weight:600;color:var(--text-dim);">'+e[0]+'</div><div style="font-size:13px;font-weight:700;color:var(--text-main);">'+fC(e[1])+'</div><div style="font-size:11px;color:var(--text-dim);width:36px;text-align:right;">'+pct.toFixed(1)+'%</div></div>';}).join('');
+            var modernDepotColors=['#818cf8','#2dd4bf','#fb923c','#f472b6','#60a5fa'];
+            var hcx=100,hcy=110,hro=88,hri=62;
+            var hX=function(r,deg){return (hcx+r*Math.cos(deg*Math.PI/180)).toFixed(2);};
+            var hY=function(r,deg){return (hcy+r*Math.sin(deg*Math.PI/180)).toFixed(2);};
+            var bgD='M '+hX(hro,180)+' '+hY(hro,180)+' A '+hro+' '+hro+' 0 0 1 '+hX(hro,360)+' '+hY(hro,360)+' L '+hX(hri,360)+' '+hY(hri,360)+' A '+hri+' '+hri+' 0 0 0 '+hX(hri,180)+' '+hY(hri,180)+' Z';
+            var hAng=180,halfSegs='',gap=0.8;
+            de.forEach(function(e,i){var pct=e[1]/dTotal,sw=pct*180,a1=hAng+gap/2,a2=hAng+sw-gap/2,lg=sw>180?1:0,d='M '+hX(hro,a1)+' '+hY(hro,a1)+' A '+hro+' '+hro+' 0 '+lg+' 1 '+hX(hro,a2)+' '+hY(hro,a2)+' L '+hX(hri,a2)+' '+hY(hri,a2)+' A '+hri+' '+hri+' 0 '+lg+' 0 '+hX(hri,a1)+' '+hY(hri,a1)+' Z';halfSegs+='<path d="'+d+'" fill="'+modernDepotColors[i%modernDepotColors.length]+'"/>';hAng+=sw;});
+            var legH=de.map(function(e,i){var pct=dTotal?(e[1]/dTotal*100):0;return'<div style="display:flex;align-items:center;gap:8px;margin-bottom:3px;width:260px;"><div style="width:8px;height:8px;border-radius:2px;background:'+modernDepotColors[i%modernDepotColors.length]+';flex-shrink:0;"></div><div style="flex:1;font-size:12px;font-weight:600;color:var(--text-dim);">'+e[0]+'</div><div style="font-size:12px;font-weight:700;color:var(--text-main);">'+fC(e[1])+'</div><div style="font-size:11px;color:var(--text-dim);width:34px;text-align:right;">'+pct.toFixed(1)+'%</div></div>';}).join('');
             mc.className='total-change';mc.style.marginTop='16px';
-            mc.innerHTML='<div style="display:flex;align-items:center;gap:24px;margin-top:4px;"><svg viewBox="0 0 32 32" style="width:90px;height:90px;flex-shrink:0;transform:rotate(-90deg);border-radius:50%;">'+circles+'</svg><div style="flex:1;">'+legH+'</div></div>'
+            mc.innerHTML='<div style="margin-top:4px;">'
+                +buildCombinedDonut(halfSegs,tW)
+                +'<div style="margin-top:4px;display:flex;flex-direction:column;align-items:center;">'+legH+'</div>'
+                +'<div style="margin-top:8px;display:flex;justify-content:center;gap:20px;">'
+                +'<div style="display:flex;align-items:center;gap:5px;"><div style="width:8px;height:8px;border-radius:2px;background:#3b82f6;"></div><span style="font-size:11px;font-weight:600;color:var(--text-dim);">Aktien</span></div>'
+                +'<div style="display:flex;align-items:center;gap:5px;"><div style="width:8px;height:8px;border-radius:2px;background:#f97316;"></div><span style="font-size:11px;font-weight:600;color:var(--text-dim);">ETFs</span></div>'
+                +'</div>'
+                +'</div>'
                 +'<div id="total-depot-chart" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border-color);"></div>';
-            // render depot chart into the slot
             setTimeout(function(){buildDepotChart(document.getElementById('total-depot-chart'));},0);
         }
     }
@@ -695,6 +983,72 @@ function parseMenge(t){return parseFloat((t||'').toString().replace(/[€$£\s.]
 function getFlag(isin,kat){return(kat||'').toLowerCase().indexOf('etf')>-1?'🌍':(countryToFlag[(isin||'').substring(0,2).toUpperCase()]||'🌍');}
 function formatStueck(n){return Number.isInteger(n)?n.toString():n.toFixed(2).replace('.',',');}
 function parseCSV(t){var rows=[],cur=[],v='',q=false;for(var i=0,len=t.length;i<len;i++){var c=t[i];if(c==='"')q=!q;else if(c===','&&!q){cur.push(v.trim());v='';}else if((c==='\n'||c==='\r')&&!q){cur.push(v.trim());rows.push(cur);cur=[];v='';if(c==='\r'&&t[i+1]==='\n')i++;}else v+=c;}if(v||cur.length){cur.push(v.trim());rows.push(cur);}return rows;}
+
+function renderRollingYieldChart() {
+    var el = document.getElementById('rolling-yield-card');
+    if (!el) return;
+    if (!devData || devData.length < 2 || !histData || histData.length < 2) { el.innerHTML=''; return; }
+    var divFlat = buildMonthlyFlat();
+    if (divFlat.length < 12) { el.innerHTML=''; return; }
+    var hHead = histData[0].map(function(h){return h.toLowerCase().trim();});
+    var hEin = -1;
+    for (var hc=0;hc<hHead.length;hc++){if(hHead[hc].indexOf('einstand')>-1)hEin=hc;}
+    if (hEin<0) hEin=1;
+    var einArr = [];
+    for (var hi=1;hi<histData.length;hi++){
+        var hr=histData[hi]; if(!hr[0]) continue;
+        var v=parseMenge(hr[hEin]); if(v>0) einArr.push(v);
+    }
+    if (einArr.length < 12) { el.innerHTML=''; return; }
+    var lf2=getLastFullMonth(), cm2=lf2.cm, cy2=lf2.cy;
+    var lastFullIdx2 = divFlat.findIndex(function(e){return e.year===cy2&&e.month===cm2;});
+    if (lastFullIdx2 >= 0) divFlat = divFlat.slice(0, lastFullIdx2+1);
+    if (divFlat.length < 12) { el.innerHTML=''; return; }
+    var len = Math.min(divFlat.length, einArr.length);
+    var divSub  = divFlat.slice(divFlat.length - len);
+    var einSub  = einArr.slice(einArr.length - len);
+    var points = [];
+    for (var i=11; i<len; i++) {
+        var sumDiv=0, sumEin=0;
+        for (var j=i-11; j<=i; j++) { sumDiv+=divSub[j].val; sumEin+=einSub[j]; }
+        var avgEin = sumEin / 12;
+        if (avgEin > 0) points.push({val:(sumDiv/avgEin)*100, year:divSub[i].year, month:divSub[i].month});
+    }
+    if (points.length < 2) { el.innerHTML=''; return; }
+    var W=380,H=160,pl=52,pr=8,pt=14,pb=28,cW=W-pl-pr,cH=H-pt-pb;
+    var maxVal=Math.max.apply(null,points.map(function(p){return p.val;}));
+    var mag=Math.pow(10,Math.floor(Math.log10(maxVal/4)));
+    var niceStep=Math.ceil((maxVal/4)/mag)*mag, niceMax=niceStep*4;
+    function xP(i){return pl+(i/(points.length-1))*cW;}
+    function yP(v){return pt+(1-v/niceMax)*cH;}
+    var nf=new Intl.NumberFormat('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2});
+    var grid='';
+    for(var s=0;s<=4;s++){var gv=niceStep*s,gy=yP(gv);
+        grid+='<line x1="'+pl+'" y1="'+gy+'" x2="'+(W-pr)+'" y2="'+gy+'" stroke="#262626" stroke-width="1" stroke-dasharray="4,3"/>';
+        grid+='<text x="'+(pl-6)+'" y="'+(gy+4)+'" text-anchor="end" font-size="9" fill="#94a3b8" font-family="Outfit,sans-serif">'+nf.format(gv)+'%</text>';
+    }
+    var seenYrRY={},xL='',lastXRY=-999;
+    points.forEach(function(p,i){var yr=String(p.year);if(!seenYrRY[yr]){var x=xP(i);if(i>0&&x-lastXRY<28)return;seenYrRY[yr]=true;lastXRY=x;if(i>0)xL+='<line x1="'+x.toFixed(1)+'" y1="'+pt+'" x2="'+x.toFixed(1)+'" y2="'+(pt+cH)+'" stroke="#262626" stroke-width="1" stroke-dasharray="2,4"/>';xL+='<text x="'+x.toFixed(1)+'" y="'+(H-6)+'" text-anchor="'+(i===0?'start':(x>xP(points.length-1)-30?'end':'middle'))+'" font-size="8" fill="#94a3b8" font-family="Outfit,sans-serif">'+yr+'</text>';}});
+    var pathD=points.map(function(p,i){return(i===0?'M':'L')+xP(i).toFixed(1)+','+yP(p.val).toFixed(1);}).join(' ');
+    var areaD=pathD+' L'+xP(points.length-1).toFixed(1)+','+(pt+cH)+' L'+pl+','+(pt+cH)+' Z';
+    yieldPoints = points;
+    yieldChartParams = {pl:pl,cW:cW,pt:pt,cH:cH,niceMax:niceMax,W:W};
+    el.innerHTML='<div class="analyse-card">'
+        +'<div class="analyse-title">Rollierende \u00d8-Monatsdividendenrendite<br>(12 Monate)</div>'
+        +'<svg viewBox="0 0 '+W+' '+(H+20)+'" style="width:100%;display:block;">'
+        +'<defs>'
+        +'<linearGradient id="yieldAreaGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#10b981" stop-opacity="0.2"/><stop offset="100%" stop-color="#10b981" stop-opacity="0.01"/></linearGradient>'
+        +'<linearGradient id="yieldLineGrad" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#3b82f6"/><stop offset="50%" stop-color="#8b5cf6"/><stop offset="100%" stop-color="#10b981"/></linearGradient>'
+        +'</defs>'
+        +'<g transform="translate(0,20)">'+grid+xL
+        +'<path d="'+areaD+'" fill="url(#yieldAreaGrad)"/>'
+        +'<path d="'+pathD+'" fill="none" stroke="url(#yieldLineGrad)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>'
+        +'<line x1="'+pl+'" y1="'+pt+'" x2="'+pl+'" y2="'+(pt+cH)+'" stroke="#262626" stroke-width="1"/>'
+        +'<circle id="yield-dot" r="0" fill="#10b981" opacity="0"/>'
+        +'<text id="yield-tip-txt" font-size="10" fill="#94a3b8" font-family="Outfit,sans-serif" font-weight="600" opacity="0"></text>'
+        +'<rect x="'+pl+'" y="'+pt+'" width="'+cW+'" height="'+cH+'" fill="transparent" style="cursor:crosshair;" onclick="handleYieldClick(event)"/>'
+        +'</g></svg></div>';
+}
 
 setupFooterAnimation();
 var savedTheme=localStorage.getItem('dagobert-theme');
