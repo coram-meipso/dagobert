@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dagobert v1.17</title>
+    <title>Dagobert v1.16</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3QgeD0iMTAiIHk9IjIiIHdpZHRoPSIxMCIgaGVpZ2h0PSI4IiBmaWxsPSIjMWUxZTFlIi8+PHJlY3QgeD0iMTAiIHk9IjciIHdpZHRoPSIxMCIgaGVpZ2h0PSIxIiBmaWxsPSIjZWY0NDQ0Ii8+PHJlY3QgeD0iOSIgeT0iMTAiIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMCIgZmlsbD0iI0ZGRkZGRiIvPjxyZWN0IHg9IjEyIiB5PSIxNCIgd2lkdGg9IjIiIGhlaWdodD0iMiIgZmlsbD0iIzAwMDAwMCIvPjxyZWN0IHg9IjE3IiB5PSIxNCIgd2lkdGg9IjIiIGhlaWdodD0iMiIgZmlsbD0iIzAwMDAwMCIvPjxyZWN0IHg9IjgiIHk9IjE3IiB3aWR0aD0iMTQiIGhlaWdodD0iMyIgZmlsbD0iI2ZiYmYyNCIvPjxnIGlkPSJtb25leS1oYW5kIj48cmVjdCB4PSIyMiIgeT0iOCIgd2lkdGg9IjYiIGhlaWdodD0iOCIgZmlsbD0iIzEwYjk4MSIvPjxyZWN0IHg9IjIxIiB5PSIxMyIgd2lkdGg9IjMiIGhlaWdodD0iNCIgZmlsbD0iI0ZGRkZGRiIvPjwvZz48cmVjdCB4PSI5IiB5PSIyMCIgd2lkdGg9IjEyIiBoZWlnaHQ9IjgiIGZpbGw9IiNlZjQ0NDQiLz48cmVjdCB4PSIxMyIgeT0iMjIiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiIGZpbGw9IiMzYjgyZjYiLz48L3N2Zz4=">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
@@ -176,7 +176,7 @@
                         <rect x="10" y="2" width="10" height="8" fill="#1e1e1e"/><rect x="10" y="7" width="10" height="1" fill="#ef4444"/><rect x="9" y="10" width="12" height="10" fill="#FFFFFF"/><rect x="12" y="14" width="2" height="2" fill="#000000"/><rect x="17" y="14" width="2" height="2" fill="#000000"/><rect x="8" y="17" width="14" height="3" fill="#fbbf24"/><g id="money-hand"><rect x="22" y="8" width="6" height="8" fill="#10b981"/><rect x="21" y="13" width="3" height="4" fill="#FFFFFF"/></g><rect x="9" y="20" width="12" height="8" fill="#ef4444"/><rect x="13" y="22" width="4" height="2" fill="#3b82f6"/>
                     </svg>
                     <span class="dag-word" style="position:absolute;top:0;left:0;clip-path:inset(48% 0 0 0);z-index:3;">O</span>
-                </span><span class="dag-word">BERT</span><span class="title-version">v1.17</span>
+                </span><span class="dag-word">BERT</span><span class="title-version">v1.16</span>
             </h1>
         </div>
         <button id="theme-btn" class="refresh-btn" onclick="toggleTheme()">
@@ -258,7 +258,7 @@
     </section>
 
     <section id="page-ziele"></section>
-    <div class="footer-version" style="color:#2dd4bf;opacity:0.6;">v1.17 &middot; 03.05.2026</div>
+    <div class="footer-version" style="color:#2dd4bf;opacity:0.6;">v1.16 &middot; 01.05.2026</div>
     <div style="text-align:center;padding-bottom:40px;">
         <button id="desktop-btn" onclick="toggleDesktop()" style="background:none;border:1px solid var(--border-color);color:var(--text-dim);font-family:inherit;font-size:10px;padding:4px 12px;border-radius:8px;cursor:pointer;opacity:0.4;letter-spacing:0.5px;">🖥 Desktop-Ansicht</button>
     </div>
@@ -1475,13 +1475,43 @@ function render() {
             var depRows2=de2.map(function(e,i){return bRow(e[0],e[1],dTotal2,depotColors2[i%depotColors2.length]);}).join('');
             var assetRows2=bRow('Aktien',aktieSum,tW,'var(--color-aktie)')+bRow('ETFs',etfSum,tW,'var(--color-etf)');
             var dbc=document.getElementById('depot-bar-card');
-            if(dbc)dbc.innerHTML='<div class="analyse-card">'
-                +'<div class="analyse-title">Depotverteilung</div>'
-                +depRows2
-                +'<div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border-color);">'
-                +'<div class="analyse-title" style="margin-bottom:10px;">Asset-Klassen</div>'
-                +assetRows2
-                +'</div></div>';
+            if(dbc){
+                var nfB=new Intl.NumberFormat('de-DE',{style:'currency',currency:'EUR',maximumFractionDigits:0});
+
+                // Stacked bar for depot distribution
+                var depSegs=de2.map(function(e,i){
+                    var pct=dTotal2>0?(e[1]/dTotal2*100):0;
+                    return'<div style="width:'+pct.toFixed(2)+'%;height:100%;background:'+depotColors2[i%depotColors2.length]+';transition:width .6s;" title="'+e[0]+': '+nfB.format(e[1])+'"></div>';
+                }).join('');
+                var depLegend=de2.map(function(e,i){
+                    var pct=dTotal2>0?(e[1]/dTotal2*100):0;
+                    return'<div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">'
+                        +'<div style="width:8px;height:8px;border-radius:2px;background:'+depotColors2[i%depotColors2.length]+';flex-shrink:0;"></div>'
+                        +'<span style="font-size:12px;font-weight:600;color:var(--text-main);flex:1;">'+e[0]+'</span>'
+                        +'<span style="font-size:12px;color:var(--text-dim);">'+nfB.format(e[1])+'</span>'
+                        +'<span style="font-size:11px;color:var(--text-dim);width:38px;text-align:right;">'+pct.toFixed(1)+'%</span>'
+                        +'</div>';
+                }).join('');
+
+                // Stacked bar for asset classes
+                var aktPct=tW>0?(aktieSum/tW*100):0, etfPct=tW>0?(etfSum/tW*100):0;
+                var assetSegs=''
+                    +'<div style="width:'+aktPct.toFixed(2)+'%;height:100%;background:var(--color-aktie);transition:width .6s;" title="Aktien: '+nfB.format(aktieSum)+'"></div>'
+                    +'<div style="width:'+etfPct.toFixed(2)+'%;height:100%;background:var(--color-etf);transition:width .6s;" title="ETFs: '+nfB.format(etfSum)+'"></div>';
+                var assetLegend=''
+                    +'<div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;"><div style="width:8px;height:8px;border-radius:2px;background:var(--color-aktie);flex-shrink:0;"></div><span style="font-size:12px;font-weight:600;color:var(--text-main);flex:1;">Aktien</span><span style="font-size:12px;color:var(--text-dim);">'+nfB.format(aktieSum)+'</span><span style="font-size:11px;color:var(--text-dim);width:38px;text-align:right;">'+aktPct.toFixed(1)+'%</span></div>'
+                    +'<div style="display:flex;align-items:center;gap:6px;"><div style="width:8px;height:8px;border-radius:2px;background:var(--color-etf);flex-shrink:0;"></div><span style="font-size:12px;font-weight:600;color:var(--text-main);flex:1;">ETFs</span><span style="font-size:12px;color:var(--text-dim);">'+nfB.format(etfSum)+'</span><span style="font-size:11px;color:var(--text-dim);width:38px;text-align:right;">'+etfPct.toFixed(1)+'%</span></div>';
+
+                dbc.innerHTML='<div class="analyse-card">'
+                    +'<div class="analyse-title">Depotverteilung</div>'
+                    +'<div style="display:flex;height:12px;border-radius:8px;overflow:hidden;margin-bottom:12px;">'+depSegs+'</div>'
+                    +depLegend
+                    +'<div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border-color);">'
+                    +'<div class="analyse-title" style="margin-bottom:10px;">Asset-Klassen</div>'
+                    +'<div style="display:flex;height:12px;border-radius:8px;overflow:hidden;margin-bottom:12px;">'+assetSegs+'</div>'
+                    +assetLegend
+                    +'</div></div>';
+            }
             mc.className='total-change';mc.style.marginTop='16px';
             mc.innerHTML='<div id="total-depot-chart" style="margin-top:4px;padding-top:4px;"></div>'
                 +'<div id="total-depot-milestones" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border-color);"></div>';
@@ -1508,37 +1538,7 @@ function renderAnalyse(aktien,etfs,gesamt,countries) {
     var ac=document.getElementById('allocation-card');
 
     if(currentFilter==='alle'){
-        // Bar chart: depot distribution + asset type
-        var dt={};allData.forEach(function(item){dt[item.depot]=(dt[item.depot]||0)+item.kurswert;});
-        var depotColors=['#818cf8','#2dd4bf','#fb923c','#f472b6','#60a5fa'];
-        var depEntries=Object.entries(dt).sort(function(a,b){return b[1]-a[1];});
-        var depTotal=depEntries.reduce(function(s,e){return s+e[1];},0);
-
-        function barRow(label,val,total,col){
-            var pct=total>0?(val/total*100):0;
-            return '<div style="margin-bottom:12px;">'
-                +'<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px;">'
-                +'<span style="font-size:13px;font-weight:600;color:var(--text-main);">'+label+'</span>'
-                +'<span style="font-size:12px;color:var(--text-dim);">'+nf.format(val)+'<span style="color:var(--text-dim);font-weight:400;margin-left:6px;">'+pct.toFixed(1)+'%</span></span>'
-                +'</div>'
-                +'<div style="background:rgba(255,255,255,0.05);border:1px solid var(--border-color);border-radius:6px;height:10px;overflow:hidden;">'
-                +'<div style="width:'+pct.toFixed(1)+'%;height:100%;background:'+col+';border-radius:6px;"></div>'
-                +'</div>'
-                +'</div>';
-        }
-
-        var depRows=depEntries.map(function(e,i){return barRow(e[0],e[1],depTotal,depotColors[i%depotColors.length]);}).join('');
-        var assetRows=barRow('Aktien',aktien,gesamt,'var(--color-aktie)')
-                     +barRow('ETFs',etfs,gesamt,'var(--color-etf)');
-
-        if(ac)ac.innerHTML='<div class="analyse-card">'
-            +'<div class="analyse-title">Depotverteilung</div>'
-            +depRows
-            +'<div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border-color);">'
-            +'<div class="analyse-title" style="margin-bottom:12px;">Asset-Klassen</div>'
-            +assetRows
-            +'</div>'
-            +'</div>';
+        if(ac)ac.innerHTML='';// depot-bar-card handles this on analyse page
     } else {
         // Single depot: simple asset type bar chart
         var assetRows2=function(label,val,tot,col){
