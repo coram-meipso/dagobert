@@ -1371,7 +1371,7 @@ function render() {
         cumYears.forEach(function(y){cumSum+=yt[y]||0;cumVals.push({year:y,val:cumSum});});
         var CW=340,CH=160,cpl=48,cpr=4,cpt=10,cpb=18,ccW=CW-cpl-cpr,ccH=CH-cpt-cpb;
         var nfCum=new Intl.NumberFormat('de-DE',{minimumFractionDigits:0,maximumFractionDigits:0});
-        var magC=Math.pow(10,Math.floor(Math.log10(cumSum/4))),niceStepC=Math.ceil((cumSum/4)/magC)*magC,niceMaxC=niceStepC*5;
+        var magC=Math.pow(10,Math.floor(Math.log10(cumSum/4))),niceStepC=Math.ceil((cumSum/4)/magC)*magC,niceMaxC=Math.ceil(cumSum/niceStepC+0.5)*niceStepC;
         // Non-linear x: early years (2017-2021) get 25% of width, later years get 75%
         var earlyYears=cumVals.filter(function(d){return parseInt(d.year)<=2021;});
         var lateYears=cumVals.filter(function(d){return parseInt(d.year)>=2021;});
@@ -1383,7 +1383,8 @@ function render() {
             else{var li=lateYears.findIndex(function(d){return d.year===cumVals[i].year;});return cpl+earlyW+(li/lateSteps)*lateW;}
         }
         var gridC='';
-        for(var sg=0;sg<=5;sg++){var gvC=niceStepC*sg,gyC=cpt+(1-gvC/niceMaxC)*ccH;if(gvC>cumSum*1.05)continue;gridC+='<line x1="'+cpl+'" y1="'+gyC.toFixed(1)+'" x2="'+(CW-cpr)+'" y2="'+gyC.toFixed(1)+'" stroke="#363636" stroke-width="1" stroke-dasharray="4,3"/>';gridC+='<text x="'+(cpl-4)+'" y="'+(gyC+3.5).toFixed(1)+'" text-anchor="end" font-size="8" fill="#a8b8cc" font-family="Outfit,sans-serif">'+nfCum.format(gvC)+'</text>';}
+        var niceStepsC=Math.round(niceMaxC/niceStepC);
+        for(var sg=0;sg<=niceStepsC;sg++){var gvC=niceStepC*sg,gyC=cpt+(1-gvC/niceMaxC)*ccH;if(gvC>cumSum*1.05)continue;gridC+='<line x1="'+cpl+'" y1="'+gyC.toFixed(1)+'" x2="'+(CW-cpr)+'" y2="'+gyC.toFixed(1)+'" stroke="#363636" stroke-width="1" stroke-dasharray="4,3"/>';gridC+='<text x="'+(cpl-4)+'" y="'+(gyC+3.5).toFixed(1)+'" text-anchor="end" font-size="8" fill="#a8b8cc" font-family="Outfit,sans-serif">'+nfCum.format(gvC)+'</text>';}
         // Divider line between early and late sections
         var divX=cpl+earlyW;
         gridC+='<line x1="'+divX.toFixed(1)+'" y1="'+cpt+'" x2="'+divX.toFixed(1)+'" y2="'+(cpt+ccH)+'" stroke="#333" stroke-width="1" stroke-dasharray="2,4" opacity="0.5"/>';
