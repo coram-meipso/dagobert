@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dagobert v1.16</title>
+    <title>Dagobert v1.17</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3QgeD0iMTAiIHk9IjIiIHdpZHRoPSIxMCIgaGVpZ2h0PSI4IiBmaWxsPSIjMWUxZTFlIi8+PHJlY3QgeD0iMTAiIHk9IjciIHdpZHRoPSIxMCIgaGVpZ2h0PSIxIiBmaWxsPSIjZWY0NDQ0Ii8+PHJlY3QgeD0iOSIgeT0iMTAiIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMCIgZmlsbD0iI0ZGRkZGRiIvPjxyZWN0IHg9IjEyIiB5PSIxNCIgd2lkdGg9IjIiIGhlaWdodD0iMiIgZmlsbD0iIzAwMDAwMCIvPjxyZWN0IHg9IjE3IiB5PSIxNCIgd2lkdGg9IjIiIGhlaWdodD0iMiIgZmlsbD0iIzAwMDAwMCIvPjxyZWN0IHg9IjgiIHk9IjE3IiB3aWR0aD0iMTQiIGhlaWdodD0iMyIgZmlsbD0iI2ZiYmYyNCIvPjxnIGlkPSJtb25leS1oYW5kIj48cmVjdCB4PSIyMiIgeT0iOCIgd2lkdGg9IjYiIGhlaWdodD0iOCIgZmlsbD0iIzEwYjk4MSIvPjxyZWN0IHg9IjIxIiB5PSIxMyIgd2lkdGg9IjMiIGhlaWdodD0iNCIgZmlsbD0iI0ZGRkZGRiIvPjwvZz48cmVjdCB4PSI5IiB5PSIyMCIgd2lkdGg9IjEyIiBoZWlnaHQ9IjgiIGZpbGw9IiNlZjQ0NDQiLz48cmVjdCB4PSIxMyIgeT0iMjIiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiIGZpbGw9IiMzYjgyZjYiLz48L3N2Zz4=">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
@@ -29,7 +29,8 @@
         @keyframes money-wave{0%,100%{transform:rotate(0deg)}25%{transform:rotate(-8deg)}75%{transform:rotate(8deg)}}
         h1{margin:0;font-size:1.9rem;font-weight:900;font-family:'Outfit',sans-serif;letter-spacing:2px;display:flex;align-items:flex-end;text-transform:uppercase;line-height:1;overflow:visible;}
         h1 .dag-word{color:var(--text-main);}
-        h1 .title-version{font-size:0.6rem;font-weight:600;color:#2dd4bf;align-self:flex-end;margin-bottom:0;margin-left:2px;letter-spacing:0.5px;line-height:1.8;}
+        h1 .title-version{font-size:0.6rem;font-weight:600;color:#2dd4bf;align-self:flex-end;margin-bottom:0;margin-left:2px;letter-spacing:0.5px;display:flex;flex-direction:column;align-items:flex-start;gap:1px;line-height:1;}
+        h1 .title-version .ver-tag{font-size:0.45rem;font-weight:600;color:#2dd4bf;opacity:0.6;letter-spacing:1px;text-transform:uppercase;line-height:1;margin-bottom:1px;}
         h1::after{content:none;}
         body.light h1 .dag-word{color:#1e293b;}
         #page-title{background:linear-gradient(135deg,rgba(59,130,246,0.12) 0%,rgba(139,92,246,0.10) 100%);border-color:rgba(139,92,246,0.3) !important;animation:title-glow 6s ease-in-out infinite;}
@@ -176,7 +177,7 @@
                         <rect x="10" y="2" width="10" height="8" fill="#1e1e1e"/><rect x="10" y="7" width="10" height="1" fill="#ef4444"/><rect x="9" y="10" width="12" height="10" fill="#FFFFFF"/><rect x="12" y="14" width="2" height="2" fill="#000000"/><rect x="17" y="14" width="2" height="2" fill="#000000"/><rect x="8" y="17" width="14" height="3" fill="#fbbf24"/><g id="money-hand"><rect x="22" y="8" width="6" height="8" fill="#10b981"/><rect x="21" y="13" width="3" height="4" fill="#FFFFFF"/></g><rect x="9" y="20" width="12" height="8" fill="#ef4444"/><rect x="13" y="22" width="4" height="2" fill="#3b82f6"/>
                     </svg>
                     <span class="dag-word" style="position:absolute;top:0;left:0;clip-path:inset(48% 0 0 0);z-index:3;">O</span>
-                </span><span class="dag-word">BERT</span><span class="title-version">v1.16</span>
+                </span><span class="dag-word">BERT</span><span class="title-version"><span>v1.17</span><span class="ver-tag">mobile</span></span>
             </h1>
         </div>
         <button id="theme-btn" class="refresh-btn" onclick="toggleTheme()">
@@ -251,14 +252,19 @@
         <div id="heatmap-card"></div>
         <div id="linechart-card"></div>
         <div class="analyse-card">
-            <div class="analyse-title">Monatlicher Dividendenvergleich</div>
+            <div class="analyse-title">Dividendenvergleich nach Zeiträumen</div>
+            <div style="display:flex;justify-content:center;gap:6px;margin-bottom:14px;" id="dev-period-toggles">
+                <button id="dev-period-m" onclick="setDevPeriod('m')" style="background:#10b981;border:none;border-radius:6px;padding:3px 12px;font-size:11px;font-weight:700;color:#fff;cursor:pointer;font-family:inherit;">Monat</button>
+                <button id="dev-period-q" onclick="setDevPeriod('q')" style="background:var(--card-bg);border:1px solid var(--border-color);border-radius:6px;padding:3px 12px;font-size:11px;font-weight:700;color:var(--text-dim);cursor:pointer;font-family:inherit;">Quartal</button>
+                <button id="dev-period-h" onclick="setDevPeriod('h')" style="background:var(--card-bg);border:1px solid var(--border-color);border-radius:6px;padding:3px 12px;font-size:11px;font-weight:700;color:var(--text-dim);cursor:pointer;font-family:inherit;">Halbjahr</button>
+            </div>
             <div id="development-chart" style="width:100%;"></div>
             <div id="dev-chart-toggles" style="display:flex;justify-content:center;gap:8px;margin-top:16px;"></div>
         </div>
     </section>
 
     <section id="page-ziele"></section>
-    <div class="footer-version" style="color:#2dd4bf;opacity:0.6;">v1.16 &middot; 01.05.2026</div>
+    <div class="footer-version" style="color:#2dd4bf;opacity:0.6;">v1.17 &middot; 01.05.2026</div>
     <div style="text-align:center;padding-bottom:40px;">
         <button id="desktop-btn" onclick="toggleDesktop()" style="background:none;border:1px solid var(--border-color);color:var(--text-dim);font-family:inherit;font-size:10px;padding:4px 12px;border-radius:8px;cursor:pointer;opacity:0.4;letter-spacing:0.5px;">🖥 Desktop-Ansicht</button>
     </div>
@@ -849,6 +855,24 @@ function renderTTMCard(ttmYield) {
     var hasVal=typeof ttmYield==='number'&&ttmYield>0;
     var valColor=hasVal?'hsl('+Math.min(120,ttmYield*12)+',70%,45%)':'var(--positive)';
     var valStr=hasVal?ttmYield.toFixed(2).replace('.',',')+'\u00a0%':'\u2013\u00a0%';
+    // Trend: compare to value 3 months ago from yieldPoints
+    var trendHtml='';
+    if(hasVal&&yieldPoints&&yieldPoints.length>3){
+        var prev=yieldPoints[yieldPoints.length-4].val,diff=ttmYield-prev;
+        var trendCol,rot;
+        if(diff>0.3){trendCol='#10b981';rot=-45;}
+        else if(diff>0.1){trendCol='#34d399';rot=-30;}
+        else if(diff>0.02){trendCol='#6ee7b7';rot=-15;}
+        else if(diff>=-0.02){trendCol='var(--text-dim)';rot=0;}
+        else if(diff>=-0.1){trendCol='#fca5a5';rot=15;}
+        else if(diff>=-0.3){trendCol='#f87171';rot=30;}
+        else{trendCol='#ef4444';rot=45;}
+        trendHtml='<span style="margin-left:10px;display:inline-flex;align-items:center;">'
+            +'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="'+trendCol+'" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" style="transform:rotate('+rot+'deg);">'
+            +'<line x1="5" y1="12" x2="19" y2="12"/>'
+            +'<polyline points="12 5 19 12 12 19"/>'
+            +'</svg></span>';
+    }
     var rangeHtml='';
     if(hasVal&&yieldPoints&&yieldPoints.length>1){
         var minV=Math.min.apply(null,yieldPoints.map(function(p){return p.val;}));
@@ -870,7 +894,7 @@ function renderTTMCard(ttmYield) {
         +'<span style="font-size:var(--base-font-size);font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;">Netto-Dividendenrendite (TTM)</span>'
         +'<span onclick="document.getElementById(\'ttm-modal\').classList.add(\'active\')" style="width:14px;height:14px;border-radius:50%;border:1px solid var(--text-dim);color:var(--text-dim);font-size:9px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;">?</span>'
         +'</div>'
-        +'<div style="font-size:2.2rem;font-weight:700;color:'+valColor+';">'+valStr+'</div>'
+        +'<div style="font-size:2.2rem;font-weight:700;color:'+valColor+';display:inline-flex;align-items:center;">'+valStr+trendHtml+'</div>'
         +rangeHtml
         +divider
         +'</div>';
@@ -940,7 +964,46 @@ function renderAvgIncomeCard(avgMonthly,avgProzent,avgColor,bestAvg,bestPeriod,m
                     +'<text id="roll-tip-label" font-size="9" fill="#a8b8cc" font-family="Outfit,sans-serif" font-weight="600" opacity="0" y="'+(Rpt+12)+'"></text>'
                     +'<text id="roll-tip-txt" font-size="9" fill="#10b981" font-family="Outfit,sans-serif" font-weight="600" opacity="0" y="'+(Rpt+22)+'"></text>'
                     +'<rect x="'+Rpl+'" y="'+Rpt+'" width="'+RcW+'" height="'+RcH+'" fill="transparent" style="cursor:crosshair;" onmousemove="handleRollMove(event)" onmouseleave="handleRollLeave()"/>'
-                    +'</g></svg></div>';
+                    +'</g></svg>';
+
+                // Milestones based on rolling monthly average
+                var rMilestones=[200,400,600,800,1000,1200,1400,1600,1800,2000];
+                var rMsIndices={};
+                rollingPoints.forEach(function(p,i){
+                    rMilestones.forEach(function(ms){
+                        if(!rMsIndices[ms]&&p.val>=ms)rMsIndices[ms]={label:String(p.month).padStart(2,'0')+'/'+p.year,idx:i};
+                    });
+                });
+                var rMsFiltered=rMilestones.filter(function(ms){return rMsIndices[ms]||(rollingPoints.length>0&&rollingPoints[rollingPoints.length-1].val<ms);});
+                var rMaxDur=0;
+                rMsFiltered.forEach(function(ms,idx){
+                    var info=rMsIndices[ms],prevMs=idx>0?rMilestones[idx-1]:null;
+                    if(info){var si=prevMs&&rMsIndices[prevMs]?rMsIndices[prevMs].idx:0;var dur=info.idx-si;if(dur>rMaxDur)rMaxDur=dur;}
+                });
+                var nfRMs=new Intl.NumberFormat('de-DE',{style:'currency',currency:'EUR',maximumFractionDigits:0});
+                var rMsRows=rMsFiltered.map(function(ms,idx){
+                    var info=rMsIndices[ms];
+                    var t=info?'hsl('+Math.min(120,Math.round((ms/Math.max.apply(null,rMilestones))*120))+',70%,42%)':'var(--text-dim)';
+                    var prevMs=idx>0?rMilestones[idx-1]:null;
+                    var dur=0,durStr='';
+                    if(info){var si=prevMs&&rMsIndices[prevMs]?rMsIndices[prevMs].idx:0;dur=info.idx-si;durStr='~ '+dur+' Mon.';}
+                    var pct=rMaxDur>0&&dur>0?Math.round(dur/rMaxDur*100):0;
+                    var barHtml='<div style="flex:1;background:rgba(255,255,255,0.05);border:1px solid var(--border-color);border-radius:4px;height:6px;overflow:hidden;margin:0 8px;">'
+                        +(pct>0?'<div style="width:'+pct+'%;background:'+t+';height:100%;border-radius:4px;"></div>':'')
+                        +'</div>';
+                    return'<div style="display:flex;align-items:center;margin-bottom:6px;">'
+                        +'<div style="width:8px;height:8px;border-radius:50%;background:'+(info?t:'var(--border-color)')+';flex-shrink:0;margin-right:8px;"></div>'
+                        +'<div style="font-size:12px;font-weight:700;color:var(--text-main);width:68px;flex-shrink:0;">'+nfRMs.format(ms)+'</div>'
+                        +'<div style="font-size:11px;color:'+(info?'var(--text-main)':'var(--text-dim)')+';width:58px;flex-shrink:0;white-space:nowrap;">'+(info?info.label:'–')+'</div>'
+                        +barHtml
+                        +'<div style="font-size:11px;color:var(--text-dim);white-space:nowrap;width:56px;text-align:right;">'+durStr+'</div>'
+                        +'</div>';
+                }).join('');
+
+                rollDiv+='<div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border-color);">'
+                    +'<div style="font-size:10px;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">Meilensteine</div>'
+                    +rMsRows
+                    +'</div></div>';
             }
         }
     }
@@ -1159,36 +1222,60 @@ function toggleLineYear(y) {
     btn.style.opacity=hidden?'1':'0.3';
 }
 
+var devChartPeriod='m';
+function setDevPeriod(p){
+    devChartPeriod=p;
+    ['m','q','h'].forEach(function(k){
+        var btn=document.getElementById('dev-period-'+k);if(!btn)return;
+        if(k===p){btn.style.background='#10b981';btn.style.color='#fff';btn.style.border='none';}
+        else{btn.style.background='var(--card-bg)';btn.style.color='var(--text-dim)';btn.style.border='1px solid var(--border-color)';}
+    });
+    renderDevChart();
+}
+
 function renderDevChart() {
     if(!devData||devData.length<2)return;
     var container=document.getElementById('development-chart');if(!container)return;
     container.innerHTML='';
     var years=['2023','2024','2025','2026'],colors={'2023':'#ec4899','2024':'#3b82f6','2025':'#8b5cf6','2026':'#10b981'};
+    var p=devChartPeriod;
     var W=380,H=200,pl=44,pr=8,pt=10,pb=28,cW=W-pl-pr,cH=H-pt-pb;
+
+    // Build period data
+    var numPeriods=p==='m'?12:p==='q'?4:2;
+    var periodLabels=p==='m'?mNames:p==='q'?['Q1','Q2','Q3','Q4']:['H1','H2'];
+    var periodData={};
+    years.forEach(function(y){
+        var row=devData.find(function(r){return r[0]&&r[0].trim()===y;});
+        periodData[y]=[];
+        for(var pi=0;pi<numPeriods;pi++){
+            var sum=0;
+            var moPerPeriod=12/numPeriods;
+            for(var mi=0;mi<moPerPeriod;mi++)sum+=row?parseMenge(row[pi*moPerPeriod+mi+1]):0;
+            periodData[y].push(sum);
+        }
+    });
+
     var maxVal=1;
-    years.forEach(function(y){var row=devData.find(function(r){return r[0]&&r[0].trim()===y;});if(row)for(var i=1;i<=12;i++)maxVal=Math.max(maxVal,parseMenge(row[i]));});
+    years.forEach(function(y){periodData[y].forEach(function(v){maxVal=Math.max(maxVal,v);});});
     var mag=Math.pow(10,Math.floor(Math.log10(maxVal/4))),niceStep=Math.ceil((maxVal/4)/mag)*mag,niceMax=niceStep*4;
     var nf=new Intl.NumberFormat('de-DE',{minimumFractionDigits:0,maximumFractionDigits:0});
     var grid='';
     for(var s=0;s<=4;s++){var gv=niceStep*s,gy=pt+(1-gv/niceMax)*cH;grid+='<line x1="'+pl+'" y1="'+gy.toFixed(1)+'" x2="'+(W-pr)+'" y2="'+gy.toFixed(1)+'" stroke="#363636" stroke-width="1" stroke-dasharray="4,3"/>';grid+='<text x="'+(pl-5)+'" y="'+(gy+4).toFixed(1)+'" text-anchor="end" font-size="9" fill="#a8b8cc" font-family="Outfit,sans-serif">'+nf.format(gv)+'</text>';}
-    var groupW=cW/12,barW=groupW/(years.length+1),bars='',xLabels='';
-    mNames.forEach(function(mn,mi){
-        var gx=pl+mi*groupW;
-        xLabels+='<text x="'+(gx+groupW/2).toFixed(1)+'" y="'+(H-6)+'" text-anchor="middle" font-size="9" fill="#a8b8cc" font-family="Outfit,sans-serif">'+mn+'</text>';
+    var groupW=cW/numPeriods,barW=groupW/(years.length+1),bars='',xLabels='';
+    periodLabels.forEach(function(lbl,pi){
+        var gx=pl+pi*groupW;
+        xLabels+='<text x="'+(gx+groupW/2).toFixed(1)+'" y="'+(H-6)+'" text-anchor="middle" font-size="9" fill="#a8b8cc" font-family="Outfit,sans-serif">'+lbl+'</text>';
         years.forEach(function(y,yi){
-            var row=devData.find(function(r){return r[0]&&r[0].trim()===y;});
-            var val=row?parseMenge(row[mi+1]):0;
-            if(val===0)return;
+            var val=periodData[y][pi];if(val===0)return;
             var bx=gx+(yi+0.5)*barW,bh=(val/niceMax)*cH,by=pt+cH-bh;
-            bars+='<rect id="dev-bar-'+y+'-'+mi+'" x="'+bx.toFixed(1)+'" y="'+by.toFixed(1)+'" width="'+barW.toFixed(1)+'" height="'+bh.toFixed(1)+'" fill="'+colors[y]+'" rx="1"><title>'+y+' '+mn+': '+fC(val)+'</title></rect>';
+            bars+='<rect id="dev-bar-'+y+'-'+pi+'" x="'+bx.toFixed(1)+'" y="'+by.toFixed(1)+'" width="'+barW.toFixed(1)+'" height="'+bh.toFixed(1)+'" fill="'+colors[y]+'" rx="1"><title>'+y+' '+lbl+': '+fC(val)+'</title></rect>';
         });
     });
     var svg='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;display:block;">'
         +'<line x1="'+pl+'" y1="'+pt+'" x2="'+pl+'" y2="'+(pt+cH)+'" stroke="#363636" stroke-width="1"/>'
-        +grid+bars+xLabels
-        +'</svg>';
+        +grid+bars+xLabels+'</svg>';
     container.innerHTML=svg;
-    container.style.cssText='';
     var tb=document.getElementById('dev-chart-toggles');
     if(tb){
         tb.innerHTML=years.map(function(y){
@@ -1198,10 +1285,10 @@ function renderDevChart() {
 }
 
 function toggleDevYear(y) {
-    var btn=document.getElementById('dev-toggle-'+y);
-    if(!btn)return;
+    var btn=document.getElementById('dev-toggle-'+y);if(!btn)return;
+    var numP=devChartPeriod==='m'?12:devChartPeriod==='q'?4:2;
     var isHidden=btn.style.opacity==='0.3';
-    for(var i=0;i<12;i++){var bar=document.getElementById('dev-bar-'+y+'-'+i);if(bar)bar.style.opacity=isHidden?'1':'0';}
+    for(var i=0;i<numP;i++){var bar=document.getElementById('dev-bar-'+y+'-'+i);if(bar)bar.style.opacity=isHidden?'1':'0';}
     btn.style.opacity=isHidden?'1':'0.3';
 }
 
