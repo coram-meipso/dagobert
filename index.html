@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dagobert v1.17</title>
+    <title>Dagobert v1.18</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3QgeD0iMTAiIHk9IjIiIHdpZHRoPSIxMCIgaGVpZ2h0PSI4IiBmaWxsPSIjMWUxZTFlIi8+PHJlY3QgeD0iMTAiIHk9IjciIHdpZHRoPSIxMCIgaGVpZ2h0PSIxIiBmaWxsPSIjZWY0NDQ0Ii8+PHJlY3QgeD0iOSIgeT0iMTAiIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMCIgZmlsbD0iI0ZGRkZGRiIvPjxyZWN0IHg9IjEyIiB5PSIxNCIgd2lkdGg9IjIiIGhlaWdodD0iMiIgZmlsbD0iIzAwMDAwMCIvPjxyZWN0IHg9IjE3IiB5PSIxNCIgd2lkdGg9IjIiIGhlaWdodD0iMiIgZmlsbD0iIzAwMDAwMCIvPjxyZWN0IHg9IjgiIHk9IjE3IiB3aWR0aD0iMTQiIGhlaWdodD0iMyIgZmlsbD0iI2ZiYmYyNCIvPjxnIGlkPSJtb25leS1oYW5kIj48cmVjdCB4PSIyMiIgeT0iOCIgd2lkdGg9IjYiIGhlaWdodD0iOCIgZmlsbD0iIzEwYjk4MSIvPjxyZWN0IHg9IjIxIiB5PSIxMyIgd2lkdGg9IjMiIGhlaWdodD0iNCIgZmlsbD0iI0ZGRkZGRiIvPjwvZz48cmVjdCB4PSI5IiB5PSIyMCIgd2lkdGg9IjEyIiBoZWlnaHQ9IjgiIGZpbGw9IiNlZjQ0NDQiLz48cmVjdCB4PSIxMyIgeT0iMjIiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiIGZpbGw9IiMzYjgyZjYiLz48L3N2Zz4=">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
@@ -146,6 +146,8 @@
     </div>
 </div>
 
+<div id="prognose-tip" style="display:none;position:fixed;z-index:9999;background:var(--card-bg);border:1px solid var(--border-color);border-radius:10px;padding:10px 14px;font-size:12px;color:var(--text-dim);max-width:260px;line-height:1.5;box-shadow:0 4px 20px rgba(0,0,0,0.4);">Jährliches Wachstum der Dividenden aus dem bestehenden Depot durch Unternehmenserhöhungen. Zusätzliche Dividenden aus neuen Investitionen werden separat über den Regler "Monatliche Neuinvestition" gesteuert – Ausschüttungen werden nicht automatisch reinvestiert.<br><br><span style="font-size:11px;opacity:0.6;">Tippe irgendwo zum Schließen.</span></div>
+
 <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
 <nav class="sidebar" id="sidebar">
@@ -177,7 +179,7 @@
                         <rect x="10" y="2" width="10" height="8" fill="#1e1e1e"/><rect x="10" y="7" width="10" height="1" fill="#ef4444"/><rect x="9" y="10" width="12" height="10" fill="#FFFFFF"/><rect x="12" y="14" width="2" height="2" fill="#000000"/><rect x="17" y="14" width="2" height="2" fill="#000000"/><rect x="8" y="17" width="14" height="3" fill="#fbbf24"/><g id="money-hand"><rect x="22" y="8" width="6" height="8" fill="#10b981"/><rect x="21" y="13" width="3" height="4" fill="#FFFFFF"/></g><rect x="9" y="20" width="12" height="8" fill="#ef4444"/><rect x="13" y="22" width="4" height="2" fill="#3b82f6"/>
                     </svg>
                     <span class="dag-word" style="position:absolute;top:0;left:0;clip-path:inset(48% 0 0 0);z-index:3;">O</span>
-                </span><span class="dag-word">BERT</span><span class="title-version"><span>v1.17</span><span class="ver-tag">mobile</span></span>
+                </span><span class="dag-word">BERT</span><span class="title-version"><span>v1.18</span><span class="ver-tag">mobile</span></span>
             </h1>
         </div>
         <button id="theme-btn" class="refresh-btn" onclick="toggleTheme()">
@@ -264,7 +266,7 @@
     </section>
 
     <section id="page-ziele"></section>
-    <div class="footer-version" style="color:#2dd4bf;opacity:0.6;">v1.17 &middot; 06.05.2026</div>
+    <div class="footer-version" style="color:#2dd4bf;opacity:0.6;">v1.18 &middot; 09.05.2026</div>
     <div style="text-align:center;padding-bottom:40px;">
         <button id="desktop-btn" onclick="toggleDesktop()" style="background:none;border:1px solid var(--border-color);color:var(--text-dim);font-family:inherit;font-size:10px;padding:4px 12px;border-radius:8px;cursor:pointer;opacity:0.4;letter-spacing:0.5px;">🖥 Desktop-Ansicht</button>
     </div>
@@ -296,6 +298,10 @@ var depotChartPoints = [], depotChartParams = {};
 var lineChartData = {}, lineChartParams = {};
 var avgZielValue = 2000;
 var annualZielValue = 13500;
+var sum12Global = 0;
+var ttmYieldGlobal = 0;
+var invMonthly = 4500;
+var customYieldRate = 0; // 0 = use live value
 var invZiele = [525000, 600000, 675000, 750000];
 var divZiele = [{jahr:13500,monat:1125},{jahr:15000,monat:1250},{jahr:16800,monat:1400},{jahr:18900,monat:1575}];
 var divZieleJahre = ['bis Ende 2026','bis Ende 2027','bis Ende 2028','bis Ende 2029'];
@@ -358,6 +364,15 @@ function toggleDesktop() {
     btn.textContent=on?'📱 Mobile-Ansicht':'🖥 Desktop-Ansicht';
     btn.style.opacity=on?'0.8':'0.4';btn.style.borderColor=on?'var(--positive)':'var(--border-color)';btn.style.color=on?'var(--positive)':'var(--text-dim)';
     applyDesktop(on);
+}
+
+function showPrognTip(el) {
+    var t=document.getElementById('prognose-tip');if(!t)return;
+    var r=el.getBoundingClientRect();
+    t.style.top=(r.bottom+6)+'px';
+    t.style.left=Math.min(r.left,window.innerWidth-270)+'px';
+    t.style.display='block';
+    setTimeout(function(){document.addEventListener('click',function h(){t.style.display='none';document.removeEventListener('click',h);},{once:true});},10);
 }
 
 function toggleMenu() {
@@ -579,8 +594,9 @@ function renderZiele(einstand, divJahr) {
     if(!einstand||einstand===0){el.innerHTML='<div class="analyse-card"><div class="analyse-title">Ziele</div><div style="color:var(--text-dim);font-size:13px;">Lade Daten...</div></div>';return;}
     var nf=new Intl.NumberFormat('de-DE',{style:'currency',currency:'EUR',maximumFractionDigits:0});
     var bs='background:var(--card-bg);border:1px solid var(--border-color);color:var(--text-dim);width:22px;height:22px;border-radius:6px;cursor:pointer;font-size:14px;line-height:1;display:inline-flex;align-items:center;justify-content:center;font-family:inherit;flex-shrink:0;';
+    var cbs='background:transparent;border:1px solid var(--border-color);color:var(--text-dim);width:20px;height:20px;border-radius:5px;cursor:pointer;font-size:13px;line-height:1;display:inline-flex;align-items:center;justify-content:center;font-family:inherit;flex-shrink:0;';
 
-    // Investitionssumme – only show invZieleCount items
+    // --- Investitionssumme ---
     var invRows=invZiele.slice(0,invZieleCount).map(function(tv,idx){
         var pct=einstand>0?Math.min(100,(einstand/tv)*100):0;
         var reached=einstand>=tv;
@@ -601,20 +617,18 @@ function renderZiele(einstand, divJahr) {
             +'</div></div>';
     }).join('');
 
-    // Dividendenziel – use rolling 12-month sum (sum12 from rollingPoints)
-    var sum12Ziel=0;
-    if(rollingPoints&&rollingPoints.length>0)sum12Ziel=rollingPoints[rollingPoints.length-1].val*12;
+    // --- Dividendenziel ---
+    var sum12Ziel = sum12Global > 0 ? sum12Global : 0;
     var divRows=divZiele.slice(0,divZieleCount).map(function(t,idx){
         var pct=sum12Ziel>0?Math.min(100,(sum12Ziel/t.jahr)*100):0;
         var reached=sum12Ziel>=t.jahr;
         var col=reached?'var(--positive)':'hsl('+Math.round(pct*1.2)+',80%,45%)';
-        // Find when this goal was first reached in rollingPoints
         var reachedDate='';
         if(reached&&rollingPoints&&rollingPoints.length>0){
             var rp=rollingPoints.find(function(p){return p.val*12>=t.jahr;});
             if(rp)reachedDate=String(rp.month).padStart(2,'0')+'/'+rp.year;
         }
-        var label=reached?'✓ '+reachedDate:(pct.toFixed(1)+'%');
+        var label=reached?('✓ '+reachedDate):(pct.toFixed(1)+'%');
         return '<div style="margin-bottom:20px;">'
             +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">'
             +'<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">'
@@ -630,29 +644,112 @@ function renderZiele(einstand, divJahr) {
             +'</div></div>';
     }).join('');
 
-    var cbs='background:transparent;border:1px solid var(--border-color);color:var(--text-dim);width:20px;height:20px;border-radius:5px;cursor:pointer;font-size:13px;line-height:1;display:inline-flex;align-items:center;justify-content:center;font-family:inherit;flex-shrink:0;';
-    el.innerHTML='<div class="analyse-card">'
-        +'<div class="analyse-title">Ziele</div>'
-        +'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">'
-        +'<div style="font-size:12px;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;">Investitionssumme</div>'
-        +'<div style="display:flex;align-items:center;gap:6px;">'
-        +'<button onclick="adjustZieleCount(\'inv\',-1)" style="'+cbs+'">−</button>'
-        +'<span style="font-size:11px;color:var(--text-dim);min-width:14px;text-align:center;">'+invZieleCount+'</span>'
-        +'<button onclick="adjustZieleCount(\'inv\',1)" style="'+cbs+'">+</button>'
-        +'</div></div>'
-        +'<div style="font-size:13px;color:var(--text-dim);margin-bottom:16px;">Aktueller Einstandswert: <span style="color:var(--text-main);font-weight:700;">'+nf.format(einstand)+'</span></div>'
-        +invRows
-        +'<div style="margin-top:8px;padding-top:16px;border-top:1px solid var(--border-color);">'
-        +'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">'
-        +'<div style="font-size:12px;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;">Dividendenziel</div>'
-        +'<div style="display:flex;align-items:center;gap:6px;">'
-        +'<button onclick="adjustZieleCount(\'div\',-1)" style="'+cbs+'">−</button>'
-        +'<span style="font-size:11px;color:var(--text-dim);min-width:14px;text-align:center;">'+divZieleCount+'</span>'
-        +'<button onclick="adjustZieleCount(\'div\',1)" style="'+cbs+'">+</button>'
-        +'</div></div>'
-        +'<div style="font-size:13px;color:var(--text-dim);margin-bottom:16px;">\u00d8 Jahresnettoeinkommen (letzte 12 Monate): <span style="color:var(--text-main);font-weight:700;">'+nf.format(Math.round(sum12Ziel))+'</span></div>'
-        +divRows
-        +'</div></div>';
+    // --- Prognose ---
+    var baseDiv = sum12Global > 0 ? sum12Global : 12630;
+    var liveYield = (ttmYieldGlobal && !isNaN(ttmYieldGlobal) && ttmYieldGlobal > 0) ? ttmYieldGlobal : 2.92;
+    var displayYield = (customYieldRate && !isNaN(customYieldRate) && customYieldRate > 0) ? customYieldRate : liveYield;
+    var yieldRate = displayYield / 100;
+    var nfP = new Intl.NumberFormat('de-DE',{style:'currency',currency:'EUR',maximumFractionDigits:0});
+    var nfY = new Intl.NumberFormat('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2});
+    var nfYield = new Intl.NumberFormat('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2});
+    var bs2='background:var(--card-bg);border:1px solid var(--border-color);color:var(--text-dim);width:22px;height:22px;border-radius:6px;cursor:pointer;font-size:14px;line-height:1;display:inline-flex;align-items:center;justify-content:center;font-family:inherit;flex-shrink:0;';
+    var years=[2026,2027,2028,2029,2030];
+    var scenarios=[
+        {label:'Konservativ',rate:0.05,cols:['#a5b4fc','#818cf8','#6366f1','#4f46e5','#4338ca']},
+        {label:'Moderat',rate:0.10,cols:['#6ee7b7','#34d399','#10b981','#059669','#047857']},
+        {label:'Optimistisch',rate:0.18,cols:['#fed7aa','#fb923c','#f97316','#ea580c','#c2410c']},
+        {label:'KI-Prognose (Claude\u00a0Sonnet\u00a04.6)',rate:0.09,cols:['#a5f3fc','#67e8f9','#22d3ee','#06b6d4','#0891b2'],ki:true}
+    ];
+    function calcNewDiv(mo,yi){return mo*12*(yi+1)*yieldRate;}
+    var maxTotal=baseDiv*Math.pow(1.18,5)+calcNewDiv(invMonthly,4);
+
+    var scenRows=scenarios.map(function(s){
+        var rows=years.map(function(yr,i){
+            var total=baseDiv*Math.pow(1+s.rate,i+1)+calcNewDiv(invMonthly,i);
+            var pct=maxTotal>0?Math.min(70,total/maxTotal*70):0;
+            var col=s.cols[i];
+            return '<div style="display:flex;align-items:center;gap:10px;margin-bottom:7px;">'
+                +'<span style="font-size:12px;font-weight:700;color:var(--text-dim);width:32px;flex-shrink:0;">'+yr+'</span>'
+                +'<div style="flex:1;background:rgba(255,255,255,0.05);border:1px solid var(--border-color);border-radius:6px;height:12px;overflow:hidden;">'
+                +'<div style="width:'+pct.toFixed(1)+'%;height:100%;background:'+col+';border-radius:6px;"></div>'
+                +'</div>'
+                +'<span style="font-size:12px;font-weight:700;color:'+col+';width:80px;text-align:right;white-space:nowrap;">'+nfP.format(Math.round(total))+'</span>'
+                +'<span style="font-size:12px;font-weight:700;color:'+col+';width:70px;text-align:right;white-space:nowrap;">'+nfP.format(Math.round(total/12))+'</span>'
+                +'</div>';
+        }).join('');
+        var tipContent=s.ki
+            ?'Jan\u2013Apr\u00a02026\u00a0+35%\u00a0YoY (MüRe-Timing bereinigt). 9% Organikwachstum: starke Zahler (MüRe/Siemens/Allianz +8\u201320%) kompensieren Problempositionen (VW/Bayer/Diageo). Analystenprognose MüRe: Dividende bis 2030 auf ~35\u20ac/Aktie (+8%/J.).'
+            :'Jährliches Wachstum der Dividenden aus dem bestehenden Depot durch Unternehmenserhöhungen. Neuinvestitionen werden separat über den Regler gesteuert.';
+        var tipId2='prognose-tip-'+s.rate.toString().replace('.','');
+        var tipDiv='<div id="'+tipId2+'" style="display:none;position:fixed;z-index:9999;background:var(--card-bg);border:1px solid var(--border-color);border-radius:10px;padding:10px 14px;font-size:12px;color:var(--text-dim);max-width:260px;line-height:1.5;box-shadow:0 4px 20px rgba(0,0,0,0.4);">'+tipContent+'<br><br><span style="font-size:11px;opacity:0.6;">Tippe irgendwo zum Schließen.</span></div>';
+        var titleRow='<div style="display:flex;align-items:center;justify-content:space-between;gap:6px;margin-bottom:6px;">'
+            +'<div style="display:flex;align-items:center;gap:6px;">'
+            +'<span style="font-size:10px;font-weight:700;color:'+s.cols[2]+';text-transform:uppercase;letter-spacing:1px;">'+s.label+' ('+(s.rate*100).toFixed(0)+'% / Jahr)</span>'
+            +'<span onclick="showPrognTip(this,\''+tipId2+'\')" style="width:14px;height:14px;border-radius:50%;border:1px solid var(--text-dim);color:var(--text-dim);font-size:9px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;">?</span>'
+            +'</div>'
+            +'<div style="display:flex;">'
+            +'<span style="font-size:10px;font-weight:600;color:var(--text-dim);width:80px;text-align:right;">/ Jahr</span>'
+            +'<span style="font-size:10px;font-weight:600;color:var(--text-dim);width:70px;text-align:right;">/ Monat</span>'
+            +'</div></div>';
+        return tipDiv+'<div style="margin-bottom:16px;">'+titleRow+rows+'</div>';
+    }).join('');
+
+    // Build HTML
+    var h='<div class="analyse-card">';
+    h+='<div class="analyse-title">Ziele</div>';
+    h+='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">';
+    h+='<div style="font-size:12px;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;">Investitionssumme</div>';
+    h+='<div style="display:flex;align-items:center;gap:6px;">';
+    h+='<button onclick="adjustZieleCount(\'inv\',-1)" style="'+cbs+'">−</button>';
+    h+='<span style="font-size:11px;color:var(--text-dim);min-width:14px;text-align:center;">'+invZieleCount+'</span>';
+    h+='<button onclick="adjustZieleCount(\'inv\',1)" style="'+cbs+'">+</button>';
+    h+='</div></div>';
+    h+='<div style="font-size:13px;color:var(--text-dim);margin-bottom:16px;">Aktueller Einstandswert: <span style="color:var(--text-main);font-weight:700;">'+nf.format(einstand)+'</span></div>';
+    h+=invRows;
+    h+='<div style="margin-top:8px;padding-top:16px;border-top:1px solid var(--border-color);">';
+    h+='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">';
+    h+='<div style="font-size:12px;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;">Dividendenziel</div>';
+    h+='<div style="display:flex;align-items:center;gap:6px;">';
+    h+='<button onclick="adjustZieleCount(\'div\',-1)" style="'+cbs+'">−</button>';
+    h+='<span style="font-size:11px;color:var(--text-dim);min-width:14px;text-align:center;">'+divZieleCount+'</span>';
+    h+='<button onclick="adjustZieleCount(\'div\',1)" style="'+cbs+'">+</button>';
+    h+='</div></div>';
+    h+='<div style="font-size:13px;color:var(--text-dim);margin-bottom:16px;">\u00d8 Jahresnettoeinkommen (letzte 12 Monate): <span style="color:var(--text-main);font-weight:700;">'+nf.format(Math.round(sum12Ziel))+'</span></div>';
+    h+=divRows;
+    h+='</div>';
+    h+='</div>';
+    h+='<div class="analyse-card">';
+    h+='<div class="analyse-title">Dividendenprognose</div>';
+    var resetBtn='<button onclick="customYieldRate=0;try{localStorage.removeItem(\'dagobert-yieldrate\');}catch(e){}render();" title="Auf Live-Wert zurücksetzen" style="background:transparent;border:1px solid var(--border-color);color:var(--text-dim);width:16px;height:16px;border-radius:4px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:0;vertical-align:middle;margin-left:4px;flex-shrink:0;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12C21 16.97 16.97 21 12 21C7.03 21 3 16.97 3 12C3 7.03 7.03 3 12 3C14.83 3 17.34 4.3 19 6.32M19 6.32V2M19 6.32H14.5"/></svg></button>';
+    h+='<div style="font-size:11px;color:var(--text-dim);margin-bottom:12px;display:flex;align-items:center;flex-wrap:wrap;gap:4px;"><span style="font-weight:700;color:var(--text-main);">Berechnungsgrundlage:</span> <span>Basis: '+nfY.format(baseDiv)+' €</span> <span>&middot;</span> <span>Rendite: '+nfY.format(displayYield)+'%</span>'+resetBtn+'</div>';
+
+    h+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;padding:12px 14px;background:rgba(99,102,241,0.06);border:1px solid rgba(99,102,241,0.2);border-radius:10px;">';
+    h+='<span style="font-size:12px;color:var(--text-dim);flex:1;">Monatliche Neuinvestition</span>';
+    h+='<button onclick="adjustInvMonthly(-500)" style="'+bs2+'">−</button>';
+    h+='<span style="font-size:13px;font-weight:700;color:var(--accent);min-width:70px;text-align:center;">'+(invMonthly===0?'0 €':nfP.format(invMonthly))+'</span>';
+    h+='<button onclick="adjustInvMonthly(500)" style="'+bs2+'">+</button>';
+    h+='</div>';
+    h+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:20px;padding:12px 14px;background:rgba(45,212,191,0.05);border:1px solid rgba(45,212,191,0.2);border-radius:10px;">';
+    h+='<span style="font-size:12px;color:var(--text-dim);flex:1;">Netto-Dividendenrendite</span>';
+    h+='<button onclick="adjustCustomYield(-0.05)" style="'+bs2+'">−</button>';
+    h+='<span style="font-size:13px;font-weight:700;color:var(--text-main);min-width:70px;text-align:center;">'+nfYield.format(displayYield)+' %</span>';
+    h+='<button onclick="adjustCustomYield(0.05)" style="'+bs2+'">+</button>';
+    h+='</div>';
+    h+=scenRows;
+    h+='</div>';
+    el.innerHTML=h;
+}
+function adjustInvMonthly(delta) {
+    invMonthly = Math.max(0, Math.min(5000, invMonthly + delta));
+    try { localStorage.setItem('dagobert-invmonthly', invMonthly); } catch(e) {}
+    render();
+}
+
+function adjustCustomYield(delta) {
+    var base = customYieldRate > 0 ? customYieldRate : ttmYieldGlobal;
+    customYieldRate = Math.max(0.1, Math.round((base + delta) * 100) / 100);
+    try { localStorage.setItem('dagobert-yieldrate', customYieldRate); } catch(e) {}
+    render();
 }
 
 function adjustZieleCount(type, delta) {
@@ -1537,6 +1634,8 @@ function render() {
         var bestAvg=bestSum/12,bestPeriod=bestStart?mNames[bestStart.month-1]+' '+bestStart.year+' \u2013 '+mNames[bestEnd.month-1]+' '+bestEnd.year:'\u2013';
         var minAvg=minSum===Infinity?0:minSum/12;
         var avgZiel=avgZielValue,avgProzent=Math.max(0,(avgMonthly/avgZiel)*100),avgColor='hsl('+Math.min(120,avgProzent*1.2)+',80%,45%)';
+        sum12Global=sum12;
+        ttmYieldGlobal=ttmYield;
         var avgEinstand = tE;
         if (histData && histData.length > 1) {
             var hHead = histData[0].map(function(h){return h.toLowerCase().trim();});
@@ -1630,6 +1729,22 @@ function render() {
     var listEl=document.getElementById('list');if(listEl)listEl.innerHTML=html;
     var divListEl=document.getElementById('div-list');if(divListEl)divListEl.innerHTML=divHtml;
     renderAnalyse(aktieSum,etfSum,tW,countries);
+    // Always calculate sum12 and ttmYield regardless of active page
+    if(devData&&devData.length>1){
+        var _lf=getLastFullMonth(),_cm=_lf.cm,_cy=_lf.cy,_s12=0,_tm=_cm,_ty=_cy;
+        for(var _i=0;_i<12;_i++){var _dr=devData.find(function(r){return r[0]&&r[0].trim()===String(_ty);});if(_dr)_s12+=parseMenge(_dr[_tm]);_tm--;if(_tm===0){_tm=12;_ty--;}}
+        sum12Global=_s12;
+        if(histData&&histData.length>1){
+            var _hHead=histData[0].map(function(h){return h.toLowerCase().trim();}),_hEin=-1;
+            for(var _hc=0;_hc<_hHead.length;_hc++){if(_hHead[_hc].indexOf('einstand')>-1)_hEin=_hc;}
+            if(_hEin<0)_hEin=1;
+            var _eArr=[];
+            for(var _hi=1;_hi<histData.length;_hi++){var _hr=histData[_hi];if(!_hr[0])continue;var _v=parseMenge(_hr[_hEin]);if(_v>0)_eArr.push(_v);}
+            var _last12Ein=_eArr.slice(-12),_avgEin=_last12Ein.length>0?_last12Ein.reduce(function(a,b){return a+b;},0)/_last12Ein.length:0;
+            ttmYieldGlobal=_avgEin>0?(_s12/_avgEin)*100:0;
+        }
+    }
+
     if(isZielePage)renderZiele(tE,sumDiv2026);
     if(window.twemoji){var cfg={folder:'svg',ext:'.svg'};twemoji.parse(document.getElementById('list'),cfg);twemoji.parse(document.getElementById('div-list'),cfg);twemoji.parse(document.getElementById('country-legend'),cfg);}
     applyPrivacyBlur();
@@ -1715,6 +1830,8 @@ try{var siz=localStorage.getItem('dagobert-invziele');if(siz)invZiele=JSON.parse
 try{var sdz=localStorage.getItem('dagobert-divziele');if(sdz)divZiele=JSON.parse(sdz);}catch(e){}
 try{var sic=localStorage.getItem('dagobert-invcount');if(sic)invZieleCount=parseInt(sic);}catch(e){}
 try{var sdc=localStorage.getItem('dagobert-divcount');if(sdc)divZieleCount=parseInt(sdc);}catch(e){}
+try{var sim=localStorage.getItem('dagobert-invmonthly');if(sim)invMonthly=parseInt(sim);}catch(e){}
+try{var syr=localStorage.getItem('dagobert-yieldrate');if(syr)customYieldRate=parseFloat(syr);}catch(e){}
 (async function init(){
     var dot=document.getElementById('status-dot');
     dot.className='pulse-dot loading';
