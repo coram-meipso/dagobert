@@ -750,7 +750,47 @@ function renderZiele(einstand, divJahr) {
     h+=divRows;
     h+='</div>';
     h+='</div>';
-    h+='<div class="analyse-card">';
+    h+='<div class="analyse-card" style="position:relative;">';
+    var crystalBall='<div style="position:absolute;top:10px;right:12px;pointer-events:none;">'
+        +'<svg width="36" height="46" viewBox="0 0 36 46" xmlns="http://www.w3.org/2000/svg">'
+        +'<defs>'
+        +'<radialGradient id="ballGrad" cx="38%" cy="35%" r="55%"><stop offset="0%" stop-color="#cff4f2" stop-opacity="0.95"/><stop offset="45%" stop-color="#7dd3fc" stop-opacity="0.8"/><stop offset="80%" stop-color="#4c6ef5" stop-opacity="0.75"/><stop offset="100%" stop-color="#1e1b4b" stop-opacity="0.9"/></radialGradient>'
+        +'<radialGradient id="shimmer2" cx="32%" cy="28%" r="28%"><stop offset="0%" stop-color="white" stop-opacity="0.85"/><stop offset="100%" stop-color="white" stop-opacity="0"/></radialGradient>'
+        +'<radialGradient id="glow1" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#a5f3fc" stop-opacity="0.5"/><stop offset="100%" stop-color="#a5f3fc" stop-opacity="0"/></radialGradient>'
+        +'<radialGradient id="glow2" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#f0abfc" stop-opacity="0.5"/><stop offset="100%" stop-color="#f0abfc" stop-opacity="0"/></radialGradient>'
+        +'<radialGradient id="glow3" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#fde68a" stop-opacity="0.4"/><stop offset="100%" stop-color="#fde68a" stop-opacity="0"/></radialGradient>'
+        +'<filter id="sblur2"><feGaussianBlur stdDeviation="1.2"/></filter>'
+        +'<filter id="sblur3"><feGaussianBlur stdDeviation="2.5"/></filter>'
+        +'<filter id="sblur4"><feGaussianBlur stdDeviation="0.6"/></filter>'
+        +'<clipPath id="ballClip"><circle cx="18" cy="15" r="13.5"/></clipPath>'
+        +'</defs>'
+        +'<circle cx="18" cy="15" r="15.5" fill="url(#glow1)" filter="url(#sblur3)" opacity="0"><animate attributeName="opacity" values="0;0.6;0;0.4;0" dur="5s" repeatCount="indefinite"/></circle>'
+        +'<circle cx="18" cy="15" r="15.5" fill="url(#glow2)" filter="url(#sblur3)" opacity="0"><animate attributeName="opacity" values="0;0;0.5;0;0" dur="5s" begin="1.5s" repeatCount="indefinite"/></circle>'
+        +'<circle cx="18" cy="15" r="15.5" fill="url(#glow3)" filter="url(#sblur3)" opacity="0"><animate attributeName="opacity" values="0;0;0;0.45;0" dur="5s" begin="3s" repeatCount="indefinite"/></circle>'
+        +'<rect x="6" y="38" width="24" height="4" rx="2" fill="#7c3f2a"/>'
+        +'<rect x="8" y="35" width="20" height="4" rx="2" fill="#8b4a32"/>'
+        +'<rect x="10" y="32.5" width="16" height="4" rx="2" fill="#9c5540"/>'
+        +'<rect x="6" y="38" width="24" height="1.5" rx="1" fill="rgba(255,255,255,0.12)"/>'
+        +'<rect x="8" y="35" width="20" height="1.5" rx="1" fill="rgba(255,255,255,0.10)"/>'
+        +'<ellipse cx="18" cy="34" rx="9" ry="2" fill="#2a1a40" opacity="0.3" filter="url(#sblur2)"><animate attributeName="opacity" values="0.3;0.15;0.3" dur="3s" repeatCount="indefinite"/></ellipse>'
+        +'<circle cx="18" cy="15" r="13.5" fill="url(#ballGrad)"><animate attributeName="r" values="13.5;13.9;13.5" dur="3s" repeatCount="indefinite"/></circle>'
+        +'<g clip-path="url(#ballClip)">'
+        +'<ellipse cx="18" cy="15" rx="8" ry="5" fill="#a5f3fc" opacity="0" filter="url(#sblur2)"><animate attributeName="opacity" values="0;0.4;0.1;0.5;0" dur="4s" repeatCount="indefinite"/><animateTransform attributeName="transform" type="rotate" values="0 18 15;40 18 15;-25 18 15;10 18 15;0 18 15" dur="4s" repeatCount="indefinite"/></ellipse>'
+        +'<ellipse cx="14" cy="18" rx="6" ry="4" fill="#f0abfc" opacity="0" filter="url(#sblur2)"><animate attributeName="opacity" values="0;0;0.35;0.1;0.4;0" dur="5s" begin="1s" repeatCount="indefinite"/><animateTransform attributeName="transform" type="rotate" values="0 18 15;-30 18 15;20 18 15;0 18 15" dur="5s" begin="1s" repeatCount="indefinite"/></ellipse>'
+        +'<ellipse cx="22" cy="12" rx="5" ry="3" fill="#fde68a" opacity="0" filter="url(#sblur2)"><animate attributeName="opacity" values="0;0;0;0.3;0.1;0" dur="6s" begin="2s" repeatCount="indefinite"/><animateTransform attributeName="transform" type="rotate" values="0 18 15;20 18 15;-40 18 15;0 18 15" dur="6s" begin="2s" repeatCount="indefinite"/></ellipse>'
+        +'<line x1="18" y1="15" x2="18" y2="3" stroke="white" stroke-width="0.6" opacity="0" stroke-linecap="round"><animate attributeName="opacity" values="0;0.3;0;0.2;0" dur="3s" repeatCount="indefinite"/><animateTransform attributeName="transform" type="rotate" values="0 18 15;360 18 15" dur="8s" repeatCount="indefinite"/></line>'
+        +'<line x1="18" y1="15" x2="18" y2="3" stroke="#a5f3fc" stroke-width="0.6" opacity="0" stroke-linecap="round"><animate attributeName="opacity" values="0;0.25;0" dur="3s" begin="1s" repeatCount="indefinite"/><animateTransform attributeName="transform" type="rotate" values="60 18 15;420 18 15" dur="8s" repeatCount="indefinite"/></line>'
+        +'<line x1="18" y1="15" x2="18" y2="3" stroke="#f0abfc" stroke-width="0.6" opacity="0" stroke-linecap="round"><animate attributeName="opacity" values="0;0.25;0" dur="3s" begin="2s" repeatCount="indefinite"/><animateTransform attributeName="transform" type="rotate" values="120 18 15;480 18 15" dur="8s" repeatCount="indefinite"/></line>'
+        +'</g>'
+        +'<circle cx="18" cy="15" r="13.5" fill="url(#shimmer2)"/>'
+        +'<g filter="url(#sblur4)">'
+        +'<polygon points="11,8 11.5,9.8 13.5,9.8 11.9,10.9 12.5,12.7 11,11.5 9.5,12.7 10.1,10.9 8.5,9.8 10.5,9.8" fill="white" opacity="0.9"><animate attributeName="opacity" values="0.9;0.3;0.9" dur="2s" repeatCount="indefinite"/></polygon>'
+        +'<polygon points="16,6 16.4,7.3 17.7,7.3 16.7,8.1 17.1,9.4 16,8.6 14.9,9.4 15.3,8.1 14.3,7.3 15.6,7.3" fill="white" opacity="0.8"><animate attributeName="opacity" values="0.8;0.2;0.8" dur="2s" begin="0.5s" repeatCount="indefinite"/></polygon>'
+        +'<circle cx="22" cy="9" r="1" fill="white" opacity="0.7"><animate attributeName="opacity" values="0.7;0.1;0.7" dur="1.5s" begin="1s" repeatCount="indefinite"/></circle>'
+        +'</g>'
+        +'<circle cx="18" cy="15" r="13.5" fill="none" stroke="#a5b4fc" stroke-width="0.8" opacity="0.4"><animate attributeName="opacity" values="0.4;0.1;0.4" dur="3s" repeatCount="indefinite"/></circle>'
+        +'</svg></div>';
+    h+=crystalBall;
     var progTipText='Szenarien zeigen das j\u00e4hrliche organische Dividendenwachstum der Unternehmen. Neuinvestitionen werden separat über den Regler gesteuert.\n\nKI-Prognose: Dividendengewichtete Analyse aller 49 Positionen. Treiber: MüRe (+9%), Allianz (+9%), Siemens (+7%). Bremsen: VW/Mercedes (21% des Einkommens), General Mills, BASF, Bayer. Netto +4,1%, gerundet auf 5%.\n\nRezession: Einfrierung ohne Kürzungen.\n\nEigene Prognose: frei konfigurierbar.';
     h+='<div id="prognose-tip-main" style="display:none;position:fixed;z-index:9999;background:var(--card-bg);border:1px solid var(--border-color);border-radius:10px;padding:10px 14px;font-size:12px;color:var(--text-dim);max-width:270px;line-height:1.5;box-shadow:0 4px 20px rgba(0,0,0,0.4);white-space:pre-line;">'+progTipText+'<br><br><span style="font-size:11px;opacity:0.6;">Tippe irgendwo zum Schließen.</span></div>';
     h+='<div class="analyse-title" style="display:flex;align-items:center;gap:6px;">Dividendenprognose<span onclick="showPrognTip(this,\'prognose-tip-main\')" style="width:16px;height:16px;border-radius:50%;border:1px solid var(--text-dim);color:var(--text-dim);font-size:10px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;margin-top:1px;">?</span></div>';
