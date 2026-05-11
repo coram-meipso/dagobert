@@ -2066,6 +2066,30 @@ try{var sgr=localStorage.getItem('dagobert-growthrate');if(sgr)customGrowthRate=
     }
     checkDataFreshness();
 })();
+
+// DAGOBERT letter animation
+(function(){
+    var colors=['#3b82f6','#8b5cf6','#2dd4bf','#f59e0b','#10b981','#ec4899','#6366f1','#f97316'];
+    var ids=[['dl0'],['dl1'],['dl2'],['dl3a','dl3b'],['dl4'],['dl5'],['dl6'],['dl7']];
+    function setColor(group,col){
+        group.forEach(function(id){
+            var el=document.getElementById(id);if(!el)return;
+            el.style.color=col||'';
+            // Skip text-shadow on clipped O spans (dl3a/dl3b) to avoid rectangular glow
+            var isClipped=(id==='dl3a'||id==='dl3b');
+            el.style.textShadow=(col&&!isClipped)?'0 0 6px '+col:'';
+        });
+    }
+    function runAnim(){
+        var delay=0;
+        ids.forEach(function(group,i){
+            setTimeout(function(){setColor(group,colors[i]);},delay);
+            delay+=320;
+        });
+        setTimeout(function(){ids.forEach(function(g){setColor(g,'');});},delay+5000);
+    }
+    setTimeout(function(){runAnim();setInterval(runAnim,10000);},1500);
+})();
 </script>
 </body>
 </html>
