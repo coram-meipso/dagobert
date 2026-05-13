@@ -226,6 +226,7 @@
     </section>
 
     <section id="page-analyse">
+        <div id="izf-card"></div>
         <div id="depot-bar-card"></div>
         <div id="allocation-card"></div>
         <div class="analyse-card">
@@ -307,6 +308,7 @@ var ttmYieldGlobal = 0;
 var invMonthly = 4500;
 var customYieldRate = 0;
 var customGrowthRate = 7;
+var showDaxCompare = false;
 var showDivCharts = false; // 0 = use live value
 var invZiele = [525000, 600000, 675000, 750000];
 var divZiele = [{jahr:13500,monat:1125},{jahr:15000,monat:1250},{jahr:16800,monat:1400},{jahr:18900,monat:1575}];
@@ -381,81 +383,176 @@ function showPrognTip(el) {
     setTimeout(function(){document.addEventListener('click',function h(){t.style.display='none';document.removeEventListener('click',h);},{once:true});},10);
 }
 
-var priceCache={};
-var pricePending={};
+var w52Cache={};
+var w52Pending={};
 
 var isinTickerMap={
     'DE000BAY0017':'BAYN.DE','DE000BASF111':'BAS.DE','DE0007164600':'SAP.DE',
     'DE0008404005':'MUV2.DE','DE0008232125':'LHA.DE','DE0007236101':'SIE.DE',
     'DE0005140008':'DBK.DE','DE0005190003':'BMW.DE','DE0005757635':'MBG.DE',
     'DE0007500001':'DTE.DE','DE000A1EWWW0':'ADS.DE','DE0008430026':'MRK.DE',
-    'DE000A14J587':'VNA.DE','DE000A2DKUC2':'FME.DE','DE000A0D9PT0':'VOW3.DE',
+    'DE000A14J587':'VNA.DE','DE000A1ML7J1':'VNA.DE','DE000A2DKUC2':'FME.DE',
+    'DE000A0D9PT0':'VOW3.DE','DE0007664039':'VOW3.DE',
+    'DE0005785604':'FRE.DE','DE000SHL1006':'SHL.DE','DE000A0Z2ZZ5':'FNTN.DE',
+    'DE000DTR0CK8':'DTR.DE','DE0005552004':'DHL.DE','DE0007100000':'MBG.DE',
     'US0231351067':'AMZN','US5949181045':'MSFT','US0378331005':'AAPL',
-    'US02079K3059':'GOOGL','US4592001014':'IBM','US17275R1023':'CSCO',
-    'US4781601046':'JNJ','US7427181091':'PG','US7134481081':'PEP',
-    'US1912161007':'KO','US5801351017':'MCD','US7181721090':'PM',
-    'US50075N1046':'KHC','GB00B10RZP78':'SHEL.L','GB0009895292':'GSK.L',
-    'GB00B16GWD56':'RKT.L','NL0000009538':'PHIA.AS','US9497461015':'WM',
-    'IE00B4BNMY34':'IWDA.AS','DE0006048432':'FRE.DE','US38141G1040':'GS',
-    'US02079K1079':'GOOGL'
+    'US02079K3059':'GOOGL','US02079K1079':'GOOGL','US4592001014':'IBM',
+    'US17275R1023':'CSCO','US4781601046':'JNJ','US7427181091':'PG',
+    'US7134481081':'PEP','US1912161007':'KO','US5801351017':'MCD',
+    'US7181721090':'PM','US50075N1046':'KHC','US5007541064':'KHC',
+    'US3703341046':'GIS','US4943681035':'KMB','US8636671013':'SYK',
+    'US9497461015':'WM','US94106L1098':'WM','US70450Y1038':'PYPL',
+    'US38141G1040':'GS','US1101221083':'BMY','US4385161066':'HON',
+    'US4581401001':'INTC','US6092071058':'MDLZ',
+    'GB00B10RZP78':'SHEL.L','GB0009895292':'GSK.L','GB00BN7SWP63':'GSK.L',
+    'GB00B16GWD56':'RKT.L','GB00B24CGK77':'RKT.L','GB00BP6MXD84':'SHEL.L',
+    'GB0002374006':'DGE.L',
+    'NL0000009538':'PHIA.AS','NL0011683594':'TDIV.AS',
+    'FR0000121014':'MC.PA','DK0060534915':'NOVO-B.CO',
+    'IE00B4BNMY34':'IWDA.AS','IE00B3RBWM25':'VWRL.AS',
+    'IE00B9CQXS71':'SPPW.DE','DE000A0F5UH1':'ISPA.DE',
+    'DE0002635307':'EXSI.DE','IE0005AJA0P1':'LGGG.DE','IE00B0M63177':'IEEM.DE'
 };
 
-function fetchPriceChanges(isin){
-    if(priceCache[isin]||pricePending[isin])return;
-    pricePending[isin]=true;
-    var el=document.getElementById('pc-'+isin.replace(/[^a-z0-9]/gi,''));
-    if(el)el.innerHTML='<div style="display:flex;gap:16px;justify-content:flex-end;margin-top:8px;padding-top:8px;border-top:1px solid var(--border-color);"><span style="font-size:9px;color:var(--text-dim);">1W&nbsp;···</span><span style="font-size:9px;color:var(--text-dim);">1M&nbsp;···</span><span style="font-size:9px;color:var(--text-dim);">1J&nbsp;···</span></div>';
-    var now=Math.floor(Date.now()/1000),yr=now-366*86400;
-    var bfUrl='https://api.boerse-frankfurt.de/v2/tradingview/lightweight_charts/history?isin='+isin+'&resolution=W&from='+yr+'&to='+now;
-    var proxies=[
-        bfUrl,
-        'https://api.boerse-frankfurt.de/v1/search/typo_tolerant_search?searchTerms='+isin,
-        'https://corsproxy.io/?url='+encodeURIComponent(bfUrl),
-        'https://api.allorigins.win/raw?url='+encodeURIComponent(bfUrl)
-    ];
-    var tried=0;
-    function trySource(url,isBF){
-        var ctrl=new AbortController();setTimeout(function(){ctrl.abort();},9000);
-        fetch(url,{signal:ctrl.signal})
-        .then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
-        .then(function(d){
-            var closes=d&&d.c;
-            if(!closes||closes.length<4)throw new Error('no data '+JSON.stringify(d).slice(0,50));
-            var valid=closes.filter(function(v){return v!=null;});
-            if(valid.length<4)throw new Error('too few');
-            var last=valid[valid.length-1];
-            function pct(o){return o&&o>0?((last-o)/o*100):null;}
-            priceCache[isin]={w1:pct(valid[Math.max(0,valid.length-2)]),m1:pct(valid[Math.max(0,valid.length-5)]),y1:pct(valid[0])};
-            pricePending[isin]=false;
-            var el2=document.getElementById('pc-'+isin.replace(/[^a-z0-9]/gi,''));
-            if(el2)renderPriceChange(el2,priceCache[isin]);
-        })
-        .catch(function(){
-            tried++;
-            if(tried<proxies.length)trySource(proxies[tried]);
-            else{
-                pricePending[isin]=false;priceCache[isin]={error:true};
-                var el3=document.getElementById('pc-'+isin.replace(/[^a-z0-9]/gi,''));
-                if(el3)el3.innerHTML='';
-            }
-        });
-    }
-    trySource(proxies[0]);
+var w52BatchQueue=[];
+var w52BatchTimer=null;
+var w52PriceMap={};
+
+function queueW52Fetch(isin,pricePerShare){
+    if(w52Cache[isin]||w52Pending[isin])return;
+    if(!isinTickerMap[isin]){w52Cache[isin]={error:true};return;}
+    w52Pending[isin]=true;
+    w52PriceMap[isin]=pricePerShare;
+    w52BatchQueue.push(isin);
+    // Show loading state immediately
+    var el=document.getElementById('w52-'+isin.replace(/[^a-z0-9]/gi,''));
+    if(el)el.innerHTML='<div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border-color);text-align:center;"><span style="font-size:9px;color:var(--text-dim);opacity:0.5;">52W ···</span></div>';
+    if(w52BatchTimer)clearTimeout(w52BatchTimer);
+    w52BatchTimer=setTimeout(flushW52Batch,100);
 }
 
-function renderPriceChange(el,data){
-    if(!el||!data||data.error){if(el)el.innerHTML='';return;}
-    function fmt(v){
-        if(v===null||v===undefined)return '<span style="color:var(--text-dim);">–</span>';
-        var col=v>=0?'var(--positive)':'var(--negative)';
-        return '<span style="font-size:12px;font-weight:700;color:'+col+'">'+(v>=0?'+':'')+v.toFixed(2)+'%</span>';
+function flushW52Batch(){
+    w52BatchTimer=null;
+    var queue=w52BatchQueue.slice(); w52BatchQueue=[];
+    if(!queue.length)return;
+    var batchSize=6;
+    for(var i=0;i<queue.length;i+=batchSize){
+        (function(batch,delay){
+            setTimeout(function(){fetchW52Batch(batch);},delay);
+        })(queue.slice(i,i+batchSize),Math.floor(i/batchSize)*800);
     }
-    el.innerHTML='<div style="display:flex;gap:16px;justify-content:flex-end;margin-top:8px;padding-top:8px;border-top:1px solid var(--border-color);">'
-        +'<div style="text-align:center;"><div style="font-size:9px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:2px;">1W</div>'+fmt(data.w1)+'</div>'
-        +'<div style="text-align:center;"><div style="font-size:9px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:2px;">1M</div>'+fmt(data.m1)+'</div>'
-        +'<div style="text-align:center;"><div style="font-size:9px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:2px;">1J</div>'+fmt(data.y1)+'</div>'
+}
+
+function fetchW52Batch(isins){
+    var tickers=isins.map(function(i){return isinTickerMap[i];}).join(',');
+    // Try multiple URL formats - Yahoo Finance sometimes needs different params
+    var base='https://query1.finance.yahoo.com/v7/finance/quote?lang=en&region=US&corsDomain=finance.yahoo.com&symbols='+encodeURIComponent(tickers);
+    var base2='https://query2.finance.yahoo.com/v7/finance/quote?symbols='+encodeURIComponent(tickers);
+    var proxies=[
+        base,
+        base2,
+        'https://corsproxy.io/?url='+encodeURIComponent(base),
+        'https://api.allorigins.win/raw?url='+encodeURIComponent(base),
+        'https://api.codetabs.com/v1/proxy?quest='+encodeURIComponent(base)
+    ];
+    var tried=0;
+    function tryNext(){
+        if(tried>=proxies.length){
+            // All failed – try individual v8 chart requests as last resort
+            isins.forEach(function(isin,idx){
+                setTimeout(function(){fetchW52Single(isin);},idx*400);
+            }); return;
+        }
+        var ctrl=new AbortController(); setTimeout(function(){ctrl.abort();},10000);
+        fetch(proxies[tried++],{signal:ctrl.signal})
+        .then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
+        .then(function(d){
+            var quotes=(d&&d.quoteResponse&&d.quoteResponse.result)||[];
+            if(!quotes.length)throw new Error('no quotes');
+            var byTicker={};
+            quotes.forEach(function(q){byTicker[q.symbol]=q;});
+            isins.forEach(function(isin){
+                var q=byTicker[isinTickerMap[isin]];
+                if(q&&q.fiftyTwoWeekHigh&&q.fiftyTwoWeekLow){
+                    w52Cache[isin]={lo:q.fiftyTwoWeekLow,hi:q.fiftyTwoWeekHigh,cur:w52PriceMap[isin]||q.regularMarketPrice||0};
+                } else { w52Cache[isin]={error:true}; }
+                w52Pending[isin]=false;
+                var el=document.getElementById('w52-'+isin.replace(/[^a-z0-9]/gi,''));
+                if(el)render52W(el,w52Cache[isin]);
+            });
+        })
+        .catch(function(){tryNext();});
+    }
+    tryNext();
+}
+
+function fetchW52Single(isin){
+    // Fallback: individual v8 chart request
+    var ticker=isinTickerMap[isin];
+    if(!ticker)return;
+    var url='https://query1.finance.yahoo.com/v8/finance/chart/'+encodeURIComponent(ticker)+'?range=1y&interval=1mo';
+    var proxies=[url,'https://corsproxy.io/?url='+encodeURIComponent(url)];
+    var tried=0;
+    function tryNext(){
+        if(tried>=proxies.length){w52Pending[isin]=false;w52Cache[isin]={error:true};var e=document.getElementById('w52-'+isin.replace(/[^a-z0-9]/gi,''));if(e)e.innerHTML='';return;}
+        var ctrl=new AbortController();setTimeout(function(){ctrl.abort();},10000);
+        fetch(proxies[tried++],{signal:ctrl.signal})
+        .then(function(r){if(!r.ok)throw new Error();return r.json();})
+        .then(function(d){
+            var res=d&&d.chart&&d.chart.result&&d.chart.result[0];
+            if(!res)throw new Error();
+            var q=res.indicators&&res.indicators.quote&&res.indicators.quote[0];
+            var hi2=Math.max.apply(null,(q&&q.high||[]).filter(function(v){return v;}));
+            var lo2=Math.min.apply(null,(q&&q.low||[]).filter(function(v){return v;}));
+            if(!isFinite(hi2)||!isFinite(lo2))throw new Error();
+            w52Cache[isin]={lo:lo2,hi:hi2,cur:w52PriceMap[isin]||(res.meta&&res.meta.regularMarketPrice)||0};
+            w52Pending[isin]=false;
+            var el=document.getElementById('w52-'+isin.replace(/[^a-z0-9]/gi,''));
+            if(el)render52W(el,w52Cache[isin]);
+        })
+        .catch(function(){tryNext();});
+    }
+    tryNext();
+}
+
+
+function parse52W(v){
+    if(!v||v==='')return 0;
+    var s=v.toString().replace(/[€$£\s]/g,'');
+    // Detect format: if last separator is comma → German (1.234,56), else English (1234.56)
+    var lastComma=s.lastIndexOf(','),lastDot=s.lastIndexOf('.');
+    if(lastComma>lastDot){s=s.replace(/\./g,'').replace(',','.');}
+    else{s=s.replace(/,/g,'');}
+    return parseFloat(s)||0;
+}
+
+function render52W(el,data){
+    if(!el||!data||data.error){if(el)el.innerHTML='';return;}
+    var lo=data.lo,hi=data.hi,cur=data.cur;
+    if(!hi||!lo||hi<=lo){el.innerHTML='';return;}
+    var pct=Math.max(0,Math.min(100,(cur-lo)/(hi-lo)*100));
+    var nf2=new Intl.NumberFormat('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2});
+    var nf0=new Intl.NumberFormat('de-DE',{minimumFractionDigits:0,maximumFractionDigits:0});
+    // Color of marker: red when near low, green when near high
+    var markerCol=pct<33?'#ef4444':pct<66?'#f59e0b':'#10b981';
+    el.innerHTML='<div style="margin-top:10px;padding-top:8px;border-top:1px solid var(--border-color);">'
+        +'<div style="font-size:9px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;text-align:center;">52 W. Tief / Hoch</div>'
+        +'<div style="display:flex;align-items:center;gap:8px;">'
+        +'<div style="font-size:10px;font-weight:600;color:var(--negative);white-space:nowrap;">'+nf2.format(lo)+' €</div>'
+        +'<div style="flex:1;position:relative;height:10px;">'
+        +'<div style="position:absolute;inset:0;border-radius:5px;background:linear-gradient(to right,#ef4444,#f97316,#eab308,#84cc16,#10b981);opacity:0.85;"></div>'
+        +'<div style="position:absolute;top:-4px;bottom:-4px;width:3px;border-radius:2px;background:white;box-shadow:0 0 4px rgba(0,0,0,0.6);left:calc('+pct.toFixed(1)+'% - 1.5px);"></div>'
+        +'<div style="position:absolute;top:50%;transform:translate(-50%,-50%);width:14px;height:14px;border-radius:50%;background:white;box-shadow:0 1px 6px rgba(0,0,0,0.5);border:2px solid '+markerCol+';left:'+pct.toFixed(1)+'%;display:flex;align-items:center;justify-content:center;">'
+        +'<div style="width:5px;height:5px;border-radius:50%;background:'+markerCol+';"></div>'
+        +'</div>'
+        +'</div>'
+        +'<div style="font-size:10px;font-weight:600;color:var(--positive);white-space:nowrap;">'+nf2.format(hi)+' €</div>'
+        +'</div>'
+        +'<div style="text-align:center;margin-top:4px;font-size:9px;color:var(--text-dim);">aktuell: <span style="color:'+markerCol+';font-weight:700;">'+nf2.format(cur)+' €</span></div>'
         +'</div>';
 }
+
+
 
 function toggleMenu() {
     document.getElementById('sidebar').classList.toggle('open');
@@ -552,7 +649,7 @@ async function loadData() {
         return;
     }
     var rows=parseCSV(csv),head=rows[0].map(function(x){return x.toLowerCase().trim();});
-    var m={n:head.findIndex(function(x){return x.indexOf('wertpapier')>-1;}),i:head.findIndex(function(x){return x.indexOf('isin')>-1;}),d:head.findIndex(function(x){return x.indexOf('depot')>-1;}),s:head.findIndex(function(x){return x.indexOf('stück')>-1;}),ew:head.findIndex(function(x){return x.indexOf('einstandswert')>-1;}),kw:head.findIndex(function(x){return x.indexOf('kurswert')>-1;}),kat:head.findIndex(function(x){return x.indexOf('kategorie')>-1;}),lnk:head.findIndex(function(x){return x.indexOf('link')>-1&&x.indexOf('logo')<0;}),logo:head.findIndex(function(x){return x.indexOf('code logo')>-1||x.indexOf('logo')>-1;}),div26:head.findIndex(function(x){return x.indexOf('erhaltene dividende 2026')>-1||x.indexOf('dividende 2026')>-1;}),divGes:head.findIndex(function(x){return x.indexOf('erhaltene dividende gesamt')>-1;})};
+    var m={n:head.findIndex(function(x){return x.indexOf('wertpapier')>-1;}),i:head.findIndex(function(x){return x.indexOf('isin')>-1;}),d:head.findIndex(function(x){return x.indexOf('depot')>-1;}),s:head.findIndex(function(x){return x.indexOf('stück')>-1;}),ew:head.findIndex(function(x){return x.indexOf('einstandswert')>-1;}),kw:head.findIndex(function(x){return x.indexOf('kurswert')>-1;}),kat:head.findIndex(function(x){return x.indexOf('kategorie')>-1;}),lnk:head.findIndex(function(x){return x.indexOf('link')>-1&&x.indexOf('logo')<0;}),logo:head.findIndex(function(x){return x.indexOf('code logo')>-1||x.indexOf('logo')>-1;}),div26:head.findIndex(function(x){return x.indexOf('erhaltene dividende 2026')>-1||x.indexOf('dividende 2026')>-1;}),divGes:head.findIndex(function(x){return x.indexOf('erhaltene dividende gesamt')>-1;}),w52lo:head.findIndex(function(x){return x.indexOf('52w tief')>-1||x.indexOf('tief')>-1&&x.indexOf('52')>-1;}),w52hi:head.findIndex(function(x){return x.indexOf('52w hoch')>-1||x.indexOf('hoch')>-1&&x.indexOf('52')>-1;})};
     if(m.div26<0)m.div26=head.findIndex(function(x){return x.indexOf('2026')>-1;});
     // Map year columns 2017-2025
     var divYearCols={};
@@ -572,7 +669,7 @@ async function loadData() {
         if(rawLogo&&rawLogo.indexOf('&lt;')>-1){var ld=document.createElement('textarea');ld.innerHTML=rawLogo;rawLogo=ld.value;}
         if(rawLogo){rawLogo=rawLogo.replace(/<defs>[\s\S]*?<\/defs>/g,'').replace(/clip-path="[^"]*"/g,'');}
         var divHist={};for(var dhy=2017;dhy<=2025;dhy++){if(divYearCols[dhy]!==undefined)divHist[dhy]=parseMenge(r[divYearCols[dhy]]);}divHist[2026]=parseMenge(r[m.div26]);
-        var item={name:r[m.n],isin:r[m.i],depot:r[m.d]||'?',stück:parseMenge(r[m.s]),kurswert:parseMenge(r[m.kw]),einstand:parseMenge(r[m.ew]),kategorie:r[m.kat]||'Aktie',div2026:parseMenge(r[m.div26]),divGesamt:parseMenge(r[m.divGes]),divHist:divHist,link:m.lnk>=0?(r[m.lnk]||''):'',logo:rawLogo};
+        var item={name:r[m.n],isin:r[m.i],depot:r[m.d]||'?',stück:parseMenge(r[m.s]),kurswert:parseMenge(r[m.kw]),einstand:parseMenge(r[m.ew]),kategorie:r[m.kat]||'Aktie',div2026:parseMenge(r[m.div26]),divGesamt:parseMenge(r[m.divGes]),divHist:divHist,link:m.lnk>=0?(r[m.lnk]||''):'',logo:rawLogo,w52lo:m.w52lo>=0?parse52W(r[m.w52lo]):0,w52hi:m.w52hi>=0?parse52W(r[m.w52hi]):0};
         item.diff=item.kurswert-item.einstand;item.diffP=item.einstand?(item.diff/item.einstand)*100:0;allData.push(item);depots.add(item.depot);}
     if(csvDev)devData=parseCSV(csvDev);
     if(csvHist)histData=parseCSV(csvHist);
@@ -694,7 +791,7 @@ function handleDepotLeave() {
     ['depot-vline','depot-dot-dep','depot-dot-ein','depot-tip-label','depot-tip-ein','depot-tip-dep'].forEach(function(id){var el=document.getElementById(id);if(el)el.setAttribute('opacity','0');});
 }
 
-function renderZiele(einstand, divJahr) {
+function renderZiele(einstand, divJahr, kurswert, divByYear, sumDivGesamt) {
     var el=document.getElementById('page-ziele');if(!el)return;
     if(!einstand||einstand===0){el.innerHTML='<div class="analyse-card"><div class="analyse-title">Ziele</div><div style="color:var(--text-dim);font-size:13px;">Lade Daten...</div></div>';return;}
     var nf=new Intl.NumberFormat('de-DE',{style:'currency',currency:'EUR',maximumFractionDigits:0});
@@ -892,13 +989,8 @@ function renderZiele(einstand, divJahr) {
     h+='<button onclick="adjustCustomYield(0.05)" style="'+bs2+'">+</button>';
     h+='</div>';
     h+=scenRows;
-    h+='</div>';
+
     el.innerHTML=h;
-}
-function adjustInvMonthly(delta) {
-    invMonthly = Math.max(0, Math.min(5000, invMonthly + delta));
-    try { localStorage.setItem('dagobert-invmonthly', invMonthly); } catch(e) {}
-    render();
 }
 
 function adjustCustomYield(delta) {
@@ -1578,10 +1670,13 @@ function render() {
         else if(currentSort==='roi')res=(a.einstand?a.divGesamt/a.einstand:0)-(b.einstand?b.divGesamt/b.einstand:0);
         return sortAsc?res:-res;
     });
-    var tW=0,tE=0,sumDivGesamt=0,sumDiv2026=0,html='',divHtml='',etfSum=0,aktieSum=0,countries={},pendingIsins=[];
+    var tW=0,tE=0,sumDivGesamt=0,sumDiv2026=0,html='',divHtml='',etfSum=0,aktieSum=0,countries={},pendingIsins=[],divByYear={};
+    for(var _y=2017;_y<=2026;_y++)divByYear[_y]=0;
     if(currentFilter==='alle')sumDivGesamt+=totalDividendsSold;
     sorted.forEach(function(item){
         tW+=item.kurswert;tE+=item.einstand;sumDivGesamt+=item.divGesamt;sumDiv2026+=item.div2026;
+        if(item.divHist){for(var _dy=2017;_dy<=2025;_dy++){if(item.divHist[_dy])divByYear[_dy]+=item.divHist[_dy];}}
+        divByYear[2026]+=item.div2026;
         if(item.kategorie.toLowerCase().indexOf('etf')>-1){etfSum+=item.kurswert;}
         else{aktieSum+=item.kurswert;var cc=(item.isin?item.isin.substring(0,2).toUpperCase():'XX');countries[cc]=(countries[cc]||0)+item.kurswert;}
         var isP=item.diff>=0;
@@ -1589,9 +1684,14 @@ function render() {
         var logoSvg=logoBlocklist.indexOf(item.isin)<0?(item.logo||(logos[item.isin]||'')):'';
         if(logoSvg){logoSvg=logoSvg.replace(/<defs>[\s\S]*?<\/defs>/g,'').replace(/clip-path="[^"]*"/g,'');}
         var logoHtml=logoSvg?'<div style="width:36px;height:36px;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-right:8px;margin-top:2px;border-radius:50%;overflow:hidden;">'+logoSvg+'</div>':'';
-        var pcId='pc-'+item.isin.replace(/[^a-z0-9]/gi,'');
-        var pcHtml='<div id="'+pcId+'"></div>';
-        html+='<div class="asset-card"><div style="display:flex;justify-content:space-between;align-items:center;"><div style="flex:1;"><div class="asset-name">'+nameHtml+'</div><div style="display:flex;align-items:center;">'+logoHtml+'<div><div class="asset-meta"><span>'+item.isin+'</span><div class="flag-circle">'+getFlag(item.isin,item.kategorie)+'</div></div><div class="asset-amount">'+formatStueck(item.stück)+' Stk. &middot; Kaufwert '+fC(item.einstand)+'</div></div></div></div><div style="text-align:right;"><div class="value-eur">'+fC(item.kurswert)+'</div><div style="font-size:0.85rem;font-weight:600;margin-top:4px;" class="'+(isP?'text-green':'text-red')+'">'+(isP?'+':'')+fC(item.diff)+'</div><div style="font-size:0.85rem;font-weight:600;" class="'+(isP?'text-green':'text-red')+'">'+(isP?'+':'')+item.diffP.toFixed(2)+'%</div></div></div>'+pcHtml+'</div>';
+        var w52Id='w52-'+item.isin.replace(/[^a-z0-9]/gi,'');
+        var w52Html='<div id="'+w52Id+'"></div>';
+        // Pre-populate cache from CSV if data available
+        if(item.w52lo>0&&item.w52hi>0&&item.w52hi>item.w52lo){
+            var pricePS=item.stück>0?item.kurswert/item.stück:0;
+            w52Cache[item.isin]={lo:item.w52lo,hi:item.w52hi,cur:pricePS};
+        }
+        html+='<div class="asset-card"><div style="display:flex;justify-content:space-between;align-items:center;"><div style="flex:1;"><div class="asset-name">'+nameHtml+'</div><div style="display:flex;align-items:center;">'+logoHtml+'<div><div class="asset-meta"><span>'+item.isin+'</span><div class="flag-circle">'+getFlag(item.isin,item.kategorie)+'</div></div><div class="asset-amount">'+formatStueck(item.stück)+' Stk. &middot; Kaufwert '+fC(item.einstand)+'</div></div></div></div><div style="text-align:right;"><div class="value-eur">'+fC(item.kurswert)+'</div><div style="font-size:0.85rem;font-weight:600;margin-top:4px;" class="'+(isP?'text-green':'text-red')+'">'+(isP?'+':'')+fC(item.diff)+'</div><div style="font-size:0.85rem;font-weight:600;" class="'+(isP?'text-green':'text-red')+'">'+(isP?'+':'')+item.diffP.toFixed(2)+'%</div></div></div>'+w52Html+'</div>';
         pendingIsins.push(item.isin);
         var roi=item.einstand?(item.divGesamt/item.einstand)*100:0,ric='hsl('+Math.min(120,roi*8)+',80%,45%)',d2c=item.div2026===0?'var(--text-dim)':'var(--positive)';
         var divLinkHtml=item.link?'<a href="'+item.link+'" target="_blank" rel="noopener" style="display:inline-block;" title="Auf divvydiary ansehen"><img src="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCAIAAgADASIAAhEBAxEB/8QAHQABAAICAwEBAAAAAAAAAAAAAAcIBQYCAwQJAf/EAFsQAAEDAgIDBg4MCggFBQEAAAABAgMEBQYRBwghEjFBUWFxExQWNDdWcnOBlKGxs9EVFyIyNVJidJGTstIjM0JVdYKSlaLBQ1NUY6O0wtMmJ0Sk8CQlNmXD4f/EABsBAQACAwEBAAAAAAAAAAAAAAAGBwEEBQID/8QAOhEAAQMBAwgIBgEEAwEAAAAAAAECAwQFETETFCE0UXGRsQYSMkFSYXLRIlOBocHh8BVCkvEjM0Ni/9oADAMBAAIRAxEAPwCmQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMw3C2JnIjm4cvCou1FSik2+QdSuKO1u8eIyfdPnlWeJD65GTwrwMODMdSuKO1u8eIyfdHUrijtbvHiMn3RlWeJBkJPCvAw4Mx1K4o7W7x4jJ90dSuKO1u8eIyfdGVZ4kGQk8K8DDgzHUrijtbvHiMn3R1K4o7W7x4jJ90ZVniQZCTwrwMODMdSuKO1u8eIyfdHUrijtbvHiMn3RlWeJBkJPCvAw4Mx1K4o7W7x4jJ90dSuKO1u8eIyfdGVZ4kGQk8K8DDgzHUrijtbvHiMn3R1K4o7W7x4jJ90ZVniQZCTwrwMODMdSuKO1u8eIyfdHUrijtbvHiMn3RlWeJBkJPCvAw4Mx1K4o7W7x4jJ90dSuKO1u8eIyfdGVZ4kGQk8K8DDgy7sL4mbv4du6c9FJ6j86mMSdr128Tk9RnKs2oYyMnhXgYkGW6mMSdr128Tk9Q6mMSdr128Tk9QyrNqDIyeFeBiQZbqYxJ2vXbxOT1DqYxJ2vXbxOT1DKs2oMjJ4V4GJBlupjEna9dvE5PUOpjEna9dvE5PUMqzagyMnhXgYkGW6mcSdr928Tk9R5p7TdYM+j2ytiy393A5vnQJI1cFMLE9MUU8QP1UVFyVMlPw9ngAAAAAAAHdRQMqKpkMlVDStcuSyzbrcN59yir5Aq3GUS9bjpBI1BoZxlcqFtdaHWi50z/ey0texzV5M1y28h5qvQ7pIps93hmV6ccVRE/wCy9TVSuplW7KJxQ3Fs6rRL8k67cpoQNmq9H+OaXPo2Er3km+rKN70+lqKYupsF9ps+mLLcocv6yle3zofZs0bsHIv1Nd1PKztNVPoY0HJ7HMcrXtVrk30VMlOJ9D5AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAH0Ct3wfTd6b5kPQdFv6wp+9N8yHeVc7EuVuCAAGDIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB5qugoKxMquipqhF/rYmu86Gv3HR3gW4Z9M4UtGa77o6ZsTl8LMlNpB9GSyM7LlT6nzkgjk7bUXehFl30C6P61HdLU9fbXLvLT1SuRPBJujSL5q3VDd0+yYmif8AFjrIFblzvaq/ZLFA3YrWrI8Hqu/TzOdNYlDLjGibtHIpriLQ5pAsu6e6yOr4W/0lC9Js+Zqe7/hNEqqeelndBUwSQSsXJ0cjFa5q8qLvH0FMbfbDZL7T9AvNqo6+PLJEnhRyt5lXangOpB0jemiVl+7Qcao6Jxrpheqb9Pt+Sg4LSYt1fML3BHzWCsqrPMu9Gq9Gh+hy7pP2vAQ1jPRBjfDKPmktvsjRt29MUKrKiJxq3LdJz5Zcp3Ka1aWo0NdcuxdBHauxKyl0uZem1NP7+xqmG8RXzDlalZY7nU0E3CsT9j+Rzd5yciopNuB9YiVnQ6XGFsSRN5ayiTJed0a7F50VOYr8qKi5LsUH1qaGCpT/AJG6dvea9HaVTRr/AMTrk2d3AvlhfE9hxPRdOWK6U9dGnvkY7J7ORzV903woZg+f9ruFfa61lbbayoo6mP3ksEiscnhQm3R3rBV9IsdDjKm6dg2NStp2o2VvK5uxHc6ZLzkarLAlj+KFesmzv/ZL6DpPDLc2oTqrt7v1/NJY6opqepbuaiCKZvFIxHJ5TB3HA+DrjmtZhezyuXff0mxHftImZ78O320YhtrLjZbhBW0z/wAuN3vV4nJvtXkXJTJHDR0kS3IqovAkisimbeqI5F+pG910I6Oq5FVlomonr+VTVL08jlVvkNLverdQPRXWTEtTCvAyrgbJn+s3c5fQpPgNqO1KuPCRfrp5mlNY1DL2o0+mjlcVFxDoKx9a0c+mpKW6xN250k6brLuX7lc+RMyPLvabraKjpe622roZfiVELo1X6UL+nRX0dHX0zqWupYKqB/vopo0ex3Oi7DqQ9IpW6JWou7Qcao6KQO0wvVu/Sn4Pn4C3eK9BuBr1u5aOlms1S7efRvyZnyxuzTLkTIh3GGgXGNmR89qWC+Uzdv4D3E2XLG7f5mqqnaprZpZ9F/VXz98CP1fR+tp9PV6yeWn7YkTA7qylqaKpfS1lPNTTxrk+KVise1eJUXah0nVRb9KHFVFRblAABgAAAAAAAAAAAAAAAAAA+gdv6wp+9N8yHedFB1jT96b5jvKuXEuVuCAAGDIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABpmONGWEMXo+S42xsFa7/rKXKObPjVcsnfrIpAGkDQZijD6SVdm/8AfKBua/gWZTsTlj/K/Vz5kLZA6VJatRS6Gremxf5oOTXWLS1l6ubc7an80nz3e1zHuY9qtc1cnNVMlReI4l0tImi/C2NI3zVlL0nclT3NdTIjZM/lJvPTn28SoVm0kaL8TYIkdNVwdOWzdZMrqdFVnIj032Lz7OJVJXQ2vBVfDg7Yv4ITaNh1NFe7tN2p+U7uRrmF8R3vDFzbcbHcJqOdPfbhfcvTic1djk5FLKaK9N9oxGsVsxIkNpujsmsk3WVPOvIq+8XkVcuJeAqqD7VtnQ1afGmnb3mvZ9q1FC74FvbsXD9H0KBU7RHpmuuFXQ2q+uludlTJrc1zmpk+Qq++b8lfAqby2isF5tl+tcV0s9bFWUkqZtkjXPnRU30VOFF2oQuus6Wjdc/SncpYVnWrBXsvYtzu9O/9oe8AGgdIAAAwmKsJ4dxTS9L32001YiJk17m5SM7l6ZOTwKQTj7V6rabolZg6u6cjTNekqpyNkTka/Y13hy51LIg3qW0KilX/AI3aNncc+tsulrE/5W6dqaF/m8oBdrbcLTXyUFzop6OqjXJ8UzFa5PAvBynkL34vwph/FlAtHfbbDVsRF3EiplJGvG1ybU/8zK46TNBd7sCS3DDbpLzbm5uWJG/+piTlanv05W7eThJTRW3DUfDJ8LvtxIVaPR2opb3xfG37p9PYh4H6qK1VRUVFTYqKfh2yPAAAAAAAAAAAAAAAH0EoesoO9t8x3HTQ9ZQd7b5juKuXEuVuCAAGDIAAAB4vZe0/nOi+vb6z8debQ3311oU56hnrPfUdsPOUZtPcDH+zdm/O9B4yz1j2bs353oPGWesdR2wxlGbUMgDH+zdm/O9B4yz1j2bs353oPGWesdR2wZRm1DIAx/s3ZvzvQeMs9Zx9n7F+erb40z1jJu2DKM2oZIGN9n7F+erb40z1j2fsX56tvjTPWMm/YMqzahkgY32fsX56tvjTPWPZ+xfnq2+NM9Yyb9gyrNqGSBjfZ+xfnq2+NM9Y9n7F+erb40z1jJv2DKs2oZIGN9n7F+erb40z1j2fsX56tvjTPWMm/YMqzahkgY32fsX56tvjTPWPZ+xfnq2+NM9Yyb9gyrNqGSBj0vdlVM0u9v8AGWesezdm/O9B4yz1jqO2DKM2oZAHgS9WdVyS7UCryVDPWemCppqj8RURS9w9HeYwrVTFDKPauCncADyegAAAAAAAAAAAAcJoop4XwzRskje1WvY9qK1yLvoqLvocwZBA2lfQPT1bZbtglrKeo2uktznZRv72q+9X5K7OLIrrX0lVQVktHW08tNUwuVskUrFa5i8Sou8fQM0bSno0seO6JXztSjusbcoK6Nvuk4mvT8pvJvpwKm0kNnW46K6OfSm3vT35kVtXo4ya+Wm0O2dy7tnIpcbVo4x1fMDXdKy1y9Ep5FTpmkkVehzN5eJ3E5NqcqZovixthS9YPvT7XeqVYpE2xSN2xzN+Mx3CnlThyMEStUjqI7luVqkKa6WllvS9rm8ULyaPMbWTG9mS4WmbKRmSVFM9fwkDl4FThTiVNi/SibMUMwliO74WvcN3s1U6nqY9ipvtkbwtcnC1eL+Zb7RRpEtOPbR0WDc01zganTVG52as+U34zF4+DeXlhlqWS6lXrx6Wct/uT+xrcZWpk5ND+e72N1ABxSQAAAAAAEbaUtENgxkyWupWstd5XalTEz3Eq/3jU3+6Tbz7xVrGeFL5hG7Ott8onQSbVjkTbHK34zHcKeVOHIvcYnFeHbPii0SWq90UdVTv2pnsdG7gc12+1eVDtWfbMlNcyT4m/dN3sR+1bAhrL3x/C/7Lv9+ZQsEi6XNFV3wNUOrId3X2R7so6prfdRZ7zZETeXl3l5F2EdEzhnjnYj41vQgFRTS00ixypcqAAH1PgAAAAAAAAAfQSi6zg723zHcdVH1pD3tvmO0q5cS5W4AAGDIOE+2CRPkr5jmcZEzjcnIplAp89wAWiUyAAAAAAAAAAAAAAAAAAAAAAAAAAAD9RVRc0VUVOFD8ABlKDEeILfl0hfbpS5b3Qat7MvoU2i06YNIluVqR4jmqGJvtqY2S5+FyZ+U0MHxfTwydtqL9DYjq54uw9U3KpOlg1jr1CrWXywUVY3eV9LI6F3Pku6RfISPhnTngO8K2Oqq6i0TLs3NZFk3Pu25plyrkVEBzprDpJME6q+R1afpHXQ4u6yeaflLlPoFb66iuNK2qt9XT1dO/3ssEiPYvMqbD0FBrDfLzYatKqzXOroJuF0Eqt3XIqJsVORSYMFaw15o3Mp8VW+O5w7y1FOiRTJyq33ruZNzznEqej80emJesnBSRUnSinl+GZOqvFPf7FmQa3gvHOGMXwdEsd0imlRM307/cTM52Lty5UzTlNkOE+N0buq9LlJJHKyVqPYt6eQAB4PYAAAAABhMZ4WsuLrLJar3SJNC7bG9NkkTuBzHcC+feXNCoWlPR7d8B3foFWi1FvmcvStY1uTZE+KvxXpwp9GaF2DH4is1txBZ6i03elZVUk7dy9jk3uJUXgVN9FTeOpZ1pvo3XLpauKexx7WseOvZemh6YL+F/mgoKZDDt6ueH7xT3a0VT6argdmx7eHjRU4UXeVF3zadLujq5YDvG5du6m01Dl6Uq8t/5D+J6eXfThRNGJxHJHUR9ZulqlcSxS0sqtdoc0ujoi0iW7Htm3bdxTXWnanTdJnvfLZxsXyby8CrvJQfDN8ueHL1T3i0VLqerp3Ztcm85OFrk4UXeVC5GirHltx5h9K2m3MFdDk2spc81idxpxtXgXwb6KQ61rKWlXKR9hft+ie2HbSVjclL20+/72m4AA4hIgAAAAADqq6anrKWWlqoY54JWqySORqOa9q76Ki76FXtOGh+bDKzYgw3HJPZlXdTQbXPpOXjVnLvpw8ZaY/Hta9jmPajmuTJUVM0VOI3qGvko39ZmHem059o2bDXx9V+Pcven82Hz2BNun3RItjdNifDFOq2ty7qrpWJn0qvxmp/V8n5PNvQkTylqo6qNJI1/RWlZRy0cqxSpp5+aAAGwagAAAAAB9BaTrSHuG+Y7TqpOtYu4TzHaVcuJcqYAAGDIPxdqKh+gA+eoP1yZOVOU/C0imQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADtpaielqI6mlnkgmjdumSRuVrmrxoqbUUmfRzp9u9sWKhxbE660aZNSqYiJURpxrwP8AIvKpCYNappIalvVkbebdJXT0jutC67ku9C+2GMQ2bEtsZcrHcIa2mdsVWLtYvE5q7WryKZQoXhXEd6wvdGXKx18tJUN2O3K5tkT4rmrscnIpaHRLpjtGL+hWu6pHbL2uxsau/BVC/IVd5fkrt4lUiNoWLJTXvj+Jv3QnVl9IIqu6OX4X/Zd3sSmADiEhAAAAAAMbiax23EdkqbPdqZs9JUN3LmrvtXgc1eBUXailNdKWBblgTETrfVZzUcub6OqRMkmZ/JybM0/kqF3DXtIOErZjTDc9muTct17qCZEzdBIm89P5pwoqodWy7SdRyXO7C4+5xbZsltfHe3Q9MF/C/wA0FFjN4JxPdcI4ggvVpm3E0a5PY73krF32OThRfJsVNqHVi7D9ywviCqsl1i6HU07ss0969vA9q8KKm0xJObmTM2opXCLJBJsc1fqioXT0caTsM43ibFR1HSly3Ob6GoVEk5VYu89Obbxohu58+IJZYJmTQSPilY5HMexyo5qpvKipvKT1om07zQOhs+N3umh2MjuTW5vZ31E98nyk28aLvkVr7BdHe+n0ps7/AKbeZNbM6SslujqtC7e767OW4saDqpKinq6aOqpZ454JWo+OSNyOa9q7yoqbFQ7SOKlxLEW/SgABgAAAHGRjJGOjka17HIqOa5M0VF4FKrawOi5cLVjsQ2KBVslQ/wDCxNTPpR68HcKu9xLs4s7VnRX0lNX0U1FWwRz007FjliembXtVMlRUN6grn0cvWbh3ptOdadmx18PUdoVMF2frafPwG+6adH1RgXEathR8lnq1V9FMu3JOGNy/Gb5UyXjRNCJ/DMyZiSMW9FKwqIJKeRYpEuVAAD6nxAAAPoLS9bRdwnmO066XraLuE8x2FXLiXMmAABgAAAHz4m2SvT5SnA7KnZUSp8tfOdZaKFNLiAAZMAAAAG7YQ0W4wxXZWXizUVPLSPe5iOfUMYubVyXYqmVXQZpHRNlop15q2L7xquraZjla6REVPNDcZZ1W9qObG5UXyUjQEkO0H6SU3rHEvNWw/eODtCektM8sOtXmrqf75jP6X5jeKHr+mVnynf4qR0CQ/aV0m9rX/fU/+4PaV0m9rX/fU/8AuGc+pfmN4oY/ptZ8p3+K+xHgJD9pXSb2tf8AfU/+4PaV0m9rX/fU/wDuDPqX5jeKD+m1nynf4r7EeAkNNCmkxV24bROeup/9w5e0lpL7XW+PU/3xn1L8xvFB/Taz5Tv8V9iOgSL7SWkvtdb49T/fHtJaS+11vj1P98xn9L8xvFB/Taz5Tv8AFfYjoEiLoT0mImzDjV5q6n++fntK6Te1r/vqf/cM59S/MbxQf02s+U7/ABX2I8BITtC2kxE24ZXwVtOv/wCh4qrRTpDps+iYVrnZf1e5k+yqmUradcJG8UPK2fVtxidwX2NKBlLph2/2vP2SsdyokTfWelexPKhiz7tcjkvRbzWcxzVuclwAB6PIAAAAAAP1qq1UVFVFTaipwH4ACfNC+m6SmWCwY0qHSQbGU9yeubo+JsvGnyt9OHPfSxkb2Sxtkje17HojmuauaKi7yop89yXtBulyowtNFYcQSyT2N67mORfdPo1XhTjZxpwb6cSxq1LFR98tOmnvTbuJdYvSBWKkFSujuXZv8vMtYDrpp4amnjqKeVk0MrUfHIxyOa5qpmioqb6HYRMnCLeAAYAAABGunnR5HjTDq1lBE1L3QMV1M5N+Zm+sS8++nEvOpUF7XMe5j2q1zVyc1UyVF4j6EFZtaDAKWy5JjG1Q5UlbJua5jU2RzLvP5ncPyu6JNYVodVc3euhcPYiHSWy+s3Oo00p2vf3IOABLCEEhaJNKV4wNVtppFfXWSR2c1I521me+6NV96vJvLw8aW0wvf7ViWzQ3ezVbKmllTYqb7V4WuTfRycSlCTbNGWO7xgW9pW0DlmpJVRKqkc7Jkzf5OTgdwcqZocS1LIbUoskeh/P9+ZIrGt19IqRS6Wcv15cC7wMNg3EtpxZYYLzZ5+iwSJk5q7HxP4WOTgVP/wCpsVDMkKexzHK1yXKhYTHtkajmreigAHk9AAAGDxzhm3Yuw1VWO5M/BzNzjkRM3QyJ717eVF+lM04Sk2LLDcMM4gq7JdIuh1NM/cqqe9e3gc3jRUyVC+pE+sdgFMT4aW926DdXe2MVyI1PdTw77mcqptcnhThO5YtoZvJknr8LvspHekNl51Flo0+Nv3T+YFTQATYrsAAA+g1N1vH3CeY7Drp+t4+4TzHYVcuJcyYAAGAAAAfPqsTKrmT+8d5zqO+vTKuqE/vXedToLRTApp2IABkwAAAW61X+xLSfOp/tEoEYasPYko/nM/21JPK6tHWpN6lr2VqUXpTkAAaRvgAAAAAAAAAAAAAAAAAA16/YIwhfUct1w7bqh7t+XoKMk/bbk7ymwg9skcxb2rcp4kjZIlz0RU8yE8Uau+HatHy2C6VlslXa2Kb8PFzcDk581IfxloixvhlHzTWxbhSM2rUUKrK1E41bluk51TLlLmA6tPblVDocvWTz9ziVXRyjn0tTqr5e3+j56gufj7RThHF7JJqihbQ3B21KykRGPVeNybz/AApnyoVw0k6J8T4L3dVJElxtaLsrKdq5NT+8bvs8qcpJaK14Kr4b+q7Yv4IjaFhVNHe67rN2p+U7uRH4AOqcUAAAAAAmPQBpUfhqrjw5f6hXWWZ2UEz1z6Ueq/YVd/iXbxlpmua5qOaqOaqZoqLsVD57FidWnSWsqQ4Jvs+b2plbJ3rvon9Cq/Z+jiQjNtWXei1ESae9Pz7kw6PWyrVSlmXR/av49uBYEAETJsAAADw361UV7s1XaLjCktJVxLFK3kXhTiVN9F4FRD3Ayiq1b0MOajkVFwUojjvDdZhLFVdYq3NXU8n4OTLJJY12tenOmXMuacBgy02tFgxLzhZuJqOLOutTfw25TbJTqu39lV3XMrirJYVm1iVcCP78F3lW2tQLQ1Kx/wBq6U3frAAA3zmG36K8d3LAmIG11KrpqKZUbWUu6ybKzjTicnAvg3lUuXhy827EFlprxaqhtRSVLN0xyb6caKnAqLsVOBUKCkmaB9I8mCr70jcJXOsVa9Enbv8AQH7ySonkcnCnKiHCtizEqG5WNPjT7/sklg2wtK/Iyr8C/ZfbbxLfA4xSMlibLE9r2PRHNc1c0ci7yopyIWWEAAYAAABUXWKwOmFMXrcKCHcWq6K6WJGp7mKT8uPkTNc05Fy4CLy8WlDClPjPBlbZZEak6t6JSSL/AEczUXcrzLtReRVKRVUE1LVS0tTE6KaF6xyMcmStci5Ki8qKTqxq3OYOq7tN0eylb9ILOzSo67E+F2lN/eh1AA7BwT6DU3W8fcJ5jsOum62i7hPMdhVy4lzJgAAYAAAB8/bkmVxqU/vn+dTznquyZXSrT+/f9pTylotwQpt3aUAAyeQAAC3mrF2I6H5xP9tSTiMtWNP+UVB3+f0ikmlc2hrUm9eZbFl6lF6U5AAGmbwAAAAAAAAAAAAAAAAAAAAAAAAPx7WvYrHtRzXJkqKmaKh+gAg7S3oMo7m2W74Njioq7a6Shz3MM3ccDHcnvebfK3XGiq7dXTUNfTS01TC5WSxStVrmLxKin0CNA0uaMbTjugWZEZR3mJmVPWI333EyT4zfKnBwosis223RKkc63t296e6EWtfo8yZFlpkuds7l9l+xTQGRxFZbnh68VFpu9K+mq4HZPY7h4lReFF4FTfMcS9rkcl6YEEc1WqrXJcqAAGTyDnDLJBMyaGR0csbkcx7VyVqouaKi8CnAAFydBuPY8b4VTpp7UvFCjY6xm9u/iyInE7LwKi8hIJRvRni2rwXi6lvVPunxNXodVCi/jYVX3TefhTlRC7ltraW42+nuFFM2amqY2yxSN3nNcmaKQS2KDNZus3suw8vIsmwbTz2DqvX424+exfc9AAOQd0AAA66iGKogkgnjbJFI1WPY5M0c1UyVF5MikOlPC78H44uFlyd0ux/RKVzvyoXbW7eFU3l5UUvEQprXYWS4YXpsT00edRbHpHOqJtWB65Zr3Lsv2lO1YdXkajqLg7R9e72I/wBI6LOKXKNT4mafp3+/0KwAAnBXIAABY/Vf0grVU6YJu0+c0LVdbZHrtexNqxc7d9OTNOBCez5+22tqrbcKe4UUzoKmnkbLFI3fa5FzRS7ejHFtNjTB9JeodyyZydDqokX8VM33yc28qcioQ63aDJPy7E0Ox3/sn3Ru08vHm8i/E3DzT9cjZwAR4lAAAAKt60+EW2jFUOJaOLc0t2zSbJNjZ2pt/aTJedHFpDVNLOF2YvwJcbOjUWp3HRqRV4JmbW/TtavI5ToWZV5rUNcuC6F3HMtiizylcxE+JNKb098CkAP1zXMcrXNVrkXJUVNqKfhYRVh9BqbraLuE8x2HXTdbRdwnmOwq5cS5kwAAMAAAA+f93+Fqzv7/ALSnlPXePhes7+/7SnkLQb2UKbf2lAAPR5AAALfasvYht3f5/SOJMI01Z+xBbO/T+lcSWVzaGtSb15lsWXqUXpTkAAaZvAAAAGvXzG+EbJWyUN1xFbqSqiy6JDJMm7bmiKmbd9M0VF8JhZtL+jiJVR+KKdcviQyu8zVPu2lnel7WKv0U131lOxbnSIn1Q3sEdSabdGjV2Yge/uaGf+bDpXTno4Rcku9QvKlFL90+iUFUv/m7gp8ltOjT/wBW8UJLBGft6aOc8vZSq5+k5PUc26cdG65Z3qdvPRTfdM/0+q+WvBTH9Uovmt4oSSCOm6bdGi7+IXt56Gf7h3R6ZNGr/e4njTuqWdPOwwtDUp/5u4KektKjX/1b/knub+DSY9LOjuT3uKqNO6a9vnaZS346wZcHoykxTZ5Hu3mdOMRy+BVzPm6mmbixU+in0bWU71ubIi/VDYgcY3skYkkb2vY5M0c1c0U5HxNgAAwAAAAAADRNMOjuhx5Y9wnQ6e70zVWjqVT+B/GxfIu1OFFp3d7dW2i51FsuNO+mq6Z6xyxPTa1U/wDN/hL/AJD2sdo5biKzvxNaYP8A3ehjzmYxNtTCm+nK5u+nGmacRILGtNYXJDIvwrh5L7EY6QWOlQxaiJPjTHzT3QqsACZEAAAABY/VRxl0xRVGDK6XOSnRaihVy78ar7ticyruk7p3EVwMthC+VWGsTW++0S/hqOZJNznlu27zmryK1VTwmlaFKlVA6Pv7t50LLrVoqlsvdgu7+aS+gPLaK+mutqpLnRSdEpqqFs0TuNrkzTznqK7VFRblLVRUcl6AAGDIPHe7bTXiz1lqrWbunq4XwyJ8lyZLly7T2Ayiqi3oYc1HJcuBQPEFsqLLfK60VaZT0c74H7N9WqqZpyLvnhJj1rcPJbcdU97hZuYbrBm9UT+ljya7+FWeUhwsiknSogbJtT/ZUtdTLS1D4V7l+3d9gADZNQEqatuM1w3jVtqq5tzbburYX5rsjm/o3cmaruV7rPgIrP1qq1yOaqoqLmipwHxqIG1ETo3YKbFJUvpZmysxQ+hINM0M4r6sMAUNylkR9bEnS9Zx9FZlmq90mTv1jcyt5YnRPVjsULagmbNG2RmCpeAAfM+gAABTnWFw11OaSq1YY9xSXH/1sGSbE3aru08D0ds4lQjstJrYYf8AZDBNLfomZzWufKRUT+ikyav8SM+lSrZYFk1GcUrVXFNC/T9FX23SZtWvamC6U+v7vPoNS9bRdwnmOw66XraLuE8x2EAXEtBMAADAAAAKAXj4XrPnD/tKeQ9d5+GK35xJ9pTyFoN7KFNv7SgAHo8gAAFwNWjsP2vvtR6VxJRG+rV2HrT3yo9M8kgrmv1qT1LzLYszU4vSnIAA0zeAAAKc6yHZlvfNT/5eMjskbWS7Ml67mn9BGRyWPQarH6U5FTWlrkvqdzUAA2zSABziilmcrYo3yKiZqjWquScYBwAAAAABlbBiO/2CVJLNeK6gXPNUhmc1rudu8vhQlzBGsLeKN7KfFdDHcoN5amnakcycqt967mTckHA1aiigqE/5GovPibtLaNTSrfE9U8u7gXuwfi3D+Lbf07YrjFVNTLokfvZIl4nNXanmXgzM4UEsN4udiucVztFbNR1cS5skjdkvMvAqLwouxS0WhnTDQ4uSOzXvoVDfMsmZbIqruc953yfo4kilo2K+mRZItLfuhNrK6Qx1apFN8L/svtuJZABwiRgAAAAAFR9YvArcKYsS5W+HcWq6K6SNrU9zDL+WzkTbmnIqpwEWl4tKOFYcY4KrrM9remHN6LSPX8iZu1q8iLvLyKpSCeKSCeSCZjo5Y3Kx7HJkrVRclRSdWLW5zB1Xdpuj2UrfpBZ6UlT1mJ8LtKb+9DgADsHBAAALSaqWJVuWDanD9RJup7VLnEirt6DJmqfQ5HcyKhMxTrV2v/sFpRt7Xv3NPcUWil28L8tx/GjfpUuKQS26fI1SqmDtPuWV0dqs4okRcW6Pb7AAHIO4AAARZrPWJLtoylrmMzntc7Klqpv7hV3D05snIv6pUgv3iG2xXiw3C0zZdDrKaSByrwI5qpn5ShFVBLTVMtNM1WSxPVj2rwORclQmHR2brQujXuXmQPpXT9Sdkqf3Jd9U/SnWACREVAAAJl1U8TLbMZ1GHp5Mqe6xZxoq7EmjRVT6W7pOVUaWlKBWO41FnvNFdaR2U9HOyePnaqLlzbC+dnr6e6WmkudK7dQVcDJ4142uaip5FId0hpupMkqf3c0/RPei1XlIHQLi1dG5f3zPUACPEpAAAMXiy0x37DFzs0uW5raWSFFX8lXNVEXwLkvgKGTxSQTyQTMVkkblY9q76Ki5Kh9Byl2ni0JZtKt7gYzcxTzJVR8SpIiPXL9ZXJ4CTdHJrnviXv0kQ6WU97I5k7lu46U5KXNpetou4TzHYddL1tF3CeY7CNLiS5MAADBkAAAoBevhit+cSfaU8h7L18M1vziT7SnjLQZ2UKbf2lAAPR5AAALh6tfYdtHd1Hpnkjkc6tnYcs3d1Hp5CRiuK/WpPUvMtmzNTi9KcgADUN0AAAp5rJ9mO8dxT+gYRwSRrK9mG7d7p/QsI3LHoNVj9Kcip7T1yX1LzAANs0QStqsJnpVjXioZl+yRSSxqqpnpTz4rfMvlaaVpapJuU6Nk67FvQs/dcP2G6ovsnZbdW57/AExTMkXyoanddDmjq4Zudh6Omev5VNM+LLwIu58hv4IDHUzR9hypuUs6Wkgm/wCxiLvRCFLrq54XmzdbrzdaNy7ySbiVqeDJq+U1K6at9+jVfYzEVtqk4OmInwqv0bsswDdjtmsZ/ffvuOdLYFBJ/ZduVUKeXXQlpFoc1ZZ4q1iflU1Sx3kVUd5DT77hnEViTdXmx3GgYrtyj56dzGKvEjlTJfApfMiTWuTPRfHyXKL7Lzq0NuTTTNie1NK3HEtHo3TwQPmjcuhL7luUqgcopHxStlie5kjHI5rmrkrVTeVF4FOIJSQwtZq/6UequjTD98mT2cp2ZxyLs6bjTh7tOFOFNvHlLx8/7TcKy03OmuVvnfT1dNIkkUjd9rk/83i7OjHFtLjTCFJeoNyyZU6HVRIv4qZPfJzbypyKhC7as1Kd2VjT4V+y+xYPR61lqmZCVfjb9090NnABwSSgAAAqVrN4W9gcfuulPHuaO8NWobkmxJU2SJ9Ko79ctqRfrM2BLzoyqKxjM6i1SNqmKibdx716c25XdfqnUsepyFU3Y7Qv1/ZxrepEqaN12LdKfTH7FRQAT4rIAAA7aSolpKuGqgerJoXtkjcnA5FzRfpQvth25RXmwW+7wZdDrKaOdqJwbpqLl4MyghbvVjuy3LRVSwPfupLfUS0q57+We7b5HongI70ih60LZNi8/wDRK+ilR1Z3xL/cl/D/AGSeACHk7AAABSjTda/YjSpf6VG7lklUtQziylRJNnhcqeAuuVb1trf0vj6guDW5Nq7e1FXjex7kXyK07vR+Tq1Kt2oRvpTD16NH+FU++j2IZABNSvQAAAW61Y72t20X09LI/dTWyd9Kue/ufft8GTsv1SopO+qBdViv17srnbKimZUsReON25XLnSRPoORbkOUpFXw6Tu9HJ8lXNTuden55oWTABBCyQAAAVs1wLWkV+sd5a3rmmkp3qnHG5HJn9Yv0FkyHtbG3dNaOqauanu6KvY5V+Q9rmr5VadOx5MnWM89HE5FvQ5WgkTZp4L7EuUvWsXcJ5jtOql61i7hPMdpzVxOumAABgAAAFAb38M13ziT7SnjPZe/hqu+cSfaU8ZaDOyhTb+0oAB6PIAABcTVt7Dll7qo9PISMRzq29huy91UenkJGK4r9ak9S8y2bN1OL0t5IAAahugAAFPtZbswXXvVP6FhGxJWsx2X7n3mD0TSNSx6DVY/SnIqe09dl9S8wADbNEEt6qKZ6UJF4rbKv8TCJCXtU1M9JtQvFa5V/xIzRtPVJNx0rH16LehawAFdlqAAAAibWrTPRanJcIfM8lkijWoTPRW7krof9RvWbrce9Dn2vqMu5SpgALEKpBLerBit1kxz7CVEmVFeESLJV2NmTNWL4drfCnERId1FUzUdZDV00ixzwSNkjem+1zVzRfpQ+FVA2ohdG7vNmjqXUs7Zm9y/7PoIDH4aukV7w9brxDsjraaOdE4t01Fy8GeRkCtnNVqqiluNcjkRyYKAAeTIPJeKGG52isttQmcNXA+CRPkuarV856wZRVRb0MKiOS5T59VlPLSVk1LO3cywyOjenE5FyXyodRt2magS26U8RUyJki1r5kTiSTKT/AFGolmxPykbX7URSn548lK6PYqpwAAPofIFhtTy4bMRWpzv6mojT9prv9BXkmHVLqlh0kVdMq+5qLbImXKj2KnkRTm2uzr0b0+vBTrWFJk6+NfO7ilxakAFfloAAAAgbXCokfZcP3Hc7YaiWBV7tqO/0KTyRLrWU3R9FzZcut7hDJ9KPZ/qOjZT+pWRr589By7bZ16CVPK/hpKngAsEq0AAAEh6utwWg0uWfN2TKnotO/l3Ubsk/aRpHhntHlUtDj7D9Wi5JFcqdy83RG5+TM+FUzKQPbtReRs0UmSqI37FTmXsABWhboAAANG090XT2iO/xImaxwNmTk3EjXr5GqbyYPSDT9NYDxBTZZrLbKlic6xOyPvTO6kzHbFTma9WzKU727UXkZel61i7hPMdp1UvWsXcJ5jtPiuJ90wAAMGQAACgN8+Gq75zJ9pTxntvvw3X/ADmT7SniLQZ2UKbf2lAAPR5AAALi6tvYbsvdVHp5CRSOtW7sN2Xuqj08hIpXFfrUnqXmWzZupxelvJAADUN0AAAqBrM9l65d5g9E0jQkzWa7L1x7xB6NpGZY1n6rHuTkVRamuy+peYABuGgCYdUlM9JdYvFaZV/xYiHiYtUjslV36Il9LCaFqapJuOnY2vRby1AAK8LTAAABFWtN2KZfnsPnUlUirWl7FMvz2Hzqbtna3HvQ59ralL6VKlAAsUqkAAAuJq31z63RFakkdunUz5oM+RJHKnkVEJGIg1TJlk0Z1TFX8VdJWpzdDjd/Ml8rq0W9WqkTzUtayn9eiiX/AOUAANI6AAABUXWfpkg0tVkqJl0xTQSry5M3H+ki8mPW3i3GkihkT+ktUarzpLKnqIcLEs13WpI18kKqtdvVrpU81AAN45wJM1ZZVj0vW5if0sE7V+rcv8iMyRtW3P25LLl8Woz+okNSvS+lk9K8jesxbqyL1JzLiAArgtgAAAEc6yUSSaHLy7LbG+ncn17E/mSMaBrD9hy/9zD6eM26FbqmP1JzNO0kvo5fS7kpTQAFjlSgAAA77dL0C4U06Ll0OVr8+ZUU6AYVL0uMoty3n0KB+MXdNR3GmZ+lXFygAAA8t4jSW01kSpmj4HtVOdqnqOEzUdC9q7ytVDKLct5hyXoqHGk61i7hvmO06qTrWLuG+Y7QuITAAAwZAAAKA3z4brvnMn2lPGey+fDVd85k+0p4y0GdlCm39pQAD0eQAAC4urd2G7J3VR6eQkUjrVu7Ddk7qo9PISKVxX61J6l5ls2bqcXpbyQAA1DdAAAKg6zXZeuPeIPRtIzJM1muy9ce8QejaRmWNZ+qx7k5FUWprsvqXmAAbhoAmPVH7JNf+iJfTQkOEx6o/ZJr/wBES+mhNC1NUk3HTsbXot5acAFeFpgAAAivWl7FMvz2HzqSoRXrS9imX57D51N2ztbj3oc+1tSl9KlSQAWKVSAAAWf1QnZ4GuzOBLmq/TEz1E1kI6oP/wANvH6QT0bSbivrW1yTf+C0rE1CLd+QADnHUAAAKv63if8AHdqdx2xE/wAWQhUmzW9X/je0J/8AWp6V5CZYVlanHuKutvX5d/4AAOgcoEm6skXRNLtvf/VQTv8A8NU/mRkTVqi210+NrndFbnHSUPQ8+J8j0y8jHGjab0ZSSKuznoOlZDFfXRIm1F4aS0AAK7LUAAABHOslKkehy8tVclkdTsT69i/yJGIj1rqtKfRjFBntqbjFHlyI17v9KG7ZzetVRp5oaFqu6tFKv/yv3S4qiACxSqAAAAfrUVyoiJmq7EPw92H4emb9b6fLPotVEzLneiGHLcl5lqdZUQv2xNyxreJMj9AKuLlAAABwmVGwvVVyRGqpzPFfZegWSvmzy6HTSO+hqqempeqIYctyKp6KTrWLuG+Y7TqpOtYu4b5jtMLiEwAAMGQAACgN7+Ga75xJ9pTxnsvXwzW/OJPtKeMtBnZQpt/aUAA9HkAAAuLq3dhuyd1UenkJFI61buw3ZOeo/wAxISKVxX61J6l5ls2bqcXpbyQAA1DdAAAKg6zXZeuPeIPRtIzJM1muy9ce8QejaRmWNZ+qx7k5FUWprsvqXmAAbhoAmTVG7JNw/Q8vpoSGyZNUbskXD9DyemhNC1NTk3HTsbXot5aYAFeFpgAAAivWl7FMvz2HzqSoRXrS9imX57D51N2ztbj3oc+1tSl9KlSQAWKVSAAAWd1Qk/4Ku7uO45f4bCbSFtUNP+Abo7jujk/woyaSvrV1yTeWlYmoRbvyAAc46gAABV7W8X/j21pxWtq/4shCxMut0v8AzFtreK0Rr/jSkNFhWVqce4q22tfl3gAHQOWC2Gq1h91p0eOukzNzNdp1mTNMl6E33LPKjl5nIVswFhuqxZiygsVIjkWokTor0T8XGm1715kz8OScJeW3UdNbrfT0FHEkVNTRNiiYm81rUyRPoQjfSGqRsaQJiuld3++RLeitGrpXVC4JoTev65noABEScgAAAr5rh3FEjw9aWu2qs1TInNuWtXyvLBlQtZi8JddKlXAx26it0MdI1U3s0Tdu/ieqeA7NhRderRdiKv4/Jwekk2ToVb4lRPz+CMgATkrcAAAG1aIqPp/SdhynyzT2QikVONGO3a+RpqpKeq5bentKsNSrc20FJNUcmaokaek8hq1smTp3u8lNyz4srVRs2qnMtuACty2gAAAa9pMqelNHeI6hFyVlsqNzzrG5E8qobCR9rEVvSWiG9Ki5PnSKBvLupGov8OZsUrOvOxu1U5mtWvydNI/Yi8jfKTrWLuG+Y7TqpOtYu4b5jtPguJsJgAAYMgAAFALz8MVvziT7SnkPXefhet+cSfaU8haDeyhTb+0oAB6PIAABcbVv7DVk56j/ADEhIhHerf2GrHz1H+YkJEK4rtak9S8y2bN1OL0t5IAAahugAAFQdZrsvXHvEHo2kZkmazXZeuPeIPRtIzLGs/VY9yciqLU12X1LzAANw0ATJqjdki4foeT00JDZMeqN2Sbh+h5fTQmhampybjp2Nr0W8tOACvC0wAAARXrS9imb57D51JUIr1pexTN89h86m7Z2tx70Ofa2pS+lSpIALFKpAAALSaoqf8u7kv8A9s/0MRMxX3VjxdhmwYIr6O9XyioJ33J8rI55UaqtWKNM+bNF+glb2ysA9ttp8YQgdp08rqt6o1VS/YWZY9VA2ijRz0RbtqG2A1P2ysA9ttp8YQ4u0mYAama4ttXgmRfMaGazeBeCnSzyn+YnFDbgaRPpa0dQ57vFNIuXxGSP+y1TD1+nbR3TIqw3CsrFTgho3pn+2jT6Noal2Ea8FPk+0qRmMreKEUa3Kf8AMi3rx2iP00xDZv2nLG1tx3iumutrpaunggom02VSjUc5Ue92eTVVMvdJwmgk7s+N0dMxj0uVEK2tSVktZI9i3oqg/URVXJEzVT8LEavuiOSGWnxbiml3L0ykoKKRu1q76SvTj4k8K8B6rKyOkjV7/om08UFBLXSpHGm9diG26u+j12EsPuu90i3N4uTEVzXJtp4t9I+ddiu8CcBKoBX1RUPqJFkfipaNJSx0sLYo8EAAPgbAAAB4r7cqaz2WtutW7c09HA+aReRqKuXPsKGXevqLpdau5VTt1PVzvnkXjc5yqvlUsrrXYqS3YXpsL00mVRc3JJOiLtbAxc/4nIn7LisBMuj9N1IVlX+7khAulNWkk7YG4Nx3r+gACQEWAAABYvU/tCtor7fnt/GSR0kS9ym7f9pn0FdC6WgqxrYNF9nppGbmeoi6bm2bd1Iu6RF5UarU8BxLemydL1PEt35JF0Zp8rW9fuair+DeAAQgsQAAAEKa3Vx6Bgq12xrsnVdd0RU42xsXPyvaTWVf1uLr01jW22ljs2UNHu3JxPkdtT9lrPpOrY0WUrG+Wn+fU43SCbJUD/O5OK+xZuk61i7hvmO06qTrWHuG+Y7TlridhMAADBkAAAoBePhes7+/7SnkPVd/has7+/7SnlLQb2UKbf2lAAPR5AAALjat/YasnPUf5iQkQjrVu7Ddk7qo/wAxISKVxX61J6l5ls2bqcXpbyQAA1DdAAAKg6zXZeuPeIPRtIzJL1mey9cu8weiaRoWNZ+qx7k5FUWprsvqXmAAbhoAmPVG7JNf+iJfTQkOEx6o/ZJr/wBES+mhNC1NUk3HTsbXot5acAFeFpgAAAivWl7FM3z2HzqSoRdrPQzT6LJY4Inyv6chXcsaqrvrwIbtna1HvQ0LV00UvpUqMD1+xly/N9X9S71HFbfXouS0NSi96d6iw+sm0qrqO2HmB6ekK7+xVP1TvUOkK7+xVP1TvUZ6ybR1XbDzA9PSFd/Yqn6p3qHSFd/Yqn6p3qHWTaOq7YeYHp6Qrv7FU/VO9Q6Qrv7FU/VO9Q6ybR1XbDzAyNJYr3WP3FJZrjUOXgipnuXyIbTYtEekG7q1YsOVFLGu++sVINz4HKjvoQ+UlRFGl73In1PrFSzSrcxiruRTRTIWCy3W/XKO3WegnraqTejibnknGq7yJyrsJ6whq5wxvZPiq9dGy2rTUKK1q88jkzVOZqc5NeGcOWPDVAlDYrZT0MP5SRt909eNzl2uXlVVONV2/DGl0PxL9jv0XRiolVHT/CnFf1/NBGGiHQnQ4cfDecTdBuF1bk6KBE3UNOvHt9+5OPeTgz2KTIARSpqpal/XkW9Sb0lHDSR5OJLk57wADXNkAAAHTWVMFHRzVdVK2GCCN0ksjlyRjUTNVXmQ7iBNabHjaejbgm2T/h5spLi5q+8Zvtj512KvIicZtUdK6qmSNv18kNOvrWUUDpXd2HmvchCmkvFE+MMZ198l3SRSP3FMxf6OFuxic+W1eVVNbALFjjbG1GNwQqiWR0r1e9b1XSAAezwAAAbBo6sD8UY2tVja1VZU1CdGVOCJvunr+yil6WNaxiMY1GtamSIibEQr1qj4YXdXLFtTHsy6TpFVN/edI5P4Uz7pCwxCreqcrUZNMG8+8sPozSZGlWVcX8kw/IABwiRgAAAo/pbvKX/SRfLmx26ifVOjiXgVkeTGr4Uai+Et9pLvqYbwHeLzu9zJBTOSFf713uWfxOQouSno5BpfKu78r+CG9LKjRHAm9eSfk+gtJ1rD3DfMdp1UnWsPcN8x2kXXEmKYAAGDIAAB8/7v8K1ff3/aU8p6rt8K1ff3/aU8paDcEKbf2lAAPR5AAALi6t3YbsndVHp5CRSOtW7sN2Xuqj08hIpXFfrUnqXmWzZupxelvJAADUN0AAAqBrM9l+5d5g9E0jQkvWZ7L9y7zB6JpGhY9n6rH6U5FT2prsvqXmAAbZogmPVH7JNd+iJfSwkOExapHZKrv0TL6WE0LU1STcdOxtei3lqAAV4WmAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADXdIOL7TgrD8t2ukma+9ggavu538DW/zXgQ9sY6RyNal6qeJJGRMV71uRDGaXse0WBMNOqnbiW5VCKyhp1X37/jL8luxV8CcJTK5VtVca+evrp3z1NRIsksj1zVzlXNVMrjnFN1xhiGe83aXdSv9zHG33kLE3mNTiTyrmvCYInll2elHHp7S4+xWlsWo6vl0aGJgn5AAOmccAAAHptdDVXO5U1uoollqamVsUTE/Kc5ckQ8xPOqlgxam4z4zrofwNNnBQ7pPfSKmT3pzIu553LxGrW1LaWF0i93M3LPo3VlQ2Fvfj5J3k8YJsNNhjClusVLkrKSFGOciZbt++93hcqr4TMgFcvcr3K52KlsMY2NqNbggAB5PQAPxVREVVXJEAIH1usQpDarVhiF/4SokWrnRF3mNzaxF5Fcrl/UK3G26X8SpivSDdLrG/d0qSdBpeLoTPctVOfa79Y1IsOzabN6ZrFxxXepVdr1edVb5EwwTcn8vPoLSdaw9w3zHadVJ1pD3DfMdpXq4lppgAAYMgAAHz+uvwpV9/f8AaU8x6bp8J1Xfn/aU8xaLcEKbd2lAAMnkAAAuJq29huy91UenkJGI51bew5Zu6qPTyEjFcV+tSepeZbNm6nF6W8kAANQ3QAACoGsz2X7n3mD0TSNCStZjsv3PvUHomkalj2fqsfpTkVPamuy+peYABtmiCYtUnslVv6Jl9LEQ6TDqk9kqt/RMvpYjQtTVJNx07G16LeWpABXhaYAAAAAAAAAAAAAAAAAAAAAAAAAAAB+Pc1jFe9yNa1M1VVyREIW0q6dLZZ2y2zCLoblcNrXVfvqeFeT+sXm9zyrvGzTUstS/qRpeatXWw0jOvK67mu43vSZpAseBbX0e4SJPWyNXpaijcnRJV41+K3jcvgzXYVCxziy84xvsl2vFRu3r7mKJuyOFnA1qcCeVd9TG3m6XC83Ka5XWsmrKuZ2cksrs1X1JxImxDxk1s6y46NL8XbfYry1bZlr3dVNDEwT8qAAdQ4wAAAAP1rVc5GtRVcq5IiJtUAzOCMOV+LMTUdjt7V6LUP8AdvyzSJie+evIifTvcJeDDtoorDY6Oz26LodLSRJHGnCuW+q8aquaqvGqmgavuj7qOw4twuUKNvVxajpkVNsEe+2Pn4XcuzgQk8g9s1+cy9Ri/C37rtLG6P2ZmkOUenxu+ybPf9AAHFJAAAACO9YLFSYY0d1bYZdxXXLOkpsl2puk927wNz28aoSIU+1h8XpinHs0FLLu7da0Wmp8l9y5yL+EenO5Ms+FGodSyKTOalL8G6VONbtdmlIty/E7Qn5X6IRsACfFZH0FpOtIe4b5jtOqk61i7hvmO0q5cS5UwAAMGQAAD5/XT4Squ/P+0p5j0XP4Squ/P86nnLRbghTbsVAAMnkAAAuJq29hyzd3UenkJGI51bOw5Zu7qPTvJGK4r9ak9S8y2bM1OL0t5AAGoboAABT/AFmOzBdO9QeiaRqSVrMdl+596g9E0jUsez9Vj9Kcip7U12X1LzAANs0QTDqk9kus/RMvpYiHiYNUtyN0l1iqqInsVLv99iNC1NUk3HTsfXot5aoHHokfx2/SfrXNd71yLzKV6WnefoAMAAAAAAAAAAAAAA4q9iLkr25846JH8dv0mbhecgeaevoIPx9bTRZfHla3zqYe4Y4wbb80q8U2aJyb7enGK79lFzPbY3u7KKp83zRs7TkT6mwgjK9ac9HtuRyQXCquT0320lM7zv3KL4FI+xHrH10iPjw9h6CnTebNWSrIvPuG5Ii+FTdhsmrlwYqb9HM509t0MOMiLu08ixrnNa1XOVGtRM1VV2IhG2OdNODcNpJBTVXszXtzRIaNyKxF+VJ71PBmqcRWTFmPMW4pVzb1e6qeFf8Ap2L0OL9huSLzrmprR26Xo61NM7r/ACT3I9WdKnu+Gmbd5r7f7N60iaU8VY03dPV1KUVtVdlFTKrWKny133+HZxIhooBIooY4W9WNLkIrPPJO/ryuvXzAAPofEAAAAAAE96tejN1TPDjW/U+VPGu6tsD0/GOT+mVOJPyeNdvAmevaB9Fc2LK2O+3uF0dhgfm1q7Fq3IvvU+Qi76+BOFUtdFHHFEyKJjWRsajWtamSNRN5ETiI1bVqIxFp4l0967PIl3R+xlkVKmZNCYJt892w5AAiROAAAAAdVZUQUdJNV1UrIYIWLJJI9cmsaiZqqrxIhlEvCrdpU0DT7jRMIYImZSzbi6XFHU9IiL7piZe7k/VRdnKrSnJt+lzGU2NsZ1N0zc2ij/A0Ua/kxIuxVTjcubl58uA1An1lUWaQIi9pdK+30Kxtu0M9qVVvZboT3+oAB0zjn0Gpetou4TzHYddN1tF3CeY7CrlxLmTAAAwAAAD5+3L4Rqe/P86nnPRcfhCp767zqectFuCFNOxUAAyYAAALh6tnYds/d1Hp3kjkcatfYds/d1Hp3kjlcV+tSepeZbNmanF6U5AAGoboAABUDWZ7L9y7zB6JpGhJesz2Xrl3mD0TSNCx7P1WPcnIqe1Ndl9S8wADbNEAAAAAAAAA/UVUXNFVF5D96JJ8d30nEAHLoknx3fSOiSfHd9JxAF5y6JJ8d30nEAAAAAAAAAAAAAAAAAAAAAAAAHKNj5HtYxrnPcqI1rUzVV4kAOJLehHRFVYslivl+jkprE12bGbWvq8uBvEzjdw7ycabNoa0Huk6DfcbQK1mx8FsdvrxLLxdx9PChYeJjIo2xxsaxjERrWtTJGom8iIRq1LaRt8VOunvX29yX2N0eV6pNVJo7m7d/scKOmp6OlipKSGOCCFiMjjjajWsaiZIiIm8h2gETVbybol2hAADAAAABXzWi0gojFwRaZ83Lk+5yMXeTfbF5lXwJxoSLpq0gU+BcNudC5kl4q2qyihXbuV4ZHJ8VvlXJOPKnFVUT1VVLVVMr5p5nq+SR65ue5VzVVXhVVJHYdnZR2cSJoTDzXb9OZFOklq5JmaxL8S4+SbPry3nUACXkEAAAPoNT9bx9wnmOw4QfiI+5TzHMq5cS5kwAAMAAAA+flx+EKjvrvOp0HfcOv6jvrvOp0FotwQpp2KgAGTAAABcPVr7Dtn7uo9M8kcjfVr7Dto75UemeSQVxX61J6l5ls2ZqcXpTkAAahugAAFQdZrsvXHvEHo2kZkmazfZduHeIPRoRmWNZ+qx7k5FUWprsvqXmAAbhoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGQsNlu1+r20Nmt1TXVDvyIWK7JONV3kTlXYTro81e8ljrsa1fE72PpX+R8ieZv7RqVVdBSpfI7Ts7zeorNqax10TdG3u4kNYKwdiDGFx6SsdA+bJU6LM73MUScbnbyc2+vAilodFOiOxYLbHX1O5ud6y21MjfcwrwpG3g7pdvNnkb7Z7ZbrPb47fa6KCjpYkyZFCxGtTl2cPKewiNfbMtVexvwt+67ydWZYEFHc9/xP29ybk/PIAA4x3gAAAAAAYLHWKbZg/DlRerpJlHGm5iiRfdzSL71jeVfIma8B7cRXm3Yfs1Td7tUtp6SnZunvXyIicKquxE4VKb6WMe3DHmIFrJ0dBQQZtoqXPZG3jXjcuzNeZN5DqWZZzqyS9eymK/g41sWs2giubpeuCflf5pMPjbE1zxbiOpvd1k3U0y5MYi+5iYnvWN5E8u1d9TCgE8YxrGo1qXIhWr3ukcr3LeqgAHo8AAAH0Hg/Es7lPMczhF+KZ3KHMq5S5kAAMAAAA+flf19Ud9d51Og2+r0eY6kq53MwleVRZHKi9KP27eY4N0b49VNmErv4aZyFlpUw3dtOKFRLSVF/YXgpqYNpdo6x43fwjefBSOX+RjbxhfEtnpumbth+60EG6RvRaikfGzdLvJulTLPYemzxOW5HIv1PDqaZiXuYqfRTEAA+p8S4WrV2HbR3yo9M8kgjfVq7D1p75UemeSQVxX61J6l5ls2ZqcXpTkAAahugAAFQtZvsu1/eIPRoRkTVrC4PxVeNJ9bXWrD1zraV8EKNmgpnPYqoxEVM0Qj1NHeO1XLqRvXib/AFFg0E8SU0aK5ME7/Iq+06aZ1ZKqMW7rL3LtNXBtXtcY87Ubx4q71HJujfHqpswld/DTOQ2s5h8acUNHNKjwLwU1MG2e1rj7tSu3i6nP2ssf9qd0+pGdQ+NOKGczqPlrwU1AG3+1lj/tTun1I9rLH/andPqRnUHjTigzOo+W7gpqANv9rLH/AGp3T6ke1lj/ALU7p9SM6g8acUGZ1Hy3cFNQBt/tZY/7U7p9SPayx/2p3T6kZ1B404oMzqPlu4KagDb/AGssf9qd0+pHtZY/7U7p9SM6g8acUGZ1Hy3cFNQBtrtGmPkXJcJXXwQKp+e1rj7tSu3i6jOofGnFBmdR8teCmpg25NGeP1TPqTuv1J++1lj/ALU7p9SM6g8acUGZ1Hy14KagDb26MdIC72E7n4Ysjl7V+kHtTuX7CesZ1B404oMyqflu4KacDcfav0g9qly/YT1nfBok0jTrkzC1UndyRs+05DC1dOmL04oZShqVwjdwU0cEo0GgfSHUqiTUVDR58M1Y1cv2N0bNadW67yKi3XEtDTpwpTQOl8rtwfB9qUjMZE+mnkbMdjV0mES/XRzuIIP1qK5yNaiqqrkiJwlqrHq+YKoty+41Fyuj032vlSKNfAxEd/ESFh3B+F8PIi2aw0FG9NnRWRIsnheubl+k583SGnb/ANbVX7fzgdSDorVP/wC1yNTivt9ypGFNFWOcR7h9JZJqand/1FZ+BZlxpuvdOTuUUmLBurvaKNWVGKLnJcpE2rTU2cUXMrvfOTm3JOQOLU25UzaGr1U8seJIKTo3RwaXp1188OHveeCxWW02KhbQ2e3U1DTt/IhjRqKvGvGvKu094ByHOVy3rid5rUalzUuQAA8mQAAAAAAY/EF5ttgtFRdrtVMpaSBu6e9y/QiJwqu8iJtU8eNMVWXCFlfdb3VJDEmyONNskzvisbwr5E4ckKiaU9IV4x5dujVblp7fC5elaJrs2xp8ZfjOXhX6MkOpZ1mSVjr10NTFfY49rWxFQMuTS9cE/K/zSenS/pIuOPLtkm7pbPTuXpWkz8G7flvuX6ETYnCq6GATmGFkLEYxLkQreeeSokWSRb1UAA+p8QAAAAAD6ERfimdyhyOMf4tvMhyKuLmQAAwAAAAAAARHrXuy0XxJ8a5RJ/DIS4RBraL/AMs6XlusXo5TfszW495zbY1GXcVUABYZVZcLVq7D1p75UemeSQRtq09h61d8qPTPJJK5r9ak9S8y2bM1OL0pyAANM3QAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAee41tHbqKWtr6qGlpom7qSWV6Na1OVVMoiqtyBVREvU9BoGlXSjY8DUzqdXNr7w5ucVFG/a3idIv5KeVeBOFI10q6enSpLasD7pjF9y+5SNycve2rvd0u3iRN8gKpnmqaiSoqZpJppHK58kjlc5yrvqqrtVSR2fYTn3PqNCbO/wCuzmRO1ekjI746XSu3uTdt5bzL40xVesXXl90vdWs0q7I2Jsjhb8VjeBPKvDmphACWMY1jUa1LkQhEkjpHK563qoAB6PAAAAAAAAAB9CWe8bzH6fjfepzH6VcXMAAYAAAAAAAIf1tOxnSfpWL0cpMBD+tp2M6T9KxejlN+zNbj3nNtjUZdxVUAFhlVlwdWnsP2rvtR6Z5JJG2rR2H7V32o9M8kkrmv1qT1LzLYszU4vSnIAA0zeAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB11M8FNA+oqZo4YWJm+SRyNa1ONVXYhnEKtx2H4qoiKqqiIm+qkU4307YRsaSU9oc++1iZoiU67mFF5ZF3/1UcQJj3Sni/GG7grK7pSgd/wBHSZsjVOJy77/CuXIh1qSxamo0uTqp5+xw63pBSU16NXrO2J7/AOywGkXTXhjDKSUlse293NuadDgf+BjX5cm94G5rx5FbseY8xLjSr6Leq5Vga7OKli9xDHzN4V5VzXlNYBKqKy4KTS1L3bV/mghdoWzU1uhy3N2Jh9doAB0TkgAAAAAAAAAAAAAAH0JTeQ/TWm4/wMuzqwsXhr4/WfvV7gftwsH7wi+8Vnm8vhXgpb+dQeNOKGyA11uO8EKmaYxw/wCG5Qp/qP3q6wT244e/ecP3hkJfCvAznMPjTihsIMB1bYM7brB+8YfvH4uN8Foma4vw+ictyh+8YyEvhXgM4h8acUNgBr3V1gntxw9+84fvHB2PcDt38YWDwXGJf9RnIS+FeAzmHxpxQ2QiDW07GdL+lYvRym7v0h4Ebv4vsngrGL5lIs1l8X4YvuAKeis19oK+pbcY5FjglRzkajJEVdnBmqfSb1mwStqo1Vq3X7DmWvUwuopER6X3bUK4AAnxWRcDVo7D9r77UelcSUQ7q9Yqwxa9Fduo7liOz0VSyWdXQ1FbHG9ucrlTNrnIqZoSB1dYJ7ccPfvOH7xXtfDItTIqNXFe7zLTs2oiSjiRXJ2U702GxA1vq9wP24WD94RfeHV7gftwsH7wi+8auby+FeBu51D404obIDW+r3A/bhYP3hF94dXuB+3CwfvCL7wzeXwrwGdQ+NOKGyA1vq9wP24WD94RfeHV7gftwsH7wi+8M3l8K8BnUPjTihsgNaXH+BkXLqvsXj8frPz2wMDdt9i8ej9YzeXwrwUxnUHjTihswNZ9sDA3bfYvHo/WPbAwN232Lx6P1jN5fCvBRnUHjTihswNZ9sDA3bfYvHo/WPbAwN232Lx6P1jN5fCvBRnUHjTihswNZ9sDA3bfYvHo/WPbAwN232Lx6P1jN5fCvBRnUHjTihswNZ9sDA3bfYvHo/WPbAwN232Lx6P1jN5fCvBRnUHjTihswNZ9sDA3bfYvHo/WPbAwN232Lx6P1jN5fCvBRnUHjTihswNZ9sDA3bfYvHo/WPbAwN232Lx6P1jN5fCvBRnUHjTihswNZ9sDA3bfYvHo/WPbAwN232Lx6P1jN5fCvBRnUHjTihswNbTHuB1T/wCYWD94RfeC49wOiZ9WFg/eEX3hm8vhXgozqHxpxQ2QGsP0hYFama4vsngrWL5lPLNpQ0fxIu6xZbV7mRXeZDKU0y4MXgphaynTGROKG4gj2q006NqfNOqLork4I6SZ3l3GXlMDcdYXBNPmlLSXisdwKyBjG/S5yL5D7Ms6qfhGvA+D7VomYyt438iYAV1vGslUORzbPheKNeCSqqVf/C1E+0aRe9N2kO57psd1ht8bt9lHTtb/ABOzcn0m7FYNW/tIib19rznTdJaGPsqrtye9xb2omhp4XTTyxxRtTNz3uRrU51U0XE2l/ANi3TJL2yvnb/RUCdGVf1k9wnhcVDvF6vF5l6LdrrW17880WondJlzZrsMedOHo4xNMr792g49R0skXRCxE36fYnjFesZcp0dDhmyw0bV2JPWO6I/LjRiZIi86uIixRi3EmJ5uiX281dbkubY3vyjavIxMmp4EMIDtU9BT0/wD1tuXb38SP1VpVVV/2vVU2YJwQAA2zRAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP/2Q==" style="height:20px;width:20px;border-radius:3px;display:block;mix-blend-mode:screen;" alt="divvydiary"/></a>':'';
@@ -1941,17 +2041,20 @@ function render() {
     var listEl=document.getElementById('list');if(listEl)listEl.innerHTML=html;
     // Trigger price fetches AFTER DOM insert
     setTimeout(function(){
-        pendingIsins.forEach(function(isin){
-            if(priceCache[isin]&&!priceCache[isin].error){
-                var el=document.getElementById('pc-'+isin.replace(/[^a-z0-9]/gi,''));
-                if(el)renderPriceChange(el,priceCache[isin]);
-            } else {
-                fetchPriceChanges(isin);
+        pendingIsins.forEach(function(isin,idx){
+            var pricePerShare=0;
+            var it=allData&&allData.find(function(x){return x.isin===isin;});
+            if(it&&it.stück>0)pricePerShare=it.kurswert/it.stück;
+            if(w52Cache[isin]&&!w52Cache[isin].error){
+                var el=document.getElementById('w52-'+isin.replace(/[^a-z0-9]/gi,''));
+                if(el)render52W(el,w52Cache[isin]);
+            } else if(!w52Pending[isin]){
+                queueW52Fetch(isin,pricePerShare);
             }
         });
     },0);
     var divListEl=document.getElementById('div-list');if(divListEl)divListEl.innerHTML=divHtml;
-    renderAnalyse(aktieSum,etfSum,tW,countries);
+    renderAnalyse(aktieSum,etfSum,tW,countries,tE,divByYear,sumDivGesamt);
     // Always calculate sum12 and ttmYield regardless of active page
     if(devData&&devData.length>1){
         var _lf=getLastFullMonth(),_cm=_lf.cm,_cy=_lf.cy,_s12=0,_tm=_cm,_ty=_cy;
@@ -1968,12 +2071,86 @@ function render() {
         }
     }
 
-    if(isZielePage)renderZiele(tE,sumDiv2026);
+    if(isZielePage)renderZiele(tE,sumDiv2026,tW,divByYear,sumDivGesamt);
     if(window.twemoji){var cfg={folder:'svg',ext:'.svg'};twemoji.parse(document.getElementById('list'),cfg);twemoji.parse(document.getElementById('div-list'),cfg);twemoji.parse(document.getElementById('country-legend'),cfg);}
     applyPrivacyBlur();
 }
 
-function renderAnalyse(aktien,etfs,gesamt,countries) {
+function calcIRR(flows){
+    var r=0.07;
+    for(var it=0;it<300;it++){
+        var npv=0,dnpv=0;
+        for(var i=0;i<flows.length;i++){
+            var d=Math.pow(1+r,flows[i].t);
+            npv+=flows[i].a/d;
+            dnpv-=flows[i].t*flows[i].a/(d*(1+r));
+        }
+        if(Math.abs(dnpv)<1e-12)break;
+        var r2=r-npv/dnpv;
+        if(!isFinite(r2)||r2<-0.99)r2=r*0.5;
+        if(Math.abs(r2-r)<1e-8){r=r2;break;}
+        r=r2;
+    }
+    return r;
+}
+
+function buildMonthlyFlows(histData,devData,currentDep){
+    // Parse histData → monthly {t, ein, dep}
+    if(!histData||histData.length<2)return null;
+    var hhead=histData[0].map(function(h){return h.toLowerCase().trim();});
+    var iEin=-1,iDep=-1;
+    for(var c=0;c<hhead.length;c++){
+        if(hhead[c].indexOf('einstand')>-1)iEin=c;
+        else if(hhead[c].indexOf('depot')>-1||hhead[c].indexOf('kurswert')>-1||(hhead[c].indexOf('wert')>-1&&hhead[c].indexOf('einstand')<0))iDep=c;
+    }
+    if(iEin<0)iEin=1;if(iDep<0)iDep=2;
+
+    var pts=[];
+    for(var i=1;i<histData.length;i++){
+        var row=histData[i];if(!row||!row[0])continue;
+        var ds=row[0].trim(),mo=-1,yr=-1;
+        var sp=ds.split('.');
+        if(sp.length>=3){mo=parseInt(sp[1]);yr=parseInt(sp[2]);}
+        else if(sp.length===2){mo=parseInt(sp[0]);yr=parseInt(sp[1]);}
+        else{var ss=ds.split('/');if(ss.length===2){mo=parseInt(ss[0]);yr=parseInt(ss[1]);}}
+        if(isNaN(mo)||isNaN(yr)||mo<1||mo>12||yr<2015)continue;
+        var ein=parseMenge(row[iEin]),dep=parseMenge(row[iDep]);
+        if(ein===0&&dep===0)continue;
+        pts.push({t:(yr-2017)+(mo-0.5)/12,mo:mo,yr:yr,ein:ein,dep:dep});
+    }
+    if(pts.length<2)return null;
+    pts.sort(function(a,b){return a.t-b.t;});
+
+    // Parse devData → dividend map {YYYY_M: amount}
+    var divMap={};
+    if(devData&&devData.length>1){
+        devData.forEach(function(row){
+            if(!row||!row[0]||isNaN(parseInt(row[0])))return;
+            var ry=parseInt(row[0].trim());
+            for(var m=1;m<=12;m++){var v=parseMenge(row[m]);if(v>0)divMap[ry+'_'+m]=v;}
+        });
+    }
+
+    // Build flows: initial investment + monthly deltas + dividends + terminal value
+    var flows=[];
+    flows.push({a:-pts[0].ein,t:Math.max(0,pts[0].t)});
+    for(var j=1;j<pts.length;j++){
+        var dEin=pts[j].ein-pts[j-1].ein;
+        var divs=divMap[pts[j].yr+'_'+pts[j].mo]||0;
+        // New investment = outflow (negative), dividends = inflow (positive)
+        var net=divs-dEin;
+        if(Math.abs(net)>0.01)flows.push({a:net,t:pts[j].t});
+    }
+    // Terminal: current portfolio value at today
+    var now=new Date();
+    var tNow=(now.getFullYear()-2017)+(now.getMonth()/12);
+    flows.push({a:currentDep,t:tNow});
+    return flows;
+}
+
+function renderIZF(){render();}
+
+function renderAnalyse(aktien,etfs,gesamt,countries,einstand,divByYear,sumDivGesamt) {
     var pA=gesamt?(aktien/gesamt*100):0,pE=gesamt?(etfs/gesamt*100):0;
     var nf=new Intl.NumberFormat('de-DE',{style:'currency',currency:'EUR',maximumFractionDigits:0});
     var ac=document.getElementById('allocation-card');
@@ -2000,7 +2177,187 @@ function renderAnalyse(aktien,etfs,gesamt,countries) {
             +'</div>';
     }
 
-    var sc=Object.entries(countries).sort(function(a,b){return b[1]-a[1];}),ct=sc.reduce(function(s,e){return s+e[1];},0);
+    var sc=Object.entries(countries||{}).sort(function(a,b){return b[1]-a[1];}),ct=sc.reduce(function(s,e){return s+e[1];},0);
+
+    // --- IZF Kasten (zweiter Kasten) ---
+    var izfSlot=document.getElementById('izf-card');
+    if(izfSlot&&einstand&&einstand>0&&divByYear&&gesamt>0){
+        var irrNow=new Date();
+        var irrT=(irrNow.getFullYear()-2017)+(irrNow.getMonth()/12);
+
+        // Try improved monthly MWRR first, fall back to simplified
+        var monthlyFlows=buildMonthlyFlows(histData,devData,gesamt);
+        var irrTotal;
+        if(monthlyFlows&&monthlyFlows.length>3){
+            irrTotal=calcIRR(monthlyFlows)*100;
+        } else {
+            // Fallback: simplified t=0 model
+            var flows=[{a:-einstand,t:0}];
+            for(var fy=2017;fy<=2025;fy++){if(divByYear[fy]>0)flows.push({a:divByYear[fy],t:fy-2016});}
+            flows.push({a:(divByYear[2026]||0)+gesamt,t:irrT});
+            irrTotal=calcIRR(flows)*100;
+        }
+        var irrCol=irrTotal>8?'var(--positive)':irrTotal>4?'#f59e0b':'var(--negative)';
+        var totalRet=einstand>0?((gesamt+(sumDivGesamt||0)-einstand)/einstand*100):0;
+        var nfp=new Intl.NumberFormat('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2});
+        var benchmarks=[
+            {label:'DAX TR',val:9.2,col:'#6366f1'},
+            {label:'EuroStoxx 600',val:8.0,col:'#8b5cf6'},
+            {label:'S&P 500 (EUR)',val:13.5,col:'#f59e0b'},
+            {label:'MSCI World (EUR)',val:12.5,col:'#10b981'}
+        ];
+        var daxRef=benchmarks[0].val;
+
+        // Year-by-year IRR from histData
+        var yearEndVals={};
+        if(histData&&histData.length>1){
+            var hhead=histData[0].map(function(h){return h.toLowerCase().trim();});
+            var iDep=-1;
+            for(var c2=0;c2<hhead.length;c2++){
+                if(hhead[c2].indexOf('depot')>-1||hhead[c2].indexOf('kurswert')>-1||hhead[c2].indexOf('wert')>-1)iDep=c2;
+            }
+            if(iDep<0)iDep=2;
+            for(var hi=1;hi<histData.length;hi++){
+                var hr=histData[hi];if(!hr||!hr[0])continue;
+                var dateStr=hr[0].trim();
+                var parts=dateStr.split('.');
+                var yr=-1;
+                if(parts.length>=3)yr=parseInt(parts[2]);
+                else if(dateStr.length===7&&dateStr.indexOf('/')>-1)yr=parseInt(dateStr.split('/')[1]);
+                if(yr>=2017&&yr<=2025){
+                    var dv=parseMenge(hr[iDep]);
+                    if(dv>0)yearEndVals[yr]=dv;
+                }
+            }
+        }
+
+        // Compute IRR for each completed year using monthly flows
+        var yearIRRs=[];
+        for(var y=2018;y<=2025;y++){
+            if(!yearEndVals[y])continue;
+            // Build monthly flows up to end of year y
+            var yFlowsM=buildMonthlyFlows(
+                histData&&histData.filter(function(r,ri){
+                    if(ri===0)return true; // keep header
+                    if(!r||!r[0])return false;
+                    var sp=r[0].split('.');
+                    var ry=(sp.length>=3)?parseInt(sp[2]):(sp.length===2?parseInt(sp[1]):-1);
+                    return ry<=y;
+                }),
+                devData,
+                yearEndVals[y]
+            );
+            var yIRR;
+            if(yFlowsM&&yFlowsM.length>2){
+                yIRR=calcIRR(yFlowsM)*100;
+            } else {
+                var yF=[{a:-einstand,t:0}];
+                for(var dy=2017;dy<=y;dy++){if(divByYear[dy]>0)yF.push({a:divByYear[dy],t:dy-2016});}
+                yF.push({a:yearEndVals[y],t:y-2016});
+                yIRR=calcIRR(yF)*100;
+            }
+            yearIRRs.push({year:y,irr:yIRR});
+        }
+        // Add current year
+        yearIRRs.push({year:new Date().getFullYear(),irr:irrTotal,current:true});
+
+        var maxIRR=Math.max.apply(null,yearIRRs.map(function(x){return Math.abs(x.irr);}));
+        maxIRR=Math.max.apply(null,[maxIRR,1].concat(benchmarks.map(function(b){return b.val;})));
+
+        // Heatmap color scale (dark theme) based on relative value
+        function irrHmColor(val,mx){
+            var t=mx>0?Math.max(0,val)/mx:0;
+            if(val<0)return{bg:'#7f1d1d',fg:'#fca5a5'};
+            if(t<0.10)return{bg:'#1a1f2e',fg:'#4a6080'};
+            if(t<0.25)return{bg:'#1e3a5f',fg:'#60a5fa'};
+            if(t<0.45)return{bg:'#1a4731',fg:'#4ade80'};
+            if(t<0.65)return{bg:'#166534',fg:'#86efac'};
+            if(t<0.80)return{bg:'#15803d',fg:'#bbf7d0'};
+            return{bg:'#16a34a',fg:'#f0fdf4'};
+        }
+
+        var barsHtml=yearIRRs.map(function(d){
+            var pct=d.irr/maxIRR*100;
+            var hm=irrHmColor(d.irr,maxIRR);
+            var barH=Math.abs(pct)*0.6;
+            return '<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;min-width:0;">'
+                +'<div style="font-size:7.5px;font-weight:700;color:'+hm.fg+';">'+nfp.format(d.irr)+'%</div>'
+                +'<div style="width:80%;height:60px;display:flex;align-items:flex-end;">'
+                +'<div style="width:100%;height:'+Math.max(3,barH).toFixed(1)+'px;background:'+hm.bg+';border-radius:2px 2px 0 0;"></div>'
+                +'</div>'
+                +'<div style="font-size:7px;color:var(--text-dim);">'+(d.current?'aktuell':String(d.year).slice(2))+'</div>'
+                +'</div>';
+        }).join('');
+
+        // DAX reference line position
+        var daxPct=daxRef/maxIRR*100*0.6;
+
+        var izfTip='Der Interne Zinsfuß (IZF) zeigt, wie viel Rendite dein Depot pro Jahr erzielt hat – unter Berücksichtigung des genauen Zeitpunkts jeder Investition.\n\nBerechnung: Aus deiner Depothistorie wird für jeden Monat ermittelt, wie viel neues Kapital investiert wurde. Diese monatlichen Investitionen plus alle erhaltenen Dividenden werden als Zahlungsströme verwendet. Der IZF ist dann der jährliche Zinssatz, bei dem der heutige Depotwert genau dem abgezinsten Wert aller Zahlungen entspricht.';
+        var h2='';
+        h2+='<div class="analyse-card">';
+        h2+='<div style="display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:14px;position:relative;">';
+        h2+='<span style="font-size:var(--base-font-size);font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;">Interner Zinsfuß (IZF)</span>';
+        h2+='<span onclick="var t=document.getElementById(\'izf-tip\');t.style.display=t.style.display===\'block\'?\'none\':\'block\';" style="width:15px;height:15px;border-radius:50%;border:1px solid var(--text-dim);color:var(--text-dim);font-size:9px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;">?</span>';
+        h2+='<div id="izf-tip" style="display:none;position:absolute;top:22px;left:50%;transform:translateX(-50%);z-index:99;background:var(--card-bg);border:1px solid var(--border-color);border-radius:10px;padding:10px 12px;font-size:11px;color:var(--text-dim);max-width:260px;line-height:1.5;box-shadow:0 4px 16px rgba(0,0,0,0.4);white-space:pre-line;text-align:left;">'+izfTip+'</div>';
+        h2+='</div>';
+        h2+='<div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:4px;">';
+        h2+='<div style="font-size:2.8rem;font-weight:900;color:'+irrCol+';letter-spacing:-1px;">'+nfp.format(irrTotal)+'&nbsp;%</div>';
+        h2+='<div style="font-size:11px;color:var(--text-dim);line-height:1.5;">p.a.<br>MWRR</div>';
+        h2+='</div>';
+        h2+='<div style="font-size:11px;color:var(--text-dim);text-align:center;margin-bottom:14px;">Zeitraum: 2017 – heute · '+nfp.format(irrT)+' Jahre</div>';
+        // Cashflow summary
+        h2+='<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:14px;">';
+        h2+='<div style="text-align:center;"><div style="font-size:9px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:2px;">Investiert</div><div style="font-size:12px;font-weight:700;color:var(--negative);">'+fC(einstand)+'</div></div>';
+        h2+='<div style="text-align:center;"><div style="font-size:9px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:2px;">Dividenden</div><div style="font-size:12px;font-weight:700;color:var(--positive);">'+fC(sumDivGesamt)+'</div></div>';
+        h2+='<div style="text-align:center;"><div style="font-size:9px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:2px;">Depotwert</div><div style="font-size:12px;font-weight:700;color:var(--text-main);">'+fC(gesamt)+'</div></div>';
+        h2+='</div>';
+        // IZF per year chart
+        if(yearIRRs.length>0){
+            h2+='<div style="border-top:1px solid var(--border-color);padding-top:10px;margin-bottom:10px;">';
+            h2+='<div style="font-size:9px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">IZF pro Jahr (kumulativ)</div>';
+            h2+='<div style="position:relative;">';
+            // DAX reference line removed (always hidden)
+
+            h2+='<div style="display:flex;gap:2px;align-items:flex-end;">'+barsHtml+'</div>';
+            h2+='</div>';
+            h2+='</div>';
+        }
+        // IZF vs DAX – toggleable
+        h2+='<div style="border-top:1px solid var(--border-color);padding-top:10px;">';
+        h2+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">';
+        h2+='<div style="font-size:10px;color:var(--text-dim);">Gesamtrendite (absolut): <span style="color:'+irrCol+';font-weight:700;">'+nfp.format(totalRet)+'%</span></div>';
+        h2+='<button onclick="showDaxCompare=!showDaxCompare;renderIZF();" style="background:rgba(99,102,241,0.12);border:1px solid rgba(99,102,241,0.35);color:#a5b4fc;font-size:11px;font-weight:600;padding:5px 12px;border-radius:8px;cursor:pointer;font-family:inherit;">'+(showDaxCompare?'Benchmarks ausblenden':'vs. Benchmarks')+'</button>';
+        h2+='</div>';
+        if(showDaxCompare){
+            // Build combined list and sort descending
+            var allEntries=[{label:'Dein IZF',val:irrTotal,isUser:true}]
+                .concat(benchmarks.map(function(b){return{label:b.label,val:b.val,isUser:false};}));
+            allEntries.sort(function(a,b){return b.val-a.val;});
+            var maxC=Math.max.apply(null,allEntries.map(function(e){return Math.abs(e.val);}));
+            allEntries.forEach(function(e){
+                var barCol,textCol;
+                if(e.isUser){
+                    barCol='#3b82f6'; textCol='#93c5fd';
+                } else if(e.val>=irrTotal){
+                    barCol='#15803d'; textCol='#86efac';
+                } else {
+                    barCol='#c2410c'; textCol='#fca5a5';
+                }
+                h2+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">';
+                h2+='<div style="font-size:9px;color:var(--text-dim);width:100px;flex-shrink:0;'+(e.isUser?'font-weight:700;color:var(--text-main);':'')+'">'+e.label+'</div>';
+                h2+='<div style="flex:1;background:var(--border-color);border-radius:4px;height:10px;overflow:hidden;"><div style="width:'+Math.min(100,Math.abs(e.val)/maxC*100).toFixed(1)+'%;height:100%;background:'+barCol+';border-radius:4px;"></div></div>';
+                h2+='<div style="font-size:11px;font-weight:700;color:'+textCol+';width:46px;text-align:right;">'+nfp.format(e.val)+' %</div>';
+                h2+='</div>';
+            });
+            h2+='<div style="font-size:9px;color:var(--text-dim);margin-top:6px;opacity:0.6;">∅ p.a. seit Jan 2017, Total Return in EUR (Näherungswerte)</div>';
+        }
+        h2+='</div>';
+        h2+='</div>';
+        izfSlot.innerHTML=h2;
+    } else if(izfSlot){
+        izfSlot.innerHTML='';
+    }
+
     var pieel=document.getElementById('country-pie');
     if(pieel&&ct>0){var off=0;var circles=sc.map(function(e,i){var pct=(e[1]/ct)*100;var c='<circle r="16" cx="16" cy="16" fill="none" stroke="'+countryColors[i%countryColors.length]+'" stroke-width="10" stroke-dasharray="'+pct.toFixed(2)+' '+(100-pct).toFixed(2)+'" stroke-dashoffset="'+(-off).toFixed(2)+'"/>';off+=pct;return c;}).join('');pieel.innerHTML='<svg viewBox="0 0 32 32" style="width:120px;height:120px;display:block;margin:0 auto;transform:rotate(-90deg);border-radius:50%;">'+circles+'</svg>';}
     var cl=document.getElementById('country-legend');
