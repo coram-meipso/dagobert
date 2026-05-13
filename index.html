@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dagobert v1.21</title>
+    <title>Dagobert v1.22</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3QgeD0iMTAiIHk9IjIiIHdpZHRoPSIxMCIgaGVpZ2h0PSI4IiBmaWxsPSIjMWUxZTFlIi8+PHJlY3QgeD0iMTAiIHk9IjciIHdpZHRoPSIxMCIgaGVpZ2h0PSIxIiBmaWxsPSIjZWY0NDQ0Ii8+PHJlY3QgeD0iOSIgeT0iMTAiIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMCIgZmlsbD0iI0ZGRkZGRiIvPjxyZWN0IHg9IjEyIiB5PSIxNCIgd2lkdGg9IjIiIGhlaWdodD0iMiIgZmlsbD0iIzAwMDAwMCIvPjxyZWN0IHg9IjE3IiB5PSIxNCIgd2lkdGg9IjIiIGhlaWdodD0iMiIgZmlsbD0iIzAwMDAwMCIvPjxyZWN0IHg9IjgiIHk9IjE3IiB3aWR0aD0iMTQiIGhlaWdodD0iMyIgZmlsbD0iI2ZiYmYyNCIvPjxnIGlkPSJtb25leS1oYW5kIj48cmVjdCB4PSIyMiIgeT0iOCIgd2lkdGg9IjYiIGhlaWdodD0iOCIgZmlsbD0iIzEwYjk4MSIvPjxyZWN0IHg9IjIxIiB5PSIxMyIgd2lkdGg9IjMiIGhlaWdodD0iNCIgZmlsbD0iI0ZGRkZGRiIvPjwvZz48cmVjdCB4PSI5IiB5PSIyMCIgd2lkdGg9IjEyIiBoZWlnaHQ9IjgiIGZpbGw9IiNlZjQ0NDQiLz48cmVjdCB4PSIxMyIgeT0iMjIiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiIGZpbGw9IiMzYjgyZjYiLz48L3N2Zz4=">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
@@ -180,7 +180,7 @@
                         <rect x="10" y="2" width="10" height="8" fill="#1e1e1e"/><rect x="10" y="7" width="10" height="1" fill="#ef4444"/><rect x="9" y="10" width="12" height="10" fill="#FFFFFF"/><rect x="12" y="14" width="2" height="2" fill="#000000"/><rect x="17" y="14" width="2" height="2" fill="#000000"/><rect x="8" y="17" width="14" height="3" fill="#fbbf24"/><g id="money-hand"><rect x="22" y="8" width="6" height="8" fill="#10b981"/><rect x="21" y="13" width="3" height="4" fill="#FFFFFF"/></g><rect x="9" y="20" width="12" height="8" fill="#ef4444"/><rect x="13" y="22" width="4" height="2" fill="#3b82f6"/>
                     </svg>
                     <span class="dag-l dag-word" id="dl3b" style="position:absolute;top:0;left:0;clip-path:inset(48% 0 0 0);z-index:3;">O</span>
-                </span><span class="dag-word"><span class="dag-l" id="dl4">B</span><span class="dag-l" id="dl5">E</span><span class="dag-l" id="dl6">R</span><span class="dag-l" id="dl7">T</span></span><span class="title-version"><span>v1.21</span><span class="ver-tag">mobile</span></span>
+                </span><span class="dag-word"><span class="dag-l" id="dl4">B</span><span class="dag-l" id="dl5">E</span><span class="dag-l" id="dl6">R</span><span class="dag-l" id="dl7">T</span></span><span class="title-version"><span>v1.22</span><span class="ver-tag">mobile</span></span>
 
 </h1>
             </h1>
@@ -219,6 +219,7 @@
                     <button class="filter-btn active" onclick="setSort('name',this)">Name</button>
                     <button class="filter-btn" onclick="setSort('value',this)">Kurswert</button>
                     <button class="filter-btn" onclick="setSort('gain',this)">Performance</button>
+                    <button class="filter-btn" onclick="setSort('w52',this)">52W</button>
                 </div>
             </div>
         </div>
@@ -271,7 +272,7 @@
     </section>
 
     <section id="page-ziele"></section>
-    <div class="footer-version" style="color:#2dd4bf;opacity:0.6;">v1.21 &middot; 11.05.2026</div>
+    <div class="footer-version" style="color:#2dd4bf;opacity:0.6;">v1.22 &middot; 13.05.2026</div>
     <div style="text-align:center;padding-bottom:40px;">
         <button id="desktop-btn" onclick="toggleDesktop()" style="background:none;border:1px solid var(--border-color);color:var(--text-dim);font-family:inherit;font-size:10px;padding:4px 12px;border-radius:8px;cursor:pointer;opacity:0.4;letter-spacing:0.5px;">🖥 Desktop-Ansicht</button>
     </div>
@@ -541,14 +542,11 @@ function render52W(el,data){
         +'<div style="font-size:10px;font-weight:600;color:var(--negative);white-space:nowrap;">'+nf2.format(lo)+' €</div>'
         +'<div style="flex:1;position:relative;height:10px;">'
         +'<div style="position:absolute;inset:0;border-radius:5px;background:linear-gradient(to right,#ef4444,#f97316,#eab308,#84cc16,#10b981);opacity:0.85;"></div>'
-        +'<div style="position:absolute;top:-4px;bottom:-4px;width:3px;border-radius:2px;background:white;box-shadow:0 0 4px rgba(0,0,0,0.6);left:calc('+pct.toFixed(1)+'% - 1.5px);"></div>'
-        +'<div style="position:absolute;top:50%;transform:translate(-50%,-50%);width:14px;height:14px;border-radius:50%;background:white;box-shadow:0 1px 6px rgba(0,0,0,0.5);border:2px solid '+markerCol+';left:'+pct.toFixed(1)+'%;display:flex;align-items:center;justify-content:center;">'
-        +'<div style="width:5px;height:5px;border-radius:50%;background:'+markerCol+';"></div>'
-        +'</div>'
+        +'<div style="position:absolute;top:-3px;bottom:-3px;width:2px;border-radius:1px;background:rgba(255,255,255,0.9);box-shadow:0 0 3px rgba(0,0,0,0.4);left:calc('+pct.toFixed(1)+'% - 1px);"></div>'
         +'</div>'
         +'<div style="font-size:10px;font-weight:600;color:var(--positive);white-space:nowrap;">'+nf2.format(hi)+' €</div>'
         +'</div>'
-        +'<div style="text-align:center;margin-top:4px;font-size:9px;color:var(--text-dim);">aktuell: <span style="color:'+markerCol+';font-weight:700;">'+nf2.format(cur)+' €</span></div>'
+        +'<div style="text-align:center;margin-top:4px;font-size:9px;color:'+markerCol+';font-weight:700;">'+nf2.format(cur)+' €</div>'
         +'</div>';
 }
 
@@ -586,17 +584,18 @@ function showPage(pageId,index,closeMenu) {
 }
 
 function setSort(type,btn) {
-    if(currentSort===type){sortAsc=!sortAsc;}else{currentSort=type;sortAsc=(type==='name');}
+    if(currentSort===type){sortAsc=!sortAsc;}else{currentSort=type;sortAsc=(type==='name'||type==='w52'?false:false);if(type==='name')sortAsc=true;if(type==='w52')sortAsc=false;}
     document.querySelectorAll('.sort-bar-container .filter-btn').forEach(function(b){
         b.classList.remove('active');
         if(b.getAttribute('onclick').indexOf("'name'")>-1)b.innerText='Name';
         if(b.getAttribute('onclick').indexOf("'value'")>-1)b.innerText='Kurswert';
         if(b.getAttribute('onclick').indexOf("'gain'")>-1)b.innerText='Performance';
+        if(b.getAttribute('onclick').indexOf("'w52'")>-1)b.innerText='52W';
         if(b.getAttribute('onclick').indexOf("'divGesamt'")>-1)b.innerText='Gesamt';
         if(b.getAttribute('onclick').indexOf("'div2026'")>-1)b.innerText='akt. Jahr';
         if(b.getAttribute('onclick').indexOf("'roi'")>-1)b.innerText='ROI';
     });
-    btn.classList.add('active');btn.innerText+=sortAsc?' ▴':' ▾';moveSortIndicator(btn);render();
+    btn.classList.add('active');btn.innerText=btn.innerText+(sortAsc?' ▴':' ▾');moveSortIndicator(btn);render();
 }
 
 function moveSortIndicator(btn) {
@@ -1665,6 +1664,17 @@ function render() {
         if(currentSort==='name')res=a.name.localeCompare(b.name);
         else if(currentSort==='value')res=a.kurswert-b.kurswert;
         else if(currentSort==='gain')res=a.diffP-b.diffP;
+        else if(currentSort==='w52'){
+            function w52pos(isin,item){
+                var d=w52Cache[isin];
+                if(d&&!d.error&&d.hi>d.lo){
+                    var cur=item.stück>0?item.kurswert/item.stück:0;
+                    return(cur-d.lo)/(d.hi-d.lo)*100;
+                }
+                return -1;
+            }
+            res=w52pos(a.isin,a)-w52pos(b.isin,b);
+        }
         else if(currentSort==='divGesamt')res=a.divGesamt-b.divGesamt;
         else if(currentSort==='div2026')res=a.div2026-b.div2026;
         else if(currentSort==='roi')res=(a.einstand?a.divGesamt/a.einstand:0)-(b.einstand?b.divGesamt/b.einstand:0);
