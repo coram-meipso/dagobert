@@ -535,18 +535,18 @@ function render52W(el,data){
     var nf2=new Intl.NumberFormat('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2});
     var nf0=new Intl.NumberFormat('de-DE',{minimumFractionDigits:0,maximumFractionDigits:0});
     // Color of marker: red when near low, green when near high
-    var markerCol=pct<33?'#ef4444':pct<66?'#f59e0b':'#10b981';
+    var markerCol=pct<33?'#c0392b':pct<66?'#888888':'#2166ac';
     el.innerHTML='<div style="margin-top:10px;padding-top:8px;border-top:1px solid var(--border-color);">'
         +'<div style="font-size:9px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;text-align:center;">52 W. Tief / Hoch</div>'
-        +'<div style="display:flex;align-items:center;gap:8px;">'
-        +'<div style="font-size:10px;font-weight:600;color:var(--negative);white-space:nowrap;">'+nf2.format(lo)+' €</div>'
+        +'<div style="display:flex;align-items:center;gap:6px;">'
+        +'<div style="font-size:10px;color:var(--text-dim);white-space:nowrap;flex-shrink:0;line-height:10px;">'+nf2.format(lo)+' €</div>'
         +'<div style="flex:1;position:relative;height:10px;">'
-        +'<div style="position:absolute;inset:0;border-radius:5px;background:linear-gradient(to right,#ef4444,#f97316,#eab308,#84cc16,#10b981);opacity:0.85;"></div>'
-        +'<div style="position:absolute;top:-3px;bottom:-3px;width:2px;border-radius:1px;background:rgba(255,255,255,0.9);box-shadow:0 0 3px rgba(0,0,0,0.4);left:calc('+pct.toFixed(1)+'% - 1px);"></div>'
+        +'<div style="position:absolute;inset:0;border-radius:5px;background:linear-gradient(to right,#c0392b,#e07060,#f0b8b0,#f5e8e6,#ffffff,#d0dff0,#7fafd4,#2166ac);opacity:0.95;"></div>'
+        +'<div style="position:absolute;top:-3px;height:16px;width:2px;border-radius:1px;background:rgba(255,255,255,0.95);box-shadow:0 0 4px rgba(0,0,0,0.5);left:calc('+pct.toFixed(1)+'% - 1px);"></div>'
         +'</div>'
-        +'<div style="font-size:10px;font-weight:600;color:var(--positive);white-space:nowrap;">'+nf2.format(hi)+' €</div>'
+        +'<div style="font-size:10px;color:var(--text-dim);white-space:nowrap;flex-shrink:0;line-height:10px;">'+nf2.format(hi)+' €</div>'
         +'</div>'
-        +'<div style="text-align:center;margin-top:4px;font-size:9px;color:'+markerCol+';font-weight:700;">'+nf2.format(cur)+' €</div>'
+        +'<div style="text-align:center;margin-top:4px;font-size:10px;"><span style="color:var(--text-dim);font-weight:400;">Aktueller Kurs: </span><span style="font-weight:700;color:'+markerCol+';">'+nf2.format(cur)+' €</span></div>'
         +'</div>';
 }
 
