@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dagobert v1.24</title>
+    <title>Dagobert v1.25</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3QgeD0iMTAiIHk9IjIiIHdpZHRoPSIxMCIgaGVpZ2h0PSI4IiBmaWxsPSIjMWUxZTFlIi8+PHJlY3QgeD0iMTAiIHk9IjciIHdpZHRoPSIxMCIgaGVpZ2h0PSIxIiBmaWxsPSIjZWY0NDQ0Ii8+PHJlY3QgeD0iOSIgeT0iMTAiIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMCIgZmlsbD0iI0ZGRkZGRiIvPjxyZWN0IHg9IjEyIiB5PSIxNCIgd2lkdGg9IjIiIGhlaWdodD0iMiIgZmlsbD0iIzAwMDAwMCIvPjxyZWN0IHg9IjE3IiB5PSIxNCIgd2lkdGg9IjIiIGhlaWdodD0iMiIgZmlsbD0iIzAwMDAwMCIvPjxyZWN0IHg9IjgiIHk9IjE3IiB3aWR0aD0iMTQiIGhlaWdodD0iMyIgZmlsbD0iI2ZiYmYyNCIvPjxnIGlkPSJtb25leS1oYW5kIj48cmVjdCB4PSIyMiIgeT0iOCIgd2lkdGg9IjYiIGhlaWdodD0iOCIgZmlsbD0iIzEwYjk4MSIvPjxyZWN0IHg9IjIxIiB5PSIxMyIgd2lkdGg9IjMiIGhlaWdodD0iNCIgZmlsbD0iI0ZGRkZGRiIvPjwvZz48cmVjdCB4PSI5IiB5PSIyMCIgd2lkdGg9IjEyIiBoZWlnaHQ9IjgiIGZpbGw9IiNlZjQ0NDQiLz48cmVjdCB4PSIxMyIgeT0iMjIiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiIGZpbGw9IiMzYjgyZjYiLz48L3N2Zz4=">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
@@ -49,6 +49,7 @@
         .refresh-btn.spinning svg{animation:spin-color 1.2s linear infinite;}
         @keyframes spin-color{0%{transform:rotate(0deg);stroke:#3b82f6}50%{stroke:#fbbf24}100%{transform:rotate(360deg);stroke:#3b82f6}}
         .filter-bar{display:flex;position:relative;background:var(--card-bg);padding:4px;border-radius:14px;margin-bottom:24px;border:1px solid var(--border-color);overflow:hidden;}
+        #filter-container{display:none;}
         .nav-indicator{position:absolute;height:calc(100% - 8px);top:4px;left:0;background:#363636;border-radius:10px;transition:all 0.3s cubic-bezier(0.4,0,0.2,1);z-index:1;}
         .filter-btn{position:relative;flex:1;min-width:80px;background:transparent;color:var(--text-dim);border:none;padding:10px;border-radius:10px;cursor:pointer;font-size:var(--base-font-size);font-weight:600;z-index:2;text-align:center;}
         .filter-btn.active{color:var(--text-main);}
@@ -180,7 +181,7 @@
                         <rect x="10" y="2" width="10" height="8" fill="#1e1e1e"/><rect x="10" y="7" width="10" height="1" fill="#ef4444"/><rect x="9" y="10" width="12" height="10" fill="#FFFFFF"/><rect x="12" y="14" width="2" height="2" fill="#000000"/><rect x="17" y="14" width="2" height="2" fill="#000000"/><rect x="8" y="17" width="14" height="3" fill="#fbbf24"/><g id="money-hand"><rect x="22" y="8" width="6" height="8" fill="#10b981"/><rect x="21" y="13" width="3" height="4" fill="#FFFFFF"/></g><rect x="9" y="20" width="12" height="8" fill="#ef4444"/><rect x="13" y="22" width="4" height="2" fill="#3b82f6"/>
                     </svg>
                     <span class="dag-l dag-word" id="dl3b" style="position:absolute;top:0;left:0;clip-path:inset(48% 0 0 0);z-index:3;">O</span>
-                </span><span class="dag-word"><span class="dag-l" id="dl4">B</span><span class="dag-l" id="dl5">E</span><span class="dag-l" id="dl6">R</span><span class="dag-l" id="dl7">T</span></span><span class="title-version"><span>v1.24</span><span class="ver-tag">mobile</span></span>
+                </span><span class="dag-word"><span class="dag-l" id="dl4">B</span><span class="dag-l" id="dl5">E</span><span class="dag-l" id="dl6">R</span><span class="dag-l" id="dl7">T</span></span><span class="title-version"><span>v1.25</span><span class="ver-tag">mobile</span></span>
 
 </h1>
             </h1>
@@ -195,8 +196,8 @@
 
     <div id="page-title" style="font-size:1.1rem;font-weight:900;color:var(--text-main);letter-spacing:3px;text-transform:uppercase;margin-bottom:16px;text-align:center;font-family:'Outfit',sans-serif;background:transparent;border:1px solid var(--border-color);border-radius:16px;padding:12px 16px;position:relative;"></div>
 
-    <div class="filter-bar" id="filter-container">        <div id="nav-indicator" class="nav-indicator"></div>
-        <div id="filter-inner" style="display:flex;flex:1;z-index:2;"></div>
+    <div id="filter-dropdown" style="display:none;position:fixed;z-index:1000;background:var(--card-bg);border:1px solid var(--border-color);border-radius:14px;padding:6px;box-shadow:0 8px 32px rgba(0,0,0,0.4);min-width:160px;">
+        <div id="filter-dropdown-inner" style="display:flex;flex-direction:column;gap:2px;"></div>
     </div>
 
     <div id="total" class="total-box">
@@ -209,6 +210,10 @@
             <span id="update-time">Lade Daten...</span>
         </div>
         <div id="load-error" style="display:none;position:absolute;top:10px;right:12px;width:22px;height:22px;background:#ef4444;border-radius:50%;display:none;align-items:center;justify-content:center;font-size:13px;font-weight:900;color:white;line-height:1;box-shadow:0 0 8px rgba(239,68,68,0.6);" title="Daten konnten nicht geladen werden">!</div>
+    </div>
+
+    <div class="filter-bar" id="filter-container">        <div id="nav-indicator" class="nav-indicator"></div>
+        <div id="filter-inner" style="display:flex;flex:1;z-index:2;"></div>
     </div>
 
     <section id="page-portfolio" class="page-active">
@@ -273,7 +278,7 @@
     </section>
 
     <section id="page-ziele"></section>
-    <div class="footer-version" style="color:#2dd4bf;opacity:0.6;">v1.24 &middot; 16.05.2026</div>
+    <div class="footer-version" style="color:#2dd4bf;opacity:0.6;">v1.25 &middot; 16.05.2026</div>
     <div style="text-align:center;padding-bottom:40px;">
         <button id="desktop-btn" onclick="toggleDesktop()" style="background:none;border:1px solid var(--border-color);color:var(--text-dim);font-family:inherit;font-size:10px;padding:4px 12px;border-radius:8px;cursor:pointer;opacity:0.4;letter-spacing:0.5px;">🖥 Desktop-Ansicht</button>
     </div>
@@ -293,7 +298,15 @@ var logos = {};
 var logoBlocklist = ['DE0008404005'];
 var eurFormatter  = new Intl.NumberFormat('de-DE',{style:'currency',currency:'EUR'});
 var mNames        = ['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
-var countryColors = ['#3b82f6','#f97316','#10b981','#f59e0b','#ec4899','#06b6d4','#a855f7','#ef4444','#84cc16','#64748b'];
+// Gradient color function: purple (#c026d3) → cyan (#22d3ee)
+function gradCol(i, n){
+    var t=n>1?i/(n-1):0.5;
+    var r=Math.round(192*(1-t)+34*t);
+    var g=Math.round(38*(1-t)+211*t);
+    var b=Math.round(211*(1-t)+238*t);
+    return 'rgb('+r+','+g+','+b+')';
+}
+var countryColors=['#c026d3','#a855f7','#818cf8','#60a5fa','#22d3ee','#2dd4bf','#818cf8','#c026d3','#a855f7','#22d3ee'];
 var depotColors   = ['#3b82f6','#f97316','#10b981','#f59e0b','#ec4899'];
 
 var allData = [], devData = [], histData = [];
@@ -310,6 +323,8 @@ var ttmYieldGlobal = 0;
 var invMonthly = 4500;
 var customYieldRate = 0;
 var customGrowthRate = 7;
+var funnelSVG='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 3H2l8 9.46V19l4 2V12.46z"/></svg>';
+var filterPages=['portfolio','dividenden','div-entwicklung','analyse'];
 var showDaxCompare = false;
 var showDivCharts = false;
 var showW52Bars = false;
@@ -483,6 +498,41 @@ function adjustDailyRate(delta){
     render();
 }
 
+function toggleFilterDropdown(e){
+    e.stopPropagation();
+    var dd=document.getElementById('filter-dropdown');
+    if(dd.style.display==='block'){dd.style.display='none';return;}
+    // Build dropdown options
+    var inner=document.getElementById('filter-dropdown-inner');
+    var depots=Array.from(new Set(allData.map(function(d){return d.depot;}))).filter(Boolean).sort();
+    var opts=['alle'].concat(depots);
+    inner.innerHTML=opts.map(function(d){
+        var active=d===currentFilter;
+        return '<button onclick="setFilterFromDropdown(\''+d+'\')" style="width:100%;text-align:left;padding:8px 14px;background:'+(active?'rgba(99,102,241,0.2)':'transparent')+';border:none;border-radius:10px;cursor:pointer;font-size:13px;font-weight:'+(active?'700':'400')+';color:'+(active?'#a5b4fc':'var(--text-main)')+';font-family:inherit;">'+d+'</button>';
+    }).join('');
+    // Position below the button
+    var btn=e.currentTarget||e.target;
+    var rect=btn.getBoundingClientRect();
+    dd.style.left=rect.left+'px';
+    dd.style.top=(rect.bottom+6)+'px';
+    dd.style.display='block';
+}
+
+function setFilterFromDropdown(value){
+    document.getElementById('filter-dropdown').style.display='none';
+    var inner=document.getElementById('filter-inner');
+    var btn=Array.from(inner.querySelectorAll('.filter-btn')).find(function(b){return b.innerText===value;});
+    if(btn){setFilter(btn,value);}else{currentFilter=value;render();}
+    // Update funnel button highlight
+    var pt=document.getElementById('page-title');
+    if(pt){var fb=pt.querySelector('button[onclick*="toggleFilterDropdown"]');if(fb)fb.style.background=value==='alle'?'rgba(99,102,241,0.15)':'rgba(99,102,241,0.4)';}
+}
+
+document.addEventListener('click',function(e){
+    var dd=document.getElementById('filter-dropdown');
+    if(dd&&dd.style.display==='block'&&!dd.contains(e.target))dd.style.display='none';
+});
+
 function toggleMenu() {
     document.getElementById('sidebar').classList.toggle('open');
     document.getElementById('overlay').classList.toggle('active');
@@ -491,21 +541,27 @@ function toggleMenu() {
 function showPage(pageId,index,closeMenu) {
     ['portfolio','analyse','dividenden','div-entwicklung','ziele'].forEach(function(p){document.getElementById('page-'+p).classList.remove('page-active');});
     document.getElementById('page-'+pageId).classList.add('page-active');
-    document.getElementById('filter-container').style.display=(pageId==='div-entwicklung'||pageId==='ziele')?'none':'';
-    var pageTitles={'portfolio':'Portfolio','analyse':'Depotanalyse','dividenden':'Dividenden','div-entwicklung':'Dividendenentwicklung','ziele':'Ziele & Prognosen'};
+    document.getElementById('filter-container').style.display='none';
     var pt=document.getElementById('page-title');
     if(pt){
         pt.textContent='';
+        var pageTitles={'portfolio':'Portfolio','analyse':'Depotanalyse','dividenden':'Dividenden','div-entwicklung':'Dividendenentwicklung','ziele':'Ziele & Prognosen'};
         var titleText=pageTitles[pageId]||'';
+        var showFilter=filterPages.indexOf(pageId)>-1||pageId==='analyse';
+        var filterBtnHtml=showFilter?'<button onclick="toggleFilterDropdown(event)" style="position:absolute;left:0;background:rgba(99,102,241,0.15);border:1px solid rgba(99,102,241,0.35);color:#a5b4fc;width:28px;height:28px;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;padding:0;">'+funnelSVG+'</button>':'';
         if(pageId==='dividenden'){
-            pt.innerHTML='<div style="display:flex;align-items:center;justify-content:center;position:relative;width:100%;">'
+            pt.innerHTML='<div style="display:flex;align-items:center;justify-content:center;position:relative;width:100%;">'+filterBtnHtml
                 +'<span style="flex:1;text-align:center;padding:0 32px;">'+titleText+'</span>'
                 +'<button onclick="if(expandedDivCards.size>0){expandedDivCards.clear();}else{allData.forEach(function(i){expandedDivCards.add(i.isin);});}render();" style="position:absolute;right:0;background:rgba(99,102,241,0.15);border:1px solid rgba(99,102,241,0.35);color:#a5b4fc;width:24px;height:24px;border-radius:8px;cursor:pointer;font-size:15px;line-height:1;display:flex;align-items:center;justify-content:center;font-family:inherit;flex-shrink:0;">'+(expandedDivCards.size>0?'−':'+')+'</button>'
                 +'</div>';
         } else if(pageId==='portfolio'){
-            pt.innerHTML='<div style="display:flex;align-items:center;justify-content:center;position:relative;width:100%;">'
+            pt.innerHTML='<div style="display:flex;align-items:center;justify-content:center;position:relative;width:100%;">'+filterBtnHtml
                 +'<span style="flex:1;text-align:center;padding:0 32px;">'+titleText+'</span>'
                 +'<button onclick="if(expandedW52.size>0){expandedW52.clear();}else{allData.forEach(function(i){expandedW52.add(i.isin);});}render();" style="position:absolute;right:0;background:rgba(99,102,241,0.15);border:1px solid rgba(99,102,241,0.35);color:#a5b4fc;width:24px;height:24px;border-radius:8px;cursor:pointer;font-size:15px;line-height:1;display:flex;align-items:center;justify-content:center;font-family:inherit;flex-shrink:0;">'+(expandedW52.size>0?'−':'+')+'</button>'
+                +'</div>';
+        } else if(showFilter){
+            pt.innerHTML='<div style="display:flex;align-items:center;justify-content:center;position:relative;width:100%;">'+filterBtnHtml
+                +'<span style="flex:1;text-align:center;padding:0 32px;">'+titleText+'</span>'
                 +'</div>';
         } else {
             pt.textContent=titleText;
@@ -941,7 +997,7 @@ function renderZiele(einstand, divJahr, kurswert, divByYear, sumDivGesamt) {
     h+=crystalBall;
     var progTipText='Szenarien zeigen das j\u00e4hrliche organische Dividendenwachstum der Unternehmen. Neuinvestitionen werden separat über den Regler gesteuert.\n\nKI-Prognose: Dividendengewichtete Analyse aller 49 Positionen. Treiber: MüRe (+9%), Allianz (+9%), Siemens (+7%). Bremsen: VW/Mercedes (21% des Einkommens), General Mills, BASF, Bayer. Netto +4,1%, gerundet auf 5%.\n\nRezession: Einfrierung ohne Kürzungen.\n\nEigene Prognose: frei konfigurierbar.';
     h+='<div id="prognose-tip-main" style="display:none;position:fixed;z-index:9999;background:var(--card-bg);border:1px solid var(--border-color);border-radius:10px;padding:10px 14px;font-size:12px;color:var(--text-dim);max-width:270px;line-height:1.5;box-shadow:0 4px 20px rgba(0,0,0,0.4);white-space:pre-line;">'+progTipText+'<br><br><span style="font-size:11px;opacity:0.6;">Tippe irgendwo zum Schließen.</span></div>';
-    h+='<div class="analyse-title" style="display:flex;align-items:center;gap:6px;">Dividendenprognose<span onclick="showPrognTip(this,\'prognose-tip-main\')" style="width:16px;height:16px;border-radius:50%;border:1px solid var(--text-dim);color:var(--text-dim);font-size:10px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;margin-top:1px;">?</span></div>';
+    h+='<div class="analyse-title" style="display:flex;align-items:center;justify-content:center;gap:6px;">Dividendenprognose<span onclick="showPrognTip(this,\'prognose-tip-main\')" style="width:16px;height:16px;border-radius:50%;border:1px solid var(--text-dim);color:var(--text-dim);font-size:10px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;margin-top:1px;">?</span></div>';
     var resetBtn='<button onclick="customYieldRate=0;try{localStorage.removeItem(\'dagobert-yieldrate\');}catch(e){}render();" title="Auf Live-Wert zurücksetzen" style="background:transparent;border:1px solid var(--border-color);color:var(--text-dim);width:16px;height:16px;border-radius:4px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:0;vertical-align:middle;margin-left:4px;flex-shrink:0;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12C21 16.97 16.97 21 12 21C7.03 21 3 16.97 3 12C3 7.03 7.03 3 12 3C14.83 3 17.34 4.3 19 6.32M19 6.32V2M19 6.32H14.5"/></svg></button>';
     h+='<div style="font-size:11px;color:var(--text-dim);margin-bottom:4px;display:flex;align-items:center;flex-wrap:wrap;gap:4px;"><span style="font-weight:700;color:var(--text-main);">Berechnungsgrundlage:</span> <span>Basis: '+nfY.format(baseDiv)+' €</span> <span>&middot;</span> <span>Rendite: '+nfY.format(displayYield)+'%</span>'+resetBtn+'</div>';
     h+='<div style="font-size:11px;color:var(--text-dim);margin-bottom:12px;">Stand der Prognosedaten: 09.05.2026</div>';
@@ -1969,9 +2025,9 @@ function render() {
         uc.style.display='flex';
         if(isAnalysePage&&currentFilter==='alle'){
             uc.style.display='none';
-            var depotColors2=['#818cf8','#2dd4bf','#fb923c','#f472b6','#60a5fa'];
             var dt2={};allData.forEach(function(item){dt2[item.depot]=(dt2[item.depot]||0)+item.kurswert;});
             var de2=Object.entries(dt2).sort(function(a,b){return b[1]-a[1];}),dTotal2=de2.reduce(function(s,e){return s+e[1];},0);
+            var depotColors2=de2.map(function(_,i){return gradCol(i,de2.length);});
             var nfB=new Intl.NumberFormat('de-DE',{style:'currency',currency:'EUR',maximumFractionDigits:0});
             function bRow(label,val,tot,col){var pct=tot>0?(val/tot*100):0;return'<div style="margin-bottom:10px;"><div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;"><span style="font-size:13px;font-weight:600;color:var(--text-main);">'+label+'</span><span style="font-size:12px;color:var(--text-dim);">'+nfB.format(val)+'<span style="margin-left:6px;">'+pct.toFixed(1)+'%</span></span></div><div style="background:rgba(255,255,255,0.05);border:1px solid var(--border-color);border-radius:6px;height:8px;overflow:hidden;"><div style="width:'+pct.toFixed(1)+'%;height:100%;background:'+col+';border-radius:6px;"></div></div></div>';}
             var depRows2=de2.map(function(e,i){return bRow(e[0],e[1],dTotal2,depotColors2[i%depotColors2.length]);}).join('');
@@ -1980,37 +2036,67 @@ function render() {
             if(dbc){
                 var nfB=new Intl.NumberFormat('de-DE',{style:'currency',currency:'EUR',maximumFractionDigits:0});
 
-                // Stacked bar for depot distribution
-                var depSegs=de2.map(function(e,i){
-                    var pct=dTotal2>0?(e[1]/dTotal2*100):0;
-                    return'<div style="width:'+pct.toFixed(2)+'%;height:100%;background:'+depotColors2[i%depotColors2.length]+';transition:width .6s;" title="'+e[0]+': '+nfB.format(e[1])+'"></div>';
-                }).join('');
+                // Half-donut generator
+                function halfDonut(segs,total,W,centerVal,centerLabel){
+                    var r=W*0.40,strokeW=22,cx=W/2,cy=r+strokeW/2+4;
+                    var H=cy+4;
+                    var T=Math.PI*r;
+                    var d='M '+(cx-r).toFixed(1)+' '+cy.toFixed(1)+' A '+r.toFixed(1)+' '+r.toFixed(1)+' 0 0 1 '+(cx+r).toFixed(1)+' '+cy.toFixed(1);
+                    var html='<svg viewBox="0 0 '+W+' '+H.toFixed(1)+'" style="width:100%;display:block;">';
+                    html+='<path d="'+d+'" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="'+strokeW+'" stroke-linecap="round"/>';
+                    // Cumulative lengths (left→right)
+                    var cumLens=[],cum=0;
+                    segs.forEach(function(s){cum+=total>0?(s.value/total)*T:0;cumLens.push(cum);});
+                    // Paint back-to-front: last segment first, first segment last (on top)
+                    for(var i=segs.length-1;i>=0;i--){
+                        var len=cumLens[i];
+                        html+='<path d="'+d+'" fill="none" stroke="'+segs[i].color+'" stroke-width="'+strokeW+'" stroke-linecap="round" stroke-dasharray="'+len.toFixed(1)+' '+(T*10).toFixed(1)+'" stroke-dashoffset="0"/>';
+                        // White separator between segments
+                        if(i>0){
+                            var sepLen=2.5;
+                            html+='<path d="'+d+'" fill="none" stroke="var(--card-bg)" stroke-width="'+(strokeW+2)+'" stroke-linecap="butt" stroke-dasharray="'+sepLen+' '+(T*10).toFixed(1)+'" stroke-dashoffset="'+(-cumLens[i-1]+sepLen/2).toFixed(1)+'"/>';
+                        }
+                    }
+                    // Center text
+                    if(centerVal){
+                        html+='<text x="'+cx+'" y="'+(cy-12)+'" text-anchor="middle" font-size="13" font-weight="700" fill="var(--text-main)" font-family="Outfit,sans-serif">'+centerVal+'</text>';
+                        html+='<text x="'+cx+'" y="'+(cy-0)+'" text-anchor="middle" font-size="9" fill="var(--text-dim)" font-family="Outfit,sans-serif">'+centerLabel+'</text>';
+                    }
+                    html+='</svg>';
+                    return html;
+                }
+
+                // Depotverteilung half-donut
+                var depSegsD=de2.map(function(e,i){return{value:e[1],color:depotColors2[i%depotColors2.length],label:e[0]};});
+                var depDonut=halfDonut(depSegsD,dTotal2,220,nfB.format(dTotal2),'Gesamt');
                 var depLegend=de2.map(function(e,i){
                     var pct=dTotal2>0?(e[1]/dTotal2*100):0;
                     return'<div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">'
-                        +'<div style="width:8px;height:8px;border-radius:2px;background:'+depotColors2[i%depotColors2.length]+';flex-shrink:0;"></div>'
+                        +'<div style="width:10px;height:10px;border-radius:50%;background:'+depotColors2[i%depotColors2.length]+';flex-shrink:0;"></div>'
                         +'<span style="font-size:12px;font-weight:600;color:var(--text-main);flex:1;">'+e[0]+'</span>'
                         +'<span style="font-size:12px;color:var(--text-dim);">'+nfB.format(e[1])+'</span>'
                         +'<span style="font-size:11px;color:var(--text-dim);width:38px;text-align:right;">'+pct.toFixed(1)+'%</span>'
                         +'</div>';
                 }).join('');
 
-                // Stacked bar for asset classes
-                var aktPct=tW>0?(aktieSum/tW*100):0, etfPct=tW>0?(etfSum/tW*100):0;
-                var assetSegs=''
-                    +'<div style="width:'+aktPct.toFixed(2)+'%;height:100%;background:var(--color-aktie);transition:width .6s;" title="Aktien: '+nfB.format(aktieSum)+'"></div>'
-                    +'<div style="width:'+etfPct.toFixed(2)+'%;height:100%;background:var(--color-etf);transition:width .6s;" title="ETFs: '+nfB.format(etfSum)+'"></div>';
+                // Asset-Klassen half-donut
+                var assetSegsD=[
+                    {value:aktieSum,color:gradCol(0,2),label:'Aktien'},
+                    {value:etfSum,color:gradCol(1,2),label:'ETFs'}
+                ];
+                var aktPct=tW>0?(aktieSum/tW*100):0,etfPct=tW>0?(etfSum/tW*100):0;
+                var assetDonut=halfDonut(assetSegsD,tW,220,nfB.format(tW),'Gesamt');
                 var assetLegend=''
-                    +'<div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;"><div style="width:8px;height:8px;border-radius:2px;background:var(--color-aktie);flex-shrink:0;"></div><span style="font-size:12px;font-weight:600;color:var(--text-main);flex:1;">Aktien</span><span style="font-size:12px;color:var(--text-dim);">'+nfB.format(aktieSum)+'</span><span style="font-size:11px;color:var(--text-dim);width:38px;text-align:right;">'+aktPct.toFixed(1)+'%</span></div>'
-                    +'<div style="display:flex;align-items:center;gap:6px;"><div style="width:8px;height:8px;border-radius:2px;background:var(--color-etf);flex-shrink:0;"></div><span style="font-size:12px;font-weight:600;color:var(--text-main);flex:1;">ETFs</span><span style="font-size:12px;color:var(--text-dim);">'+nfB.format(etfSum)+'</span><span style="font-size:11px;color:var(--text-dim);width:38px;text-align:right;">'+etfPct.toFixed(1)+'%</span></div>';
+                    +'<div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;"><div style="width:10px;height:10px;border-radius:50%;background:'+gradCol(0,2)+';flex-shrink:0;"></div><span style="font-size:12px;font-weight:600;color:var(--text-main);flex:1;">Aktien</span><span style="font-size:12px;color:var(--text-dim);">'+nfB.format(aktieSum)+'</span><span style="font-size:11px;color:var(--text-dim);width:38px;text-align:right;">'+aktPct.toFixed(1)+'%</span></div>'
+                    +'<div style="display:flex;align-items:center;gap:6px;"><div style="width:10px;height:10px;border-radius:50%;background:'+gradCol(1,2)+';flex-shrink:0;"></div><span style="font-size:12px;font-weight:600;color:var(--text-main);flex:1;">ETFs</span><span style="font-size:12px;color:var(--text-dim);">'+nfB.format(etfSum)+'</span><span style="font-size:11px;color:var(--text-dim);width:38px;text-align:right;">'+etfPct.toFixed(1)+'%</span></div>';
 
                 dbc.innerHTML='<div class="analyse-card">'
                     +'<div class="analyse-title">Depotverteilung</div>'
-                    +'<div style="display:flex;height:12px;border-radius:8px;overflow:hidden;margin-bottom:12px;">'+depSegs+'</div>'
+                    +'<div style="display:flex;justify-content:center;margin-bottom:8px;">'+depDonut+'</div>'
                     +depLegend
                     +'<div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border-color);">'
-                    +'<div class="analyse-title" style="margin-bottom:10px;">Asset-Klassen</div>'
-                    +'<div style="display:flex;height:12px;border-radius:8px;overflow:hidden;margin-bottom:12px;">'+assetSegs+'</div>'
+                    +'<div class="analyse-title" style="margin-bottom:8px;">Asset-Klassen</div>'
+                    +'<div style="display:flex;justify-content:center;margin-bottom:8px;">'+assetDonut+'</div>'
                     +assetLegend
                     +'</div></div>';
             }
@@ -2304,10 +2390,10 @@ function renderAnalyse(aktien,etfs,gesamt,countries,einstand,divByYear,sumDivGes
         var totalRet=einstand>0?((gesamt+(sumDivGesamt||0)-einstand)/einstand*100):0;
         var nfp=new Intl.NumberFormat('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2});
         var benchmarks=[
-            {label:'DAX TR',val:9.2,col:'#6366f1'},
-            {label:'EuroStoxx 600',val:8.0,col:'#8b5cf6'},
-            {label:'S&P 500 (EUR)',val:13.5,col:'#f59e0b'},
-            {label:'MSCI World (EUR)',val:12.5,col:'#10b981'}
+            {label:'DAX TR',val:8.5,col:'#6366f1'},
+            {label:'EuroStoxx 600',val:9.0,col:'#8b5cf6'},
+            {label:'S&P 500 (EUR)',val:13.0,col:'#f59e0b'},
+            {label:'MSCI World (EUR)',val:11.5,col:'#10b981'}
         ];
         var daxRef=benchmarks[0].val;
 
@@ -2452,7 +2538,7 @@ function renderAnalyse(aktien,etfs,gesamt,countries,einstand,divByYear,sumDivGes
                 h2+='<div style="font-size:11px;font-weight:700;color:'+textCol+';width:46px;text-align:right;">'+nfp.format(e.val)+' %</div>';
                 h2+='</div>';
             });
-            h2+='<div style="font-size:9px;color:var(--text-dim);margin-top:6px;opacity:0.6;">∅ p.a. seit Jan 2017, Total Return in EUR (Näherungswerte)</div>';
+            h2+='<div style="font-size:9px;color:var(--text-dim);margin-top:6px;opacity:0.6;">∅ p.a. seit Jan 2017, Total Return in EUR · Stand: Mai 2026 (Näherungswerte)</div>';
         }
         h2+='</div>';
         h2+='</div>';
@@ -2460,9 +2546,32 @@ function renderAnalyse(aktien,etfs,gesamt,countries,einstand,divByYear,sumDivGes
     } else if(izfSlot){ izfSlot.innerHTML=''; }
 
     var pieel=document.getElementById('country-pie');
-    if(pieel&&ct>0){var off=0;var circles=sc.map(function(e,i){var pct=(e[1]/ct)*100;var c='<circle r="16" cx="16" cy="16" fill="none" stroke="'+countryColors[i%countryColors.length]+'" stroke-width="10" stroke-dasharray="'+pct.toFixed(2)+' '+(100-pct).toFixed(2)+'" stroke-dashoffset="'+(-off).toFixed(2)+'"/>';off+=pct;return c;}).join('');pieel.innerHTML='<svg viewBox="0 0 32 32" style="width:120px;height:120px;display:block;margin:0 auto;transform:rotate(-90deg);border-radius:50%;">'+circles+'</svg>';}
+    if(pieel&&ct>0){
+        var topN=8, scTop=sc.slice(0,topN), rest=sc.slice(topN);
+        var restVal=rest.reduce(function(s,e){return s+e[1];},0);
+        var segsC=scTop.map(function(e,i){return{value:e[1],color:gradCol(i,topN+(restVal>0?1:0))};});
+        if(restVal>0)segsC.push({value:restVal,color:gradCol(topN,topN+1)});
+        // Half-donut SVG
+        var rC=80,swC=22,cxC=110,cyC=rC+swC/2+4,WC=220,HC=cyC+6;
+        var TC=Math.PI*rC;
+        var dC='M '+(cxC-rC)+' '+cyC.toFixed(1)+' A '+rC+' '+rC+' 0 0 1 '+(cxC+rC)+' '+cyC.toFixed(1);
+        var cumC=[],cumCC=0;
+        segsC.forEach(function(s){cumCC+=s.value/ct*TC;cumC.push(cumCC);});
+        var pathsC='<path d="'+dC+'" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="'+swC+'" stroke-linecap="round"/>';
+        for(var i=segsC.length-1;i>=0;i--){
+            pathsC+='<path d="'+dC+'" fill="none" stroke="'+segsC[i].color+'" stroke-width="'+swC+'" stroke-linecap="round" stroke-dasharray="'+cumC[i].toFixed(1)+' '+(TC*10).toFixed(1)+'" stroke-dashoffset="0"/>';
+            if(i>0){
+                var sepC=2.5;
+                pathsC+='<path d="'+dC+'" fill="none" stroke="var(--card-bg)" stroke-width="'+(swC+2)+'" stroke-linecap="butt" stroke-dasharray="'+sepC+' '+(TC*10).toFixed(1)+'" stroke-dashoffset="'+(-cumC[i-1]+sepC/2).toFixed(1)+'"/>';
+            }
+        }
+        var nfC=new Intl.NumberFormat('de-DE',{minimumFractionDigits:0,maximumFractionDigits:0});
+        pathsC+='<text x="'+cxC+'" y="'+(cyC-14)+'" text-anchor="middle" font-size="13" font-weight="700" fill="var(--text-main)" font-family="Outfit,sans-serif">'+nfC.format(ct)+'</text>';
+        pathsC+='<text x="'+cxC+'" y="'+(cyC-2)+'" text-anchor="middle" font-size="9" fill="var(--text-dim)" font-family="Outfit,sans-serif">Aktien gesamt</text>';
+        pieel.innerHTML='<svg viewBox="0 0 '+WC+' '+HC.toFixed(1)+'" style="width:100%;display:block;">'+pathsC+'</svg>';
+    }
     var cl=document.getElementById('country-legend');
-    if(cl)cl.innerHTML=sc.map(function(e){var p=gesamt?(e[1]/gesamt*100):0;return'<div class="legend-item"><div class="flag-box">'+(countryToFlag[e[0]]||'🌍')+'</div><div class="legend-info"><span class="legend-name">'+e[0]+'</span><span class="legend-value">'+fC(e[1]).split(',')[0]+' \u20ac</span><span class="legend-perc">'+p.toFixed(1)+'%</span></div></div>';}).join('');
+    if(cl)cl.innerHTML=sc.map(function(e,i){var p=gesamt?(e[1]/gesamt*100):0;return'<div class="legend-item"><div class="flag-box">'+(countryToFlag[e[0]]||'🌍')+'</div><div class="legend-info"><span class="legend-name" style="color:'+gradCol(i,sc.length)+'">'+e[0]+'</span><span class="legend-value">'+fC(e[1]).split(',')[0]+' \u20ac</span><span class="legend-perc">'+p.toFixed(1)+'%</span></div></div>';}).join('');
 }
 
 function fC(v){return eurFormatter.format(v);}
@@ -2500,7 +2609,7 @@ showPage=function(pageId,index,closeMenu){
 };
 // Set initial title with button
 var _initPT=document.getElementById('page-title');
-if(_initPT)_initPT.innerHTML='<div style="display:flex;align-items:center;justify-content:center;position:relative;width:100%;"><span style="flex:1;text-align:center;padding:0 32px;">Portfolio</span><button onclick="if(expandedW52.size>0){expandedW52.clear();}else{allData.forEach(function(i){expandedW52.add(i.isin);});}render();" style="position:absolute;right:0;background:rgba(99,102,241,0.15);border:1px solid rgba(99,102,241,0.35);color:#a5b4fc;width:24px;height:24px;border-radius:8px;cursor:pointer;font-size:15px;line-height:1;display:flex;align-items:center;justify-content:center;font-family:inherit;flex-shrink:0;">+</button></div>';
+if(_initPT){var _fSVG='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 3H2l8 9.46V19l4 2V12.46z"/></svg>';_initPT.innerHTML='<div style="display:flex;align-items:center;justify-content:center;position:relative;width:100%;"><button onclick="toggleFilterDropdown(event)" style="position:absolute;left:0;background:rgba(99,102,241,0.15);border:1px solid rgba(99,102,241,0.35);color:#a5b4fc;width:28px;height:28px;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;padding:0;">'+_fSVG+'</button><span style="flex:1;text-align:center;padding:0 32px;">Portfolio</span><button onclick="if(expandedW52.size>0){expandedW52.clear();}else{allData.forEach(function(i){expandedW52.add(i.isin);});}render();" style="position:absolute;right:0;background:rgba(99,102,241,0.15);border:1px solid rgba(99,102,241,0.35);color:#a5b4fc;width:24px;height:24px;border-radius:8px;cursor:pointer;font-size:15px;line-height:1;display:flex;align-items:center;justify-content:center;font-family:inherit;flex-shrink:0;">+</button></div>';}
 
 var savedTheme=localStorage.getItem('dagobert-theme');
 if(savedTheme==='light'){document.getElementById('app-body').classList.add('light');document.getElementById('theme-icon').innerHTML='<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';}
