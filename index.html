@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dagobert v1.25</title>
+    <title>Dagobert v1.26</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3QgeD0iMTAiIHk9IjIiIHdpZHRoPSIxMCIgaGVpZ2h0PSI4IiBmaWxsPSIjMWUxZTFlIi8+PHJlY3QgeD0iMTAiIHk9IjciIHdpZHRoPSIxMCIgaGVpZ2h0PSIxIiBmaWxsPSIjZWY0NDQ0Ii8+PHJlY3QgeD0iOSIgeT0iMTAiIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMCIgZmlsbD0iI0ZGRkZGRiIvPjxyZWN0IHg9IjEyIiB5PSIxNCIgd2lkdGg9IjIiIGhlaWdodD0iMiIgZmlsbD0iIzAwMDAwMCIvPjxyZWN0IHg9IjE3IiB5PSIxNCIgd2lkdGg9IjIiIGhlaWdodD0iMiIgZmlsbD0iIzAwMDAwMCIvPjxyZWN0IHg9IjgiIHk9IjE3IiB3aWR0aD0iMTQiIGhlaWdodD0iMyIgZmlsbD0iI2ZiYmYyNCIvPjxnIGlkPSJtb25leS1oYW5kIj48cmVjdCB4PSIyMiIgeT0iOCIgd2lkdGg9IjYiIGhlaWdodD0iOCIgZmlsbD0iIzEwYjk4MSIvPjxyZWN0IHg9IjIxIiB5PSIxMyIgd2lkdGg9IjMiIGhlaWdodD0iNCIgZmlsbD0iI0ZGRkZGRiIvPjwvZz48cmVjdCB4PSI5IiB5PSIyMCIgd2lkdGg9IjEyIiBoZWlnaHQ9IjgiIGZpbGw9IiNlZjQ0NDQiLz48cmVjdCB4PSIxMyIgeT0iMjIiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiIGZpbGw9IiMzYjgyZjYiLz48L3N2Zz4=">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
@@ -85,7 +85,7 @@
         .month-group{flex:1;display:flex;align-items:flex-end;justify-content:center;gap:2px;height:100%;position:relative;}
         .bar{width:5px;border-radius:2px 2px 0 0;transition:height 0.6s cubic-bezier(0.4,0,0.2,1);}
         .month-label{position:absolute;bottom:-22px;font-size:10px;color:var(--text-dim);text-transform:uppercase;}
-        #page-portfolio,#page-analyse,#page-dividenden,#page-div-entwicklung,#page-ziele{display:none;}
+        #page-portfolio,#page-analyse,#page-dividenden,#page-div-entwicklung,#page-ziele,#page-changelog,#page-about{display:none;}
         .page-active{display:block !important;}
         .sort-row{display:flex;gap:8px;margin-bottom:24px;}
         .sort-bar-container{flex:1;margin-bottom:0;}
@@ -128,7 +128,20 @@
         body.blue svg line[stroke="#363636"]{stroke:#2a4a6a;}
         body:not(.light) svg text[fill="#a8b8cc"]{fill:#a8b8cc;}
         body.blue h1 .title-dagobert{color:#f87171;}
-    </style>
+    
+        /* Password screen */
+        #pw-screen{position:fixed;inset:0;z-index:9999;background:var(--bg-color,#0d1117);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;padding:32px;}
+        #pw-screen .pw-title{font-size:2rem;font-weight:900;letter-spacing:2px;color:var(--text-main,#f1f5f9);}
+        #pw-screen .pw-sub{font-size:13px;color:var(--text-dim,#64748b);letter-spacing:0.5px;}
+        #pw-screen .pw-box{display:flex;flex-direction:column;gap:10px;width:100%;max-width:300px;}
+        #pw-input{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);border-radius:12px;padding:14px 16px;font-size:16px;color:#f1f5f9;font-family:inherit;outline:none;width:100%;box-sizing:border-box;text-align:center;letter-spacing:4px;}
+        #pw-input:focus{border-color:#6366f1;box-shadow:0 0 0 3px rgba(99,102,241,0.2);}
+        #pw-input.pw-error{border-color:#ef4444;animation:pw-shake 0.3s ease;}
+        #pw-btn{background:#6366f1;border:none;border-radius:12px;padding:14px;font-size:15px;font-weight:700;color:white;cursor:pointer;font-family:inherit;width:100%;transition:background 0.2s;}
+        #pw-btn:hover{background:#4f46e5;}
+        #pw-error-msg{font-size:12px;color:#ef4444;text-align:center;min-height:16px;}
+        @keyframes pw-shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+        </style>
 </head>
 <body id="app-body">
 
@@ -162,6 +175,12 @@
         <button class="menu-item" onclick="togglePrivacy()" style="margin-top:16px;border-top:1px solid var(--border-color);padding-top:16px;">
             <svg id="privacy-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> Privatsphäre-Modus
         </button>
+        <button class="menu-item" onclick="showPage('changelog',-1,true)">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg> Changelog
+        </button>
+        <button class="menu-item" onclick="showPage('about',-1,true)">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> About
+        </button>
     </div>
 </nav>
 
@@ -181,7 +200,7 @@
                         <rect x="10" y="2" width="10" height="8" fill="#1e1e1e"/><rect x="10" y="7" width="10" height="1" fill="#ef4444"/><rect x="9" y="10" width="12" height="10" fill="#FFFFFF"/><rect x="12" y="14" width="2" height="2" fill="#000000"/><rect x="17" y="14" width="2" height="2" fill="#000000"/><rect x="8" y="17" width="14" height="3" fill="#fbbf24"/><g id="money-hand"><rect x="22" y="8" width="6" height="8" fill="#10b981"/><rect x="21" y="13" width="3" height="4" fill="#FFFFFF"/></g><rect x="9" y="20" width="12" height="8" fill="#ef4444"/><rect x="13" y="22" width="4" height="2" fill="#3b82f6"/>
                     </svg>
                     <span class="dag-l dag-word" id="dl3b" style="position:absolute;top:0;left:0;clip-path:inset(48% 0 0 0);z-index:3;">O</span>
-                </span><span class="dag-word"><span class="dag-l" id="dl4">B</span><span class="dag-l" id="dl5">E</span><span class="dag-l" id="dl6">R</span><span class="dag-l" id="dl7">T</span></span><span class="title-version"><span>v1.25</span><span class="ver-tag">mobile</span></span>
+                </span><span class="dag-word"><span class="dag-l" id="dl4">B</span><span class="dag-l" id="dl5">E</span><span class="dag-l" id="dl6">R</span><span class="dag-l" id="dl7">T</span></span><span class="title-version"><span>v1.26</span><span class="ver-tag">mobile</span></span>
 
 </h1>
             </h1>
@@ -278,13 +297,75 @@
     </section>
 
     <section id="page-ziele"></section>
-    <div class="footer-version" style="color:#2dd4bf;opacity:0.6;">v1.25 &middot; 16.05.2026</div>
+    <section id="page-changelog">
+        <div id="changelog-list" style="padding-bottom:24px;"></div>
+    </section>
+
+    <section id="page-about">
+        <div id="about-content" style="padding-bottom:24px;">
+            <div class="analyse-card" style="line-height:1.7;font-size:14px;color:var(--text-main);">
+                Das Projekt &bdquo;Dagobert-App&ldquo; entstand im April 2026. Der Code wird hauptsächlich realisiert mithilfe von <strong>Anthropic Claude</strong>, die Daten werden mittels CSV-Dateien geliefert, die in <strong>Google Sheets</strong> erstellt wurden, und die App enthält Links zur Seite <a href="https://divvydiary.com" target="_blank" style="color:#a5b4fc;text-decoration:none;">divvydiary.com</a>.
+                <div style="display:flex;align-items:center;justify-content:center;gap:24px;margin-top:24px;">
+                    <img src="https://www.google.com/favicon.ico" style="width:40px;height:40px;object-fit:contain;" alt="Google">
+                    <img src="https://wpforms.com/wp-content/uploads/2024/08/claude-logo.png" style="width:40px;height:40px;object-fit:contain;" alt="Claude">
+                    <img src="https://divvydiary.com/logo.svg" style="width:40px;height:40px;object-fit:contain;" alt="Divvydiary">
+                </div>
+                <p style="margin-top:20px;line-height:1.7;">GitHub dient als Code Repository und das Hosten der App erfolgt über <strong>Vercel</strong>.</p>
+                <div style="display:flex;align-items:center;justify-content:center;gap:24px;margin-top:16px;">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" style="width:40px;height:40px;object-fit:contain;filter:invert(1);" alt="GitHub">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Vercel_logo_black.svg/960px-Vercel_logo_black.svg.png" style="width:80px;height:40px;object-fit:contain;filter:invert(1);" alt="Vercel">
+                </div>
+            </div>
+        </div>
+    </section>
     <div style="text-align:center;padding-bottom:40px;">
         <button id="desktop-btn" onclick="toggleDesktop()" style="background:none;border:1px solid var(--border-color);color:var(--text-dim);font-family:inherit;font-size:10px;padding:4px 12px;border-radius:8px;cursor:pointer;opacity:0.4;letter-spacing:0.5px;">🖥 Desktop-Ansicht</button>
     </div>
 </div>
 
 <script>
+
+// ── Password Protection (SHA-256 hash) ──────────────────────────────
+var PW_HASH='0e3734467809741bbe7cc43ce06a4ff1fa151e423c134dc289eb6e1f1a806d57';
+var PW_SESSION_KEY='dagobert-auth';
+
+async function checkPw(){
+    var inp=document.getElementById('pw-input');
+    var msg=document.getElementById('pw-error-msg');
+    var val=inp.value;
+    if(!val)return;
+    var buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(val));
+    var hash=Array.from(new Uint8Array(buf)).map(function(b){return b.toString(16).padStart(2,'0');}).join('');
+    if(hash===PW_HASH){
+        try{sessionStorage.setItem(PW_SESSION_KEY,'1');}catch(e){}
+        document.getElementById('pw-screen').style.display='none';
+        document.getElementById('app-body').style.display='';
+    } else {
+        msg.textContent='Falsches Passwort';
+        inp.classList.add('pw-error');
+        inp.value='';
+        setTimeout(function(){inp.classList.remove('pw-error');msg.textContent='';},1200);
+        setTimeout(function(){inp.focus();},100);
+    }
+}
+
+(function initAuth(){
+    var body=document.getElementById('app-body');
+    var screen=document.getElementById('pw-screen');
+    var authed=false;
+    try{authed=sessionStorage.getItem(PW_SESSION_KEY)==='1';}catch(e){}
+    if(authed){
+        if(screen)screen.style.display='none';
+        if(body)body.style.display='';
+    } else {
+        if(body)body.style.display='none';
+        if(screen)screen.style.display='flex';
+        setTimeout(function(){var i=document.getElementById('pw-input');if(i)i.focus();},100);
+    }
+})();
+// ────────────────────────────────────────────────────────────────────
+
+var SHEET_URL_CHANGELOG = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ9-Dk9BpSoJNbOOh1C-dDunca3ChwutowAx4tVZW6bew_2SPCx4syW7cr0h89QJ6msMhR89q6Nv5bn/pub?gid=0&single=true&output=csv';
 var SHEET_URL      = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRLJWMGwbMH9JkTW2S0ZI6tnhjxokOKjylOzuGdI2KvQEJ2FB3VsDowH3bJzPSF54bbAZhZagyda1Xk/pub?gid=0&single=true&output=csv';
 var SHEET_URL_DEV  = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQDeKsNj-NeNlTHvdzVLV8SiD-hd3fswyQz1vfWznzmJ_3WKv8gm4Q-3qYhoj5u6DRnr7XSs5tk1Bbk/pub?gid=318812401&single=true&output=csv';
 var SHEET_URL_HIST = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSKa-a1ox1GRHxqqPct8loDB3ZFi6n6lMQ4hQJLv1XwSSbLgN1H624fNMIdZHsuneo5WFgcjPETkEFN/pub?gid=318812401&single=true&output=csv';
@@ -467,7 +548,7 @@ function render52W(el,data){
         +'</div>'
         +'<div style="font-size:10px;color:var(--text-dim);white-space:nowrap;flex-shrink:0;line-height:10px;">'+nf2.format(hi)+' €</div>'
         +'</div>'
-        +'<div style="text-align:center;margin-top:4px;font-size:10px;"><span style="color:var(--text-dim);font-weight:400;">Aktueller Kurs: </span><span style="font-weight:700;color:#ffffff;">'+nf2.format(cur)+' €</span></div>'
+        +'<div style="text-align:center;margin-top:4px;font-size:10px;"><span style="color:var(--text-dim);font-weight:400;">Aktueller Kurs: </span><span style="font-weight:400;color:#ffffff;">'+nf2.format(cur)+' €</span></div>'
         +'<div style="display:flex;align-items:center;justify-content:center;margin-top:3px;gap:0;">'
         +'<div style="display:flex;align-items:center;gap:3px;font-size:9px;color:var(--text-dim);">'+pieIcon+'<span style="color:#ffffff;">'+((data.depotPct||0).toFixed(2))+' %</span><span style="color:var(--text-dim);"> am Gesamtdepot</span></div>'
         +'<div style="width:1px;height:12px;background:var(--border-color);margin:0 8px;"></div>'
@@ -533,19 +614,65 @@ document.addEventListener('click',function(e){
     if(dd&&dd.style.display==='block'&&!dd.contains(e.target))dd.style.display='none';
 });
 
+function renderChangelog(csv){
+    var el=document.getElementById('changelog-list');
+    if(!el)return;
+    if(!csv){el.innerHTML='<div class="analyse-card" style="text-align:center;color:var(--text-dim);padding:32px;">Changelog konnte nicht geladen werden.</div>';return;}
+    var rows=parseCSV(csv);
+    if(!rows||rows.length<2){el.innerHTML='<div class="analyse-card" style="text-align:center;color:var(--text-dim);padding:32px;">Keine Einträge vorhanden.</div>';return;}
+    var head=rows[0].map(function(h){return h.toLowerCase().trim();});
+    // Flexible column detection
+    var iDate=head.findIndex(function(h){return h.indexOf('datum')>-1||h.indexOf('date')>-1||h==='';});
+    var iVer=head.findIndex(function(h){return h.indexOf('version')>-1||h.indexOf('ver')>-1;});
+    var iCat=head.findIndex(function(h){return h.indexOf('kategorie')>-1||h.indexOf('cat')>-1||h.indexOf('typ')>-1||h.indexOf('type')>-1;});
+    var iLines=head.findIndex(function(h){return h.indexOf('code')>-1&&(h.indexOf('zeile')>-1||h.indexOf('line')>-1||h.indexOf('#')>-1);});
+    var iDesc=head.findIndex(function(h){return h.indexOf('beschreib')>-1||h.indexOf('desc')>-1||h.indexOf('inhalt')>-1||h.indexOf('änderung')>-1||h.indexOf('aend')>-1;});
+    if(iDesc<0)iDesc=head.length-1; // fallback: last column
+    var catColors={'neu':'#10b981','new':'#10b981','feature':'#6366f1','fix':'#f59e0b','bugfix':'#f59e0b','änderung':'#3b82f6','update':'#3b82f6','entfernt':'#ef4444','removed':'#ef4444'};
+    function catColor(c){var k=Object.keys(catColors).find(function(k){return(c||'').toLowerCase().indexOf(k)>-1;});return k?catColors[k]:'#818cf8';}
+    var html='';
+    var prevDate='';
+    rows.slice(1).reverse().forEach(function(row){
+        if(!row||!row[0]&&!row[iDesc])return;
+        var date=iDate>=0?(row[iDate]||''):'';
+        var ver=iVer>=0?(row[iVer]||''):'';
+        var cat=iCat>=0?(row[iCat]||''):'';
+        var desc=iDesc>=0?(row[iDesc]||row.join(' ')):'';
+        var lines=iLines>=0?(row[iLines]||''):'';
+        if(!desc)return;
+        // Date header when date changes
+        if(date&&date!==prevDate){
+            var linesStr=lines?(' · '+lines+' Zeilen'):'';
+            html+='<div style="font-size:11px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;margin:16px 0 6px;padding-left:4px;">'+(ver?'v'+ver+' · ':'')+date+linesStr+'</div>';
+            prevDate=date;
+        }
+        var col=catColor(cat);
+        html+='<div class="analyse-card" style="padding:12px 14px;margin-bottom:8px;display:flex;align-items:flex-start;gap:12px;">';
+        if(cat)html+='<span style="flex-shrink:0;padding:2px 8px;border-radius:6px;font-size:10px;font-weight:700;background:'+col+'22;color:'+col+';border:1px solid '+col+'44;white-space:nowrap;">'+cat+'</span>';
+        html+='<span style="font-size:13px;color:var(--text-main);line-height:1.5;">'+desc.replace(/\/\//g,'<br>')+'</span>';
+        html+='</div>';
+    });
+    el.innerHTML=html||'<div class="analyse-card" style="text-align:center;color:var(--text-dim);padding:32px;">Keine Einträge vorhanden.</div>';
+}
+
+var changelogLoaded=false;
+
 function toggleMenu() {
     document.getElementById('sidebar').classList.toggle('open');
     document.getElementById('overlay').classList.toggle('active');
 }
 
 function showPage(pageId,index,closeMenu) {
-    ['portfolio','analyse','dividenden','div-entwicklung','ziele'].forEach(function(p){document.getElementById('page-'+p).classList.remove('page-active');});
+    ['portfolio','analyse','dividenden','div-entwicklung','ziele','changelog','about'].forEach(function(p){document.getElementById('page-'+p).classList.remove('page-active');});
     document.getElementById('page-'+pageId).classList.add('page-active');
+    // Hide total box on changelog
+    var totalBox=document.getElementById('total');
+    if(totalBox)totalBox.style.display=(pageId==='changelog'||pageId==='about')?'none':'';
     document.getElementById('filter-container').style.display='none';
     var pt=document.getElementById('page-title');
     if(pt){
         pt.textContent='';
-        var pageTitles={'portfolio':'Portfolio','analyse':'Depotanalyse','dividenden':'Dividenden','div-entwicklung':'Dividendenentwicklung','ziele':'Ziele & Prognosen'};
+        var pageTitles={'portfolio':'Portfolio','analyse':'Depotanalyse','dividenden':'Dividenden','div-entwicklung':'Dividendenentwicklung','ziele':'Ziele & Prognosen','changelog':'Changelog','about':'About'};
         var titleText=pageTitles[pageId]||'';
         var showFilter=filterPages.indexOf(pageId)>-1||pageId==='analyse';
         var filterBtnHtml=showFilter?'<button onclick="toggleFilterDropdown(event)" style="position:absolute;left:0;background:rgba(99,102,241,0.15);border:1px solid rgba(99,102,241,0.35);color:#a5b4fc;width:28px;height:28px;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;padding:0;">'+funnelSVG+'</button>':'';
@@ -567,9 +694,35 @@ function showPage(pageId,index,closeMenu) {
             pt.textContent=titleText;
         }
     }
-    var items=document.querySelectorAll('.menu-item');items.forEach(function(it){it.classList.remove('active');});items[index].classList.add('active');
-    document.getElementById('sidebar-indicator').style.transform='translateY('+(index*52)+'px)';
+    var items=document.querySelectorAll('.menu-item');
+    items.forEach(function(it){it.classList.remove('active');});
+    if(index>=0&&items[index]){
+        items[index].classList.add('active');
+        document.getElementById('sidebar-indicator').style.transform='translateY('+(index*52)+'px)';
+    }
     if(closeMenu!==false)toggleMenu();
+    // Load changelog on first visit
+    if(pageId==='changelog'&&!changelogLoaded){
+        changelogLoaded=true;
+        var clEl=document.getElementById('changelog-list');
+        if(clEl)clEl.innerHTML='<div style="text-align:center;padding:32px;color:var(--text-dim);">Lade Changelog…</div>';
+        // Use direct fetch without CSV validation checks
+        (async function(){
+            try{
+                var res=await fetch(SHEET_URL_CHANGELOG);
+                var txt=res.ok?await res.text():'';
+                renderChangelog(txt||null);
+            }catch(e){
+                // Try via proxy
+                try{
+                    var res2=await fetch(PROXIES[0]+encodeURIComponent(SHEET_URL_CHANGELOG));
+                    renderChangelog(res2.ok?await res2.text():null);
+                }catch(e2){renderChangelog(null);}
+            }
+        })();
+        return;
+    }
+    if(pageId==='changelog'||pageId==='about')return;
     var af=document.querySelector('#filter-inner .filter-btn.active');if(af)moveIndicator(af);
     render();
     var as=document.querySelector('#page-'+pageId+' .sort-bar-container .filter-btn.active');if(as)moveSortIndicator(as);
@@ -1749,14 +1902,15 @@ function render() {
                     var st='display:'+(expandedDivCards.has(item.isin)?'block':'none');
                     if(!item.divHist)return '<div id="divchart-'+dci+'" style="'+st+'"></div></div>';
                     var years=[2018,2019,2020,2021,2022,2023,2024,2025];
-                    var vals=years.map(function(y){return item.divHist[y]||0;});
+                    if(item.div2026>0)years.push(2026);
+                    var vals=years.map(function(y){return y===2026?(item.div2026||0):(item.divHist[y]||0);});
                     if(!vals.some(function(v){return v>0;}))return '<div id="divchart-'+dci+'" style="'+st+'"></div></div>';
                     var maxV=Math.max.apply(null,vals)||1;
                     var nfS=new Intl.NumberFormat('de-DE',{minimumFractionDigits:0,maximumFractionDigits:0});
                     var W=320,H=76,pl=0,pr=0,pt=16,pb=14,cW=W-pl-pr,cH=H-pt-pb;
                     var n=years.length,bW=cW/n,bGap=2;
-                    var barColors=['#3b5998','#4a6fa5','#5b84b1','#6c99be','#2dd4bf','#1fb3a0','#0e9f8a','#10b981'];
-                    var labelColors=['rgba(255,255,255,0.9)','rgba(255,255,255,0.9)','rgba(255,255,255,0.9)','rgba(255,255,255,0.9)','rgba(0,40,40,0.85)','rgba(0,40,40,0.85)','rgba(255,255,255,0.9)','rgba(255,255,255,0.9)'];
+                    var barColors=['#3b5998','#4a6fa5','#5b84b1','#6c99be','#2dd4bf','#1fb3a0','#0e9f8a','#10b981','#34d399'];
+                    var labelColors=['rgba(255,255,255,0.9)','rgba(255,255,255,0.9)','rgba(255,255,255,0.9)','rgba(255,255,255,0.9)','rgba(0,40,40,0.85)','rgba(0,40,40,0.85)','rgba(255,255,255,0.9)','rgba(255,255,255,0.9)','rgba(0,40,40,0.85)'];
                     var bars='',labels='',xLabels='';
                     years.forEach(function(y,i){
                         var v=vals[i];
@@ -1765,7 +1919,7 @@ function render() {
                         var col=barColors[i]||'#374151';
                         var lc=labelColors[i]||'rgba(255,255,255,0.9)';
                         bars+='<rect x="'+bx.toFixed(1)+'" y="'+by.toFixed(1)+'" width="'+bww.toFixed(1)+'" height="'+bh.toFixed(1)+'" fill="'+col+'" rx="1.5"/>';
-                        var prevV=i===0?(item.divHist[2017]||0):vals[i-1];
+                        var prevV=i===0?(item.divHist[2017]||0):(y===2026?vals[i-1]:vals[i-1]);
                         if(v>0&&prevV>0){
                             var cx2=bx+bww/2,cy2=by-5;
                             var up=v>prevV,same=v===prevV;
@@ -2604,7 +2758,7 @@ document.addEventListener('touchend',function(e){
 },{passive:true});
 var _origShowPage=showPage;
 showPage=function(pageId,index,closeMenu){
-    swipeCurrentIdx=index;
+    if(index>=0)swipeCurrentIdx=index;
     _origShowPage(pageId,index,closeMenu);
 };
 // Set initial title with button
