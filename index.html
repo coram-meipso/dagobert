@@ -132,7 +132,6 @@
         /* Password screen */
         body{background:#0d1117;}
         #pw-screen{position:fixed;inset:0;z-index:9999;background:#0d1117;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;padding:32px;}
-        #app-body{display:none;}
         #pw-screen .pw-title{font-size:2rem;font-weight:900;letter-spacing:2px;color:#f1f5f9;}
         #pw-screen .pw-sub{font-size:13px;color:#64748b;letter-spacing:0.5px;}
         #pw-screen .pw-box{display:flex;flex-direction:column;gap:10px;width:100%;max-width:300px;}
@@ -146,6 +145,15 @@
         </style>
 </head>
 <body id="app-body">
+    <div id="pw-screen">
+        <div class="pw-title">DAGOBERT</div>
+        <div class="pw-sub">Bitte Passwort eingeben</div>
+        <div class="pw-box">
+            <input id="pw-input" type="password" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')checkPw()">
+            <button id="pw-btn" onclick="checkPw()">Entsperren</button>
+            <div id="pw-error-msg"></div>
+        </div>
+    </div>
 
 <div id="ttm-modal" class="modal-overlay" onclick="this.classList.remove('active')">
     <div class="modal-box" onclick="event.stopPropagation()">
@@ -341,7 +349,6 @@ async function checkPw(){
     if(hash===PW_HASH){
         try{sessionStorage.setItem(PW_SESSION_KEY,'1');}catch(e){}
         document.getElementById('pw-screen').style.display='none';
-        document.getElementById('app-body').style.display='';
     } else {
         msg.textContent='Falsches Passwort';
         inp.classList.add('pw-error');
@@ -352,15 +359,12 @@ async function checkPw(){
 }
 
 (function initAuth(){
-    var body=document.getElementById('app-body');
     var screen=document.getElementById('pw-screen');
     var authed=false;
     try{authed=sessionStorage.getItem(PW_SESSION_KEY)==='1';}catch(e){}
     if(authed){
         if(screen)screen.style.display='none';
-        if(body)body.style.display='';
     } else {
-        if(body)body.style.display='none';
         if(screen)screen.style.display='flex';
         setTimeout(function(){var i=document.getElementById('pw-input');if(i)i.focus();},100);
     }
