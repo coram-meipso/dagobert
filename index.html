@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dagobert v1.26</title>
+    <title>Dagobert v1.27</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3QgeD0iMTAiIHk9IjIiIHdpZHRoPSIxMCIgaGVpZ2h0PSI4IiBmaWxsPSIjMWUxZTFlIi8+PHJlY3QgeD0iMTAiIHk9IjciIHdpZHRoPSIxMCIgaGVpZ2h0PSIxIiBmaWxsPSIjZWY0NDQ0Ii8+PHJlY3QgeD0iOSIgeT0iMTAiIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMCIgZmlsbD0iI0ZGRkZGRiIvPjxyZWN0IHg9IjEyIiB5PSIxNCIgd2lkdGg9IjIiIGhlaWdodD0iMiIgZmlsbD0iIzAwMDAwMCIvPjxyZWN0IHg9IjE3IiB5PSIxNCIgd2lkdGg9IjIiIGhlaWdodD0iMiIgZmlsbD0iIzAwMDAwMCIvPjxyZWN0IHg9IjgiIHk9IjE3IiB3aWR0aD0iMTQiIGhlaWdodD0iMyIgZmlsbD0iI2ZiYmYyNCIvPjxnIGlkPSJtb25leS1oYW5kIj48cmVjdCB4PSIyMiIgeT0iOCIgd2lkdGg9IjYiIGhlaWdodD0iOCIgZmlsbD0iIzEwYjk4MSIvPjxyZWN0IHg9IjIxIiB5PSIxMyIgd2lkdGg9IjMiIGhlaWdodD0iNCIgZmlsbD0iI0ZGRkZGRiIvPjwvZz48cmVjdCB4PSI5IiB5PSIyMCIgd2lkdGg9IjEyIiBoZWlnaHQ9IjgiIGZpbGw9IiNlZjQ0NDQiLz48cmVjdCB4PSIxMyIgeT0iMjIiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiIGZpbGw9IiMzYjgyZjYiLz48L3N2Zz4=">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
@@ -219,7 +219,7 @@
                         <rect x="10" y="2" width="10" height="8" fill="#1e1e1e"/><rect x="10" y="7" width="10" height="1" fill="#ef4444"/><rect x="9" y="10" width="12" height="10" fill="#FFFFFF"/><rect x="12" y="14" width="2" height="2" fill="#000000"/><rect x="17" y="14" width="2" height="2" fill="#000000"/><rect x="8" y="17" width="14" height="3" fill="#fbbf24"/><g id="money-hand"><rect x="22" y="8" width="6" height="8" fill="#10b981"/><rect x="21" y="13" width="3" height="4" fill="#FFFFFF"/></g><rect x="9" y="20" width="12" height="8" fill="#ef4444"/><rect x="13" y="22" width="4" height="2" fill="#3b82f6"/>
                     </svg>
                     <span class="dag-l dag-word" id="dl3b" style="position:absolute;top:0;left:0;clip-path:inset(48% 0 0 0);z-index:3;">O</span>
-                </span><span class="dag-word"><span class="dag-l" id="dl4">B</span><span class="dag-l" id="dl5">E</span><span class="dag-l" id="dl6">R</span><span class="dag-l" id="dl7">T</span></span><span class="title-version"><span>v1.26</span><span class="ver-tag">mobile</span></span>
+                </span><span class="dag-word"><span class="dag-l" id="dl4">B</span><span class="dag-l" id="dl5">E</span><span class="dag-l" id="dl6">R</span><span class="dag-l" id="dl7">T</span></span><span class="title-version"><span>v1.27</span><span class="ver-tag">mobile</span></span>
 
 </h1>
             </h1>
@@ -392,6 +392,62 @@ function pwLogout(){
     setTimeout(function(){var i=document.getElementById('pw-input');if(i)i.focus();},300);
 }
 
+var BIO_CRED_KEY='dagobert-bio-cred';
+
+function bioSupported(){
+    return window.PublicKeyCredential&&navigator.credentials&&location.protocol==='https:'||location.hostname==='localhost';
+}
+
+async function registerBiometric(){
+    document.getElementById('bio-offer').style.display='none';
+    try{
+        var cred=await navigator.credentials.create({publicKey:{
+            challenge:crypto.getRandomValues(new Uint8Array(32)),
+            rp:{name:'Dagobert App',id:location.hostname},
+            user:{id:crypto.getRandomValues(new Uint8Array(16)),name:'dagobert',displayName:'Dagobert'},
+            pubKeyCredParams:[{alg:-7,type:'public-key'},{alg:-257,type:'public-key'}],
+            authenticatorSelection:{authenticatorAttachment:'platform',userVerification:'required'},
+            timeout:60000
+        }});
+        var idB64=btoa(String.fromCharCode.apply(null,new Uint8Array(cred.rawId)));
+        try{localStorage.setItem(BIO_CRED_KEY,idB64);}catch(e){}
+        updateBioBtn();
+    }catch(e){
+        if(e.name!=='NotAllowedError')alert('Biometrie konnte nicht aktiviert werden: '+e.message);
+    }
+}
+
+async function loginBiometric(){
+    var idB64;try{idB64=localStorage.getItem(BIO_CRED_KEY);}catch(e){}
+    if(!idB64)return;
+    try{
+        var credId=Uint8Array.from(atob(idB64),function(c){return c.charCodeAt(0);});
+        var assertion=await navigator.credentials.get({publicKey:{
+            challenge:crypto.getRandomValues(new Uint8Array(32)),
+            allowCredentials:[{type:'public-key',id:credId}],
+            userVerification:'required',
+            timeout:60000
+        }});
+        if(assertion){
+            try{sessionStorage.setItem(PW_SESSION_KEY,'1');}catch(e){}
+            document.getElementById('pw-screen').style.display='none';
+        }
+    }catch(e){
+        if(e.name!=='NotAllowedError'){
+            // Credential might be gone – remove it
+            try{localStorage.removeItem(BIO_CRED_KEY);}catch(e2){}
+            updateBioBtn();
+        }
+    }
+}
+
+function updateBioBtn(){
+    var btn=document.getElementById('bio-btn');
+    if(!btn)return;
+    var hasCred=false;try{hasCred=!!localStorage.getItem(BIO_CRED_KEY);}catch(e){}
+    btn.style.display=(bioSupported()&&hasCred)?'flex':'none';
+}
+
 async function checkPw(){
     var inp=document.getElementById('pw-input');
     var msg=document.getElementById('pw-error-msg');
@@ -402,6 +458,11 @@ async function checkPw(){
     if(hash===PW_HASH){
         try{sessionStorage.setItem(PW_SESSION_KEY,'1');}catch(e){}
         document.getElementById('pw-screen').style.display='none';
+        // Offer biometric registration if supported and not yet set up
+        var hasCred=false;try{hasCred=!!localStorage.getItem(BIO_CRED_KEY);}catch(e){}
+        if(bioSupported()&&!hasCred){
+            setTimeout(function(){document.getElementById('bio-offer').style.display='flex';},400);
+        }
     } else {
         msg.textContent='Falsches Passwort';
         inp.classList.add('pw-error');
@@ -431,6 +492,7 @@ async function checkPw(){
         if(screen)screen.style.display='none';
     } else {
         if(screen)screen.style.display='flex';
+        updateBioBtn();
         setTimeout(function(){var i=document.getElementById('pw-input');if(i)i.focus();},100);
     }
 })();
