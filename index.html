@@ -395,7 +395,7 @@ function pwLogout(){
 var BIO_CRED_KEY='dagobert-bio-cred';
 
 function bioSupported(){
-    return window.PublicKeyCredential&&navigator.credentials&&location.protocol==='https:'||location.hostname==='localhost';
+    return !!(window.PublicKeyCredential&&navigator.credentials&&navigator.credentials.create);
 }
 
 async function registerBiometric(){
@@ -460,8 +460,17 @@ async function checkPw(){
         document.getElementById('pw-screen').style.display='none';
         // Offer biometric registration if supported and not yet set up
         var hasCred=false;try{hasCred=!!localStorage.getItem(BIO_CRED_KEY);}catch(e){}
+        console.log('bioSupported:',bioSupported(),'hasCred:',hasCred);
         if(bioSupported()&&!hasCred){
-            setTimeout(function(){document.getElementById('bio-offer').style.display='flex';},400);
+            PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable().then(function(available){
+                console.log('platformAuth available:',available);
+                if(available){
+                    setTimeout(function(){
+                        var offer=document.getElementById('bio-offer');
+                        if(offer)offer.style.display='flex';
+                    },600);
+                }
+            }).catch(function(e){console.log('platformAuth check error:',e);});
         }
     } else {
         msg.textContent='Falsches Passwort';
