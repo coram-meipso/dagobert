@@ -404,28 +404,58 @@ var divKalLoading=false;
 var divKalLoaded=false;
 
 async function fetchYahooCalendar(ticker){
-    // Use own Vercel API route (no CORS/rate-limit issues)
     var apiUrl='/api/yahoo?ticker='+encodeURIComponent(ticker);
     try{
         var ctrl=new AbortController();
-        var tmo=setTimeout(function(){ctrl.abort();},10000);
+        var tmo=setTimeout(function(){ctrl.abort();},12000);
         var res=await fetch(apiUrl,{signal:ctrl.signal});
         clearTimeout(tmo);
-        if(!res.ok){console.log('YF API HTTP',res.status,'for',ticker);return null;}
+        if(res.status===404){
+            window._divKalApiError='API-Route nicht gefunden (404). Bitte api/yahoo.js ins Vercel-Repository hochladen.';
+            return null;
+        }
+        if(!res.ok){
+            window._divKalApiError='HTTP '+res.status+' von /api/yahoo für '+ticker;
+            return null;
+        }
         var txt=await res.text();
-        if(!txt||txt.trim().charAt(0)==='<'){console.log('YF API returned HTML for',ticker);return null;}
         var json;
-        try{json=JSON.parse(txt);}catch(pe){console.log('YF API JSON parse fail for',ticker,txt.slice(0,100));return null;}
-        var result=json&&json.quoteSummary&&json.quoteSummary.result;
-        if(!result||!result[0]){console.log('YF API no result for',ticker,JSON.stringify(json).slice(0,200));return null;}
-        var ce=result[0].calendarEvents;
-        if(!ce){console.log('YF API no calendarEvents for',ticker);return null;}
-        var exDate=ce.exDividendDate&&ce.exDividendDate.raw&&ce.exDividendDate.raw>0?new Date(ce.exDividendDate.raw*1000):null;
-        var payDate=ce.dividendDate&&ce.dividendDate.raw&&ce.dividendDate.raw>0?new Date(ce.dividendDate.raw*1000):null;
-        console.log('YF OK:',ticker,'ex:',exDate,'pay:',payDate);
-        return{exDate:exDate,payDate:payDate,source:'Yahoo Finance'};
+        try{json=JSON.parse(txt);}catch(pe){return null;}
+
+        // Parse chart endpoint: extract dividend events
+        var chart=json&&json.chart&&json.chart.result&&json.chart.result[0];
+        if(!chart){
+            window._divKalApiError='Kein Ergebnis für '+ticker+'. Ticker korrekt? (z.B. ALV.DE, AAPL)';
+            return null;
+        }
+
+        var divEvents=chart.events&&chart.events.dividends;
+        if(!divEvents||Object.keys(divEvents).length===0){
+            console.log('No dividends for',ticker);
+            return{exDate:null,payDate:null,amount:0,source:'Yahoo Finance (keine Dividende)'};
+        }
+
+        // Sort dividend dates
+        var divList=Object.values(divEvents).map(function(d){
+            return{date:new Date(d.date*1000),amount:d.amount};
+        }).sort(function(a,b){return a.date-b.date;});
+
+        var last=divList[divList.length-1];
+        var prev=divList.length>1?divList[divList.length-2]:null;
+
+        // Estimate interval in months
+        var intervalMs=prev?(last.date-prev.date):null;
+        var intervalMonths=intervalMs?Math.round(intervalMs/(1000*60*60*24*30)):12;
+        if(intervalMonths<1)intervalMonths=12; // fallback
+
+        // Estimate next ex-dividend date
+        var nextDate=new Date(last.date);
+        nextDate.setMonth(nextDate.getMonth()+intervalMonths);
+
+        console.log('YF OK:',ticker,'last div:',last.date,'interval:',intervalMonths,'m → next:',nextDate,'amount:',last.amount);
+        return{exDate:nextDate,payDate:null,amount:last.amount,lastDate:last.date,intervalMonths:intervalMonths,source:'Yahoo Finance (geschätzt)'};
     }catch(e){
-        console.log('YF API error for',ticker,e.message);
+        window._divKalApiError='Fehler: '+e.message;
         return null;
     }
 }
@@ -465,8 +495,8 @@ async function loadDivKalData(){
         if(progEl)progEl.textContent=tickerDone+' / '+tickerItems.length;
 
         var cal=await fetchYahooCalendar(ticker);
-        if(cal&&(cal.exDate||cal.payDate)){
-            divKalCache[item.isin]={name:item.name,isin:item.isin,ticker:ticker,stück:item.stück,exDate:cal.exDate,payDate:cal.payDate,source:cal.source};
+        if(cal&&(cal.exDate||cal.payDate||cal.amount)){
+            divKalCache[item.isin]={name:item.name,isin:item.isin,ticker:ticker,stück:item.stück,exDate:cal.exDate,payDate:cal.payDate,amount:cal.amount||0,lastDate:cal.lastDate,intervalMonths:cal.intervalMonths,source:cal.source};
             renderDivKal(); // Sofort anzeigen
         }
         // Rate limiting
@@ -549,8 +579,10 @@ function renderDivKal(){
         +'<div class="analyse-title">Dividendenkalender</div>';
 
     if(noResults){
-        h+='<div style="text-align:center;padding:24px;color:var(--text-dim);font-size:13px;">Keine Termine gefunden.<br><br>'
-          +'<span style="font-size:11px;opacity:0.7;">Füge eine <strong>Yahoo-Symbol</strong>-Spalte in dein Google Sheet ein für bessere Ergebnisse.</span>'
+        var errMsg=window._divKalApiError||'';
+        h+='<div style="text-align:center;padding:24px;color:var(--text-dim);font-size:13px;">Keine Termine gefunden.'
+          +(errMsg?'<br><br><div style="font-size:11px;color:#f87171;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.25);border-radius:8px;padding:10px 12px;text-align:left;">&#9888;&#65039; '+errMsg+'</div>':'')
+          +'<br><br><span style="font-size:11px;opacity:0.7;">Die Datei <strong>api/yahoo.js</strong> muss im Vercel-Repository vorhanden sein.</span>'
           +'</div></div>';
         el.innerHTML=h;
         return;
@@ -570,16 +602,13 @@ function renderDivKal(){
               +'<div style="flex:1;min-width:0;">'
               +'<div style="font-size:13px;font-weight:600;color:var(--text-main);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+e.name+'</div>'
               +'<div style="font-size:10px;color:var(--text-dim);">'+e.isin+(e.ticker?' · '+e.ticker:'')+'</div>'
+              +(e.amount?'<div style="font-size:10px;color:#10b981;">'+nf.format(e.amount)+' € je Aktie'+(e.stück?' · ~'+nf.format(e.amount*e.stück)+' € gesamt':'')+'</div>':'')
               +'</div>'
               +'<div style="text-align:right;flex-shrink:0;">'
-              +'<div style="font-size:11px;color:var(--text-dim);">Ex-Datum</div>'
+              +'<div style="font-size:11px;color:var(--text-dim);">'+(e.source&&e.source.indexOf('geschätzt')>-1?'<span style="font-size:9px;background:rgba(251,191,36,0.15);border:1px solid rgba(251,191,36,0.3);color:#fbbf24;border-radius:4px;padding:1px 4px;margin-bottom:2px;display:inline-block;">~geschätzt</span><br>':'')+'Ex-Datum</div>'
               +'<div style="font-size:13px;font-weight:700;color:'+urgentCol+';">'+fmt(e.exDate)+'</div>'
               +(daysUntil!==null?'<div style="font-size:10px;color:'+urgentCol+';">in '+daysUntil+' Tagen</div>':'')
               +'</div>'
-              +(e.payDate?'<div style="text-align:right;flex-shrink:0;border-left:1px solid var(--border-color);padding-left:12px;">'
-              +'<div style="font-size:11px;color:var(--text-dim);">Zahltag</div>'
-              +'<div style="font-size:13px;font-weight:700;color:var(--text-main);">'+fmt(e.payDate)+'</div>'
-              +'</div>':'')
               +'</div>';
         });
     }
