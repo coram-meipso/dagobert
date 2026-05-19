@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dagobert v1.21</title>
+    <title>Dagobert v1.27</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3QgeD0iMTAiIHk9IjIiIHdpZHRoPSIxMCIgaGVpZ2h0PSI4IiBmaWxsPSIjMWUxZTFlIi8+PHJlY3QgeD0iMTAiIHk9IjciIHdpZHRoPSIxMCIgaGVpZ2h0PSIxIiBmaWxsPSIjZWY0NDQ0Ii8+PHJlY3QgeD0iOSIgeT0iMTAiIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMCIgZmlsbD0iI0ZGRkZGRiIvPjxyZWN0IHg9IjEyIiB5PSIxNCIgd2lkdGg9IjIiIGhlaWdodD0iMiIgZmlsbD0iIzAwMDAwMCIvPjxyZWN0IHg9IjE3IiB5PSIxNCIgd2lkdGg9IjIiIGhlaWdodD0iMiIgZmlsbD0iIzAwMDAwMCIvPjxyZWN0IHg9IjgiIHk9IjE3IiB3aWR0aD0iMTQiIGhlaWdodD0iMyIgZmlsbD0iI2ZiYmYyNCIvPjxnIGlkPSJtb25leS1oYW5kIj48cmVjdCB4PSIyMiIgeT0iOCIgd2lkdGg9IjYiIGhlaWdodD0iOCIgZmlsbD0iIzEwYjk4MSIvPjxyZWN0IHg9IjIxIiB5PSIxMyIgd2lkdGg9IjMiIGhlaWdodD0iNCIgZmlsbD0iI0ZGRkZGRiIvPjwvZz48cmVjdCB4PSI5IiB5PSIyMCIgd2lkdGg9IjEyIiBoZWlnaHQ9IjgiIGZpbGw9IiNlZjQ0NDQiLz48cmVjdCB4PSIxMyIgeT0iMjIiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiIGZpbGw9IiMzYjgyZjYiLz48L3N2Zz4=">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
@@ -191,8 +191,8 @@
         <div class="pw-sub">Bitte Passwort eingeben</div>
         <div class="pw-box">
             <div style="position:relative;">
-                <input id="pw-input" type="text" placeholder="••••••••" autocomplete="off" onkeydown="pwKeydown(event)" oninput="pwInput(event)" style="padding-right:44px;letter-spacing:4px;">
-                <button onclick="pwToggleVis(this)" type="button" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#64748b;padding:0;display:flex;align-items:center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+                <input id="pw-input" type="password" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')checkPw();" style="padding-right:44px;">
+                <button id="pw-eye-btn" onclick="var i=document.getElementById('pw-input');i.type=i.type==='password'?'text':'password';this.innerHTML=i.type==='password'?'<svg width=&quot;18&quot; height=&quot;18&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot;><path d=&quot;M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z&quot;/><circle cx=&quot;12&quot; cy=&quot;12&quot; r=&quot;3&quot;/></svg>':'<svg width=&quot;18&quot; height=&quot;18&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot;><path d=&quot;M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24&quot;/><line x1=&quot;1&quot; y1=&quot;1&quot; x2=&quot;23&quot; y2=&quot;23&quot;/></svg>';" type="button" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#64748b;padding:0;display:flex;align-items:center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
             </div>
             <button id="pw-btn" onclick="checkPw()">Entsperren</button>
             <button id="bio-btn" onclick="loginBiometric()" style="display:none;background:rgba(99,102,241,0.15);border:1px solid rgba(99,102,241,0.35);border-radius:12px;padding:14px;font-size:15px;font-weight:700;color:#a5b4fc;cursor:pointer;font-family:inherit;width:100%;align-items:center;justify-content:center;gap:8px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Mit Biometrie anmelden</button>
@@ -226,8 +226,8 @@
         <button class="menu-item" onclick="showPage('analyse',1)" style="color:#f1f5f9;"><span></span> Depotanalyse</button>
         <button class="menu-item" onclick="showPage('dividenden',2)" style="color:#f1f5f9;"><span></span> Dividenden</button>
         <button class="menu-item" onclick="showPage('div-entwicklung',3)" style="color:#f1f5f9;"><span></span> Dividendenentwicklung</button>
-        <button class="menu-item" onclick="showPage('divkal',-1,true)" style="color:#f1f5f9;"><span></span> Dividendenkalender</button>
-        <button class="menu-item" onclick="showPage('ziele',4)" style="color:#f1f5f9;"><span></span> Ziele & Prognosen</button>
+        <button class="menu-item" onclick="showPage('divkal',4,true)" style="color:#f1f5f9;"><span></span> Dividendenkalender</button>
+        <button class="menu-item" onclick="showPage('ziele',5)" style="color:#f1f5f9;"><span></span> Ziele & Prognosen</button>
         <div style="height:1px;background:var(--border-color);margin:8px 0;opacity:0.5;"></div>
         <button class="menu-item" onclick="showPage('dashboard',-1,true)" style="color:#2dd4bf;">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg> Dashboard <span style="font-size:9px;font-weight:700;background:rgba(45,212,191,0.15);border:1px solid rgba(45,212,191,0.4);color:#2dd4bf;border-radius:4px;padding:1px 5px;letter-spacing:0.5px;line-height:1.4;">BETA</span>
@@ -265,7 +265,7 @@
                         <rect x="10" y="2" width="10" height="8" fill="#1e1e1e"/><rect x="10" y="7" width="10" height="1" fill="#ef4444"/><rect x="9" y="10" width="12" height="10" fill="#FFFFFF"/><rect x="12" y="14" width="2" height="2" fill="#000000"/><rect x="17" y="14" width="2" height="2" fill="#000000"/><rect x="8" y="17" width="14" height="3" fill="#fbbf24"/><g id="money-hand"><rect x="22" y="8" width="6" height="8" fill="#10b981"/><rect x="21" y="13" width="3" height="4" fill="#FFFFFF"/></g><rect x="9" y="20" width="12" height="8" fill="#ef4444"/><rect x="13" y="22" width="4" height="2" fill="#3b82f6"/>
                     </svg>
                     <span class="dag-l dag-word" id="dl3b" style="position:absolute;top:0;left:0;clip-path:inset(48% 0 0 0);z-index:3;">O</span>
-                </span><span class="dag-word"><span class="dag-l" id="dl4">B</span><span class="dag-l" id="dl5">E</span><span class="dag-l" id="dl6">R</span><span class="dag-l" id="dl7">T</span></span><span class="title-version"><span>v1.21</span><span class="ver-tag">mobile</span></span>
+                </span><span class="dag-word"><span class="dag-l" id="dl4">B</span><span class="dag-l" id="dl5">E</span><span class="dag-l" id="dl6">R</span><span class="dag-l" id="dl7">T</span></span><span class="title-version"><span>v1.27</span><span class="ver-tag">mobile</span></span>
 
 </h1>
             </h1>
@@ -398,623 +398,209 @@
 
 <script>
 
-// ── Dividendenkalender ───────────────────────────────────────────────
-var divKalCache={};       // isin → {exDate, payDate, amount, source}
-var divKalLoading=false;
-var divKalLoaded=false;
+// ── Dividendenkalender ─────────────────────────────────────────────
+function formatDivAmount(e){
+    var nf2=new Intl.NumberFormat('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2});
+    var nfC=new Intl.NumberFormat('de-DE',{style:'currency',currency:'EUR',maximumFractionDigits:2});
+    var cur=e.currency||'EUR';
+    var sym={'USD':'$','GBP':'£','CHF':'CHF','JPY':'¥','CAD':'CA$','AUD':'A$','SEK':'SEK','NOK':'NOK','DKK':'DKK','HKD':'HKD','SGD':'SGD','CNY':'¥'}[cur]||cur;
+    var totalNative=e.amount*(e.stück||0);
+    if(cur==='EUR'){
+        var calc='<span style="color:#ffffff;font-weight:400;">'+nf2.format(e.amount)+' € × '+Math.round(e.stück)+' Stk. = </span>';
+        var result='<span style="color:#10b981;font-weight:700;">'+nfC.format(totalNative)+'</span>';
+        return calc+result;
+    }
+    var eur=toEur(totalNative,cur);
+    var eurStr=eur!==null?' <span style="color:#10b981;font-weight:700;">(≈ '+nfC.format(eur)+')</span>':'';
+    var calc='<span style="color:#ffffff;font-weight:400;">'+nf2.format(e.amount)+' '+sym+' × '+Math.round(e.stück)+' Stk. = </span>';
+    var result='<span style="color:#10b981;font-weight:700;">'+nf2.format(totalNative)+' '+sym+'</span>';
+    return calc+result+eurStr;
+}
 
-async function fetchYahooCalendar(ticker){
-    var apiUrl='/api/yahoo?ticker='+encodeURIComponent(ticker);
+var divKalUpdating=false;
+
+async function updateDivKal(){
+    await loadFxRates();
+    if(divKalUpdating)return;
+    divKalUpdating=true;
+    var btn=document.getElementById('divkal-update-btn');
+    if(btn){btn.disabled=true;btn.textContent='Aktualisiere…';}
     try{
-        var ctrl=new AbortController();
-        var tmo=setTimeout(function(){ctrl.abort();},12000);
-        var res=await fetch(apiUrl,{signal:ctrl.signal});
-        clearTimeout(tmo);
-        if(res.status===404){
-            window._divKalApiError='API-Route nicht gefunden (404). Bitte api/yahoo.js ins Vercel-Repository hochladen.';
-            return null;
+        var csv=await tryFetch(SHEET_URL);
+        if(csv){
+            var rows=parseCSV(csv);
+            if(rows.length>1){
+                var head=rows[0].map(function(h){return h.toLowerCase().trim();});
+                var mDt=[
+                    head.findIndex(function(x){return x.replace(/[- ]/g,'').indexOf('divtermin1')>-1;}),
+                    head.findIndex(function(x){return x.replace(/[- ]/g,'').indexOf('divtermin2')>-1;}),
+                    head.findIndex(function(x){return x.replace(/[- ]/g,'').indexOf('divtermin3')>-1;})
+                ];
+                var mDw=[
+                    head.findIndex(function(x){return x.replace(/[- ]/g,'').indexOf('divwert1')>-1;}),
+                    head.findIndex(function(x){return x.replace(/[- ]/g,'').indexOf('divwert2')>-1;}),
+                    head.findIndex(function(x){return x.replace(/[- ]/g,'').indexOf('divwert3')>-1;})
+                ];
+                var mIsin=head.findIndex(function(x){return x.indexOf('isin')>-1;});
+                rows.slice(1).forEach(function(r){
+                    var isin=mIsin>=0?r[mIsin]:'';
+                    if(!isin)return;
+                    var item=allData.find(function(d){return d.isin===isin;});
+                    if(!item)return;
+                    item.divTermine=[];
+                    for(var i=0;i<3;i++){
+                        var d=mDt[i]>=0?r[mDt[i]]:'', v=mDw[i]>=0?r[mDw[i]]:'';
+                        var mDc=[
+                            head.findIndex(function(x){return matchWaehrung(normColName(x),'1');}),
+                            head.findIndex(function(x){return matchWaehrung(normColName(x),'2');}),
+                            head.findIndex(function(x){return matchWaehrung(normColName(x),'3');})
+                        ];
+                        console.log('DivKal Währungsspalten:', mDc, 'Wert:', mDc[0]>=0&&r[mDc[0]]?r[mDc[0]]:'n/a');
+                        var cur=mDc[i]>=0?(r[mDc[i]]||'').trim().toUpperCase():'';
+                        var dt=parseGermanDate(d);
+                        if(dt){
+                            var ca=parseCurrencyAmount(v);
+                            if(cur&&cur.length===3)ca.currency=cur;
+                            item.divTermine.push({date:dt,amount:ca.amount,currency:ca.currency});
+                        }
+                    }
+                });
+            }
         }
-        if(!res.ok){
-            window._divKalApiError='HTTP '+res.status+' von /api/yahoo für '+ticker;
-            return null;
-        }
-        var txt=await res.text();
-        var json;
-        try{json=JSON.parse(txt);}catch(pe){return null;}
-
-        // Parse chart endpoint: extract dividend events
-        var chart=json&&json.chart&&json.chart.result&&json.chart.result[0];
-        if(!chart){
-            window._divKalApiError='Kein Ergebnis für '+ticker+'. Ticker korrekt? (z.B. ALV.DE, AAPL)';
-            return null;
-        }
-
-        var divEvents=chart.events&&chart.events.dividends;
-        if(!divEvents||Object.keys(divEvents).length===0){
-            console.log('No dividends for',ticker);
-            return{exDate:null,payDate:null,amount:0,source:'Yahoo Finance (keine Dividende)'};
-        }
-
-        // Sort dividend dates
-        var divList=Object.values(divEvents).map(function(d){
-            return{date:new Date(d.date*1000),amount:d.amount};
-        }).sort(function(a,b){return a.date-b.date;});
-
-        var last=divList[divList.length-1];
-        var prev=divList.length>1?divList[divList.length-2]:null;
-
-        // Estimate interval in months
-        var intervalMs=prev?(last.date-prev.date):null;
-        var intervalMonths=intervalMs?Math.round(intervalMs/(1000*60*60*24*30)):12;
-        if(intervalMonths<1)intervalMonths=12; // fallback
-
-        // Estimate next ex-dividend date
-        var nextDate=new Date(last.date);
-        nextDate.setMonth(nextDate.getMonth()+intervalMonths);
-
-        console.log('YF OK:',ticker,'last div:',last.date,'interval:',intervalMonths,'m → next:',nextDate,'amount:',last.amount);
-        return{exDate:nextDate,payDate:null,amount:last.amount,lastDate:last.date,intervalMonths:intervalMonths,source:'Yahoo Finance (geschätzt)'};
-    }catch(e){
-        window._divKalApiError='Fehler: '+e.message;
-        return null;
-    }
-}
-
-async function fetchYahooTicker(isin){
-    var searchUrl='https://query1.finance.yahoo.com/v1/finance/search?q='+encodeURIComponent(isin)+'&quotesCount=1&newsCount=0&enableFuzzyQuery=false';
-    for(var p=0;p<PROXIES.length;p++){
-        try{
-            var res=await fetch(PROXIES[p]+encodeURIComponent(searchUrl),{signal:AbortSignal.timeout(8000)});
-            if(!res.ok)continue;
-            var json=await res.json();
-            var q=json&&json.quotes&&json.quotes[0];
-            if(q&&q.symbol)return q.symbol;
-        }catch(e){}
-    }
-    return null;
-}
-
-async function loadDivKalData(){
-    if(divKalLoading||divKalLoaded)return;
-    divKalLoading=true;
-    var el=document.getElementById('divkal-content');
-
-    // Deduplicate by ISIN
-    var seen={}, items=[];
-    allData.forEach(function(d){if(!seen[d.isin]){seen[d.isin]=true;items.push(d);}});
-
-    var tickerItems=items.filter(function(d){return d.ticker;});
-    var tickerDone=0;
-    for(var i=0;i<items.length;i++){
-        var item=items[i];
-        var ticker=item.ticker||'';
-        if(!ticker)continue;
-
-        tickerDone++;
-        var progEl=el?el.querySelector('#divkal-progress'):null;
-        if(progEl)progEl.textContent=tickerDone+' / '+tickerItems.length;
-
-        var cal=await fetchYahooCalendar(ticker);
-        if(cal&&(cal.exDate||cal.payDate||cal.amount)){
-            divKalCache[item.isin]={name:item.name,isin:item.isin,ticker:ticker,stück:item.stück,exDate:cal.exDate,payDate:cal.payDate,amount:cal.amount||0,lastDate:cal.lastDate,intervalMonths:cal.intervalMonths,source:cal.source};
-            renderDivKal(); // Sofort anzeigen
-        }
-        // Rate limiting
-        if(i<items.length-1)await new Promise(function(r){setTimeout(r,1500);});
-    }
-
-    divKalLoaded=true;
-    divKalLoading=false;
+    }catch(e){console.error('DivKal update error:',e);}
+    divKalUpdating=false;
+    if(btn){btn.disabled=false;btn.textContent='Kalender aktualisieren';}
     renderDivKal();
 }
 
 function renderDivKal(){
     var el=document.getElementById('divkal-content');
     if(!el)return;
-
-    if(!divKalLoaded&&!divKalLoading){
-        var tickerCount=allData.filter(function(d){return d.ticker;}).length;
-    if(tickerCount===0){
-        el.innerHTML='<div class="analyse-card" style="text-align:center;padding:24px;color:var(--text-dim);font-size:13px;">'
-            +'Keine Yahoo-Symbole gefunden.<br><br>'
-            +'<span style="font-size:11px;opacity:0.7;">Füge eine Spalte <strong>Yahoo-Symbol</strong> in dein Google Sheet ein.</span>'
-            +'</div>';
-        divKalLoaded=true;divKalLoading=false;
-        return;
-    }
-    var prog='<div class="analyse-card" style="text-align:center;padding:24px;">'
-            +'<div style="font-size:13px;color:var(--text-dim);margin-bottom:16px;">Lade Dividendentermine von Yahoo Finance…</div>'
-            +'<div style="font-size:11px;color:var(--text-dim);">Fortschritt: <span id="divkal-progress">0 / '+tickerCount+'</span></div>'
-            +'<div style="font-size:10px;color:var(--text-dim);margin-top:8px;opacity:0.6;">'+tickerCount+' Position'+(tickerCount>1?'en':'')+' mit Yahoo-Symbol</div>'
-            +'</div>';
-        el.innerHTML=prog;
-        loadDivKalData();
-        return;
-    }
-    if(divKalLoading){
-        // Still loading – render whatever we have so far + progress indicator
-        renderDivKal();
-        return;
-    }
-
-    // Render calendar
-    var nf=new Intl.NumberFormat('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2});
+    var nf2=new Intl.NumberFormat('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2});
+    var nfC=new Intl.NumberFormat('de-DE',{style:'currency',currency:'EUR',maximumFractionDigits:2});
     var today=new Date(); today.setHours(0,0,0,0);
+    var fmt=function(d){return d?d.toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit',year:'numeric'}):'–';};
 
-    var h='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">'
-        +'<div></div>'
-        +'<button onclick="divKalLoaded=false;divKalLoading=false;divKalCache={};renderDivKal();" style="font-size:10px;background:rgba(255,255,255,0.06);border:1px solid var(--border-color);color:var(--text-dim);border-radius:8px;padding:4px 10px;cursor:pointer;font-family:inherit;">Neu laden</button>'
+    var all=[];
+    allData.forEach(function(item){
+        if(!item.divTermine||!item.divTermine.length)return;
+        item.divTermine.forEach(function(t){
+            all.push({name:item.name,isin:item.isin,stück:item.stück,date:t.date,amount:t.amount,currency:t.currency||'EUR',total:t.amount*(item.stück||0)});
+        });
+    });
+    all.sort(function(a,b){return a.date-b.date;});
+
+    var upcoming=all.filter(function(e){return e.date>=today;});
+    var past=all.filter(function(e){return e.date<today;}).reverse();
+
+    var h='<div style="display:flex;justify-content:flex-end;margin-bottom:12px;">'
+        +'<button id="divkal-update-btn" onclick="updateDivKal()" style="background:rgba(99,102,241,0.15);border:1px solid rgba(99,102,241,0.35);color:#a5b4fc;border-radius:10px;padding:7px 14px;font-size:12px;cursor:pointer;font-family:inherit;font-weight:600;">Kalender aktualisieren</button>'
         +'</div>';
 
-    // Loading banner
-    if(divKalLoading){
-        var loaded=Object.keys(divKalCache).length;
-        var total=allData.filter(function(d){return d.ticker;}).length;
-        h+='<div class="analyse-card" style="margin-bottom:12px;text-align:center;padding:12px;">'
-          +'<div style="font-size:12px;color:var(--text-dim);">Lade… '+loaded+' / '+total+' abgerufen</div>'
-          +'<div style="margin-top:8px;height:4px;background:rgba(255,255,255,0.07);border-radius:2px;overflow:hidden;">'
-          +'<div style="height:100%;background:#6366f1;border-radius:2px;width:'+(total>0?Math.round(loaded/total*100):0)+'%;transition:width .3s;"></div>'
-          +'</div></div>';
-    }
-    var entries=Object.values(divKalCache).filter(function(e){
-        var d=e.exDate||e.payDate;
-        return d&&d>=today;
-    }).sort(function(a,b){
-        var da=a.exDate||a.payDate, db=b.exDate||b.payDate;
-        return da-db;
-    });
-
-    var past=Object.values(divKalCache).filter(function(e){
-        var d=e.exDate||e.payDate;
-        return d&&d<today;
-    }).sort(function(a,b){
-        var da=a.exDate||a.payDate, db=b.exDate||b.payDate;
-        return db-da; // newest first
-    });
-
-    var fmt=function(d){if(!d)return'–';return d.toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit',year:'numeric'});};
-    var noResults=entries.length===0&&past.length===0;
-
-    h+='<div class="analyse-card">'
-        +'<div class="analyse-title">Dividendenkalender</div>';
-
-    if(noResults){
-        var errMsg=window._divKalApiError||'';
-        h+='<div style="text-align:center;padding:24px;color:var(--text-dim);font-size:13px;">Keine Termine gefunden.'
-          +(errMsg?'<br><br><div style="font-size:11px;color:#f87171;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.25);border-radius:8px;padding:10px 12px;text-align:left;">&#9888;&#65039; '+errMsg+'</div>':'')
-          +'<br><br><span style="font-size:11px;opacity:0.7;">Die Datei <strong>api/yahoo.js</strong> muss im Vercel-Repository vorhanden sein.</span>'
-          +'</div></div>';
-        el.innerHTML=h;
-        return;
-    }
-
-    // Info box
-    h+='<div style="font-size:11px;color:var(--text-dim);margin-bottom:16px;padding:8px 10px;background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.2);border-radius:8px;">'
-      +'<strong>Tipp:</strong> Für genauere Ergebnisse füge eine Spalte <strong>Yahoo-Symbol</strong> (z.B. ALV.DE) in dein Google Sheet ein.</div>';
-
-    // Upcoming
-    if(entries.length>0){
-        h+='<div style="font-size:11px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Bevorstehend</div>';
-        entries.forEach(function(e){
-            var daysUntil=e.exDate?Math.round((e.exDate-today)/(1000*60*60*24)):null;
-            var urgentCol=daysUntil!==null&&daysUntil<=14?'var(--positive)':'var(--text-dim)';
-            h+='<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border-color);">'
-              +'<div style="flex:1;min-width:0;">'
-              +'<div style="font-size:13px;font-weight:600;color:var(--text-main);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+e.name+'</div>'
-              +'<div style="font-size:10px;color:var(--text-dim);">'+e.isin+(e.ticker?' · '+e.ticker:'')+'</div>'
-              +(e.amount?'<div style="font-size:10px;color:#10b981;">'+nf.format(e.amount)+' € je Aktie'+(e.stück?' · ~'+nf.format(e.amount*e.stück)+' € gesamt':'')+'</div>':'')
-              +'</div>'
-              +'<div style="text-align:right;flex-shrink:0;">'
-              +'<div style="font-size:11px;color:var(--text-dim);">'+(e.source&&e.source.indexOf('geschätzt')>-1?'<span style="font-size:9px;background:rgba(251,191,36,0.15);border:1px solid rgba(251,191,36,0.3);color:#fbbf24;border-radius:4px;padding:1px 4px;margin-bottom:2px;display:inline-block;">~geschätzt</span><br>':'')+'Ex-Datum</div>'
-              +'<div style="font-size:13px;font-weight:700;color:'+urgentCol+';">'+fmt(e.exDate)+'</div>'
-              +(daysUntil!==null?'<div style="font-size:10px;color:'+urgentCol+';">in '+daysUntil+' Tagen</div>':'')
-              +'</div>'
-              +'</div>';
-        });
-    }
-
-    // Past (last 3)
-    if(past.length>0){
-        h+='<div style="font-size:11px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;margin:16px 0 8px;">Zuletzt ausgezahlt</div>';
-        past.slice(0,5).forEach(function(e){
-            h+='<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border-color);opacity:0.65;">'
-              +'<div style="flex:1;min-width:0;">'
-              +'<div style="font-size:13px;font-weight:600;color:var(--text-main);">'+e.name+'</div>'
-              +'<div style="font-size:10px;color:var(--text-dim);">'+e.isin+'</div>'
-              +'</div>'
-              +'<div style="text-align:right;flex-shrink:0;">'
-              +'<div style="font-size:11px;color:var(--text-dim);">Ex-Datum</div>'
-              +'<div style="font-size:13px;font-weight:600;color:var(--text-dim);">'+fmt(e.exDate)+'</div>'
-              +'</div>'
-              +'</div>';
-        });
-    }
-
-    h+='<div style="font-size:10px;color:var(--text-dim);margin-top:12px;text-align:center;opacity:0.6;">Quelle: Yahoo Finance · Daten können verzögert oder unvollständig sein</div>';
-    h+='</div>';
-    el.innerHTML=h;
-}
-// ────────────────────────────────────────────────────────────────────
-
-
-var DB_CONFIG_KEY='dagobert-dashboard-config';
-var DB_DEFAULT=['kpi_total','kpi_div','top_flop','donut_depot','donut_assets','div_history'];
-var DB_WIDGETS=[
-    {id:'kpi_total',    label:'Gesamtwert & Performance'},
-    {id:'kpi_div',      label:'Dividenden & ROI'},
-    {id:'top_flop',     label:'Top 3 / Flop 3 Positionen'},
-    {id:'donut_depot',  label:'Depotverteilung'},
-    {id:'donut_assets', label:'Asset-Klassen'},
-    {id:'div_history',  label:'Dividendenentwicklung'},
-    {id:'hist_chart',   label:'Depotwert-Verlauf'},
-    {id:'day_sim',      label:'Depot-Tagessimulation'},
-    {id:'biggest_pos',  label:'Größte Positionen'},
-];
-
-function dbGetConfig(){
-    try{var s=localStorage.getItem(DB_CONFIG_KEY);return s?JSON.parse(s):DB_DEFAULT.slice();}catch(e){return DB_DEFAULT.slice();}
-}
-function dbSaveConfig(cfg){try{localStorage.setItem(DB_CONFIG_KEY,JSON.stringify(cfg));}catch(e){}}
-
-function renderDashboard(){
-    var el=document.getElementById('dashboard-content');
-    if(!el)return;
-    var cfg=dbGetConfig();
-    var nf=new Intl.NumberFormat('de-DE',{style:'currency',currency:'EUR',maximumFractionDigits:0});
-    var nf2=new Intl.NumberFormat('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2});
-
-    // Pre-compute common values
-    var tW=allData.reduce(function(s,d){return s+d.kurswert;},0);
-    var tE=allData.reduce(function(s,d){return s+d.einstand;},0);
-    var tDiff=tW-tE, tDiffP=tE>0?tDiff/tE*100:0;
-    var isPos=tDiff>=0;
-    var sumDiv=allData.reduce(function(s,d){return s+(d.divGesamt||0);},0)+totalDividendsSold;
-    var sumDiv26=allData.reduce(function(s,d){return s+(d.div2026||0);},0);
-    var roi=tE>0?(tDiff+sumDiv)/tE*100:0;
-    var aktieSum=allData.filter(function(d){return d.kategorie==='Aktie';}).reduce(function(s,d){return s+d.kurswert;},0);
-    var etfSum=allData.filter(function(d){return d.kategorie==='ETF';}).reduce(function(s,d){return s+d.kurswert;},0);
-
-    var h='';
-
-    if(cfg.length===0){
-        h+='<div class="analyse-card" style="text-align:center;color:var(--text-dim);padding:32px;">Keine Widgets ausgewählt.<br><br><button onclick="dbOpenConfig()" style="background:#6366f1;border:none;border-radius:10px;padding:10px 20px;color:white;font-family:inherit;cursor:pointer;font-size:13px;">Widgets hinzufügen</button></div>';
+    if(all.length===0){
+        h+='<div class="analyse-card" style="text-align:center;padding:32px;color:var(--text-dim);">'
+          +'<div style="font-size:13px;margin-bottom:12px;">Noch keine Termine eingetragen.</div>'
+          +'<div style="font-size:11px;opacity:0.7;">F\xfcge in deinem Google Sheet die Spalten<br><strong>Div-Termin 1</strong>, <strong>Div-Wert 1</strong>, <strong>Div-W\xe4hrung 1</strong> usw. ein<br>und klicke \u201eKalender aktualisieren\u201c.</div>'
+          +'</div>';
         el.innerHTML=h; return;
     }
 
-    cfg.forEach(function(wid){
-        if(wid==='kpi_total'){
-            h+='<div class="analyse-card">'
-              +'<div class="analyse-title">Gesamtwert & Performance</div>'
-              +'<div style="font-size:2rem;font-weight:900;color:var(--text-main);margin-bottom:4px;">'+nf.format(tW)+'</div>'
-              +'<div style="font-size:13px;color:var(--text-dim);margin-bottom:12px;">Einstand: '+nf.format(tE)+'</div>'
-              +'<div style="display:flex;justify-content:space-between;">'
-              +'<div><div style="font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.5px;">Absolut</div>'
-              +'<div style="font-size:1.1rem;font-weight:700;color:'+(isPos?'var(--positive)':'var(--negative)')+';">'+(isPos?'+':'')+nf.format(tDiff)+'</div></div>'
-              +'<div style="text-align:right;"><div style="font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.5px;">Prozentual</div>'
-              +'<div style="font-size:1.1rem;font-weight:700;color:'+(isPos?'var(--positive)':'var(--negative)')+';">'+(isPos?'+':'')+nf2.format(tDiffP)+' %</div></div>'
-              +'</div></div>';
-        }
-        else if(wid==='kpi_div'){
-            h+='<div class="analyse-card">'
-              +'<div class="analyse-title">Dividenden & ROI</div>'
-              +'<div style="display:flex;justify-content:space-between;margin-bottom:12px;">'
-              +'<div><div style="font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.5px;">Dividenden gesamt</div>'
-              +'<div style="font-size:1.2rem;font-weight:700;color:var(--text-main);">'+nf.format(sumDiv)+'</div></div>'
-              +'<div style="text-align:right;"><div style="font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.5px;">davon 2026</div>'
-              +'<div style="font-size:1.2rem;font-weight:700;color:#10b981;">'+nf.format(sumDiv26)+'</div></div>'
-              +'</div>'
-              +'<div style="border-top:1px solid var(--border-color);padding-top:10px;display:flex;justify-content:space-between;align-items:center;">'
-              +'<span style="font-size:11px;color:var(--text-dim);">ROI (inkl. Dividenden)</span>'
-              +'<span style="font-size:14px;font-weight:700;color:'+(roi>=0?'var(--positive)':'var(--negative)')+';">'+(roi>=0?'+':'')+nf2.format(roi)+' %</span>'
-              +'</div></div>';
-        }
-        else if(wid==='top_flop'){
-            var sorted=allData.slice().sort(function(a,b){return b.diffP-a.diffP;});
-            var top=sorted.slice(0,3), flop=sorted.slice(-3).reverse();
-            function posRow(d,col){return '<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border-color);">'
-                +'<span style="font-size:12px;font-weight:600;color:var(--text-main);">'+d.name.split(' ').slice(0,2).join(' ')+'</span>'
-                +'<span style="font-size:12px;font-weight:700;color:'+col+';">'+(d.diffP>=0?'+':'')+nf2.format(d.diffP)+' %</span></div>';}
-            h+='<div class="analyse-card">'
-              +'<div class="analyse-title">Top 3 / Flop 3</div>'
-              +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:0 16px;">'
-              +'<div><div style="font-size:10px;font-weight:700;color:var(--positive);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;">▲ Top 3</div>'
-              +top.map(function(d){return posRow(d,'var(--positive)');}).join('')+'</div>'
-              +'<div><div style="font-size:10px;font-weight:700;color:var(--negative);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;">▼ Flop 3</div>'
-              +flop.map(function(d){return posRow(d,'var(--negative)');}).join('')+'</div>'
-              +'</div></div>';
-        }
-        else if(wid==='donut_depot'||wid==='donut_assets'){
-            var dt={};allData.forEach(function(d){dt[d.depot]=(dt[d.depot]||0)+d.kurswert;});
-            var de=Object.entries(dt).sort(function(a,b){return b[1]-a[1];});
-            var dTot=de.reduce(function(s,e){return s+e[1];},0);
-            var segs,title,centerVal;
-            if(wid==='donut_depot'){
-                segs=de.map(function(e,i){return{value:e[1],color:gradCol(i,de.length)};});
-                title='Depotverteilung';centerVal=nf.format(dTot);
-            } else {
-                segs=[{value:aktieSum,color:gradCol(0,2)},{value:etfSum,color:gradCol(1,2)}];
-                title='Asset-Klassen';centerVal=nf.format(tW);
-            }
-            var r=80,sw=22,cx=110,cy=r+sw/2+4,W=220,H=cy+6,T=Math.PI*r;
-            var d='M '+(cx-r)+' '+cy.toFixed(1)+' A '+r+' '+r+' 0 0 1 '+(cx+r)+' '+cy.toFixed(1);
-            var paths='<path d="'+d+'" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="'+sw+'" stroke-linecap="round"/>';
-            var cum=[],cc=0;
-            segs.forEach(function(s){cc+=s.value/(wid==='donut_depot'?dTot:tW)*T;cum.push(cc);});
-            for(var i=segs.length-1;i>=0;i--){
-                paths+='<path d="'+d+'" fill="none" stroke="'+segs[i].color+'" stroke-width="'+sw+'" stroke-linecap="round" stroke-dasharray="'+cum[i].toFixed(1)+' '+(T*10).toFixed(1)+'" stroke-dashoffset="0"/>';
-                if(i>0){var sp=2.5;paths+='<path d="'+d+'" fill="none" stroke="var(--card-bg)" stroke-width="'+(sw+2)+'" stroke-linecap="butt" stroke-dasharray="'+sp+' '+(T*10).toFixed(1)+'" stroke-dashoffset="'+(-cum[i-1]+sp/2).toFixed(1)+'"/>';}
-            }
-            paths+='<text x="'+cx+'" y="'+(cy-12)+'" text-anchor="middle" font-size="13" font-weight="700" fill="var(--text-main)" font-family="Outfit,sans-serif">'+centerVal+'</text>';
-            paths+='<text x="'+cx+'" y="'+(cy)+'" text-anchor="middle" font-size="9" fill="var(--text-dim)" font-family="Outfit,sans-serif">Gesamt</text>';
-            var legend='';
-            if(wid==='donut_depot'){
-                legend=de.map(function(e,i){var p=dTot>0?e[1]/dTot*100:0;return'<div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;"><div style="width:10px;height:10px;border-radius:50%;background:'+gradCol(i,de.length)+';flex-shrink:0;"></div><span style="font-size:12px;font-weight:600;color:var(--text-main);flex:1;">'+e[0]+'</span><span style="font-size:11px;color:var(--text-dim);">'+p.toFixed(1)+' %</span></div>';}).join('');
-            } else {
-                var ap=tW>0?aktieSum/tW*100:0,ep=tW>0?etfSum/tW*100:0;
-                legend='<div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;"><div style="width:10px;height:10px;border-radius:50%;background:'+gradCol(0,2)+';flex-shrink:0;"></div><span style="font-size:12px;font-weight:600;color:var(--text-main);flex:1;">Aktien</span><span style="font-size:11px;color:var(--text-dim);">'+ap.toFixed(1)+' %</span></div>'
-                      +'<div style="display:flex;align-items:center;gap:6px;"><div style="width:10px;height:10px;border-radius:50%;background:'+gradCol(1,2)+';flex-shrink:0;"></div><span style="font-size:12px;font-weight:600;color:var(--text-main);flex:1;">ETFs</span><span style="font-size:11px;color:var(--text-dim);">'+ep.toFixed(1)+' %</span></div>';
-            }
-            h+='<div class="analyse-card"><div class="analyse-title">'+title+'</div><div style="display:flex;justify-content:center;margin-bottom:8px;"><svg viewBox="0 0 '+W+' '+H.toFixed(1)+'" style="width:100%;display:block;">'+paths+'</svg></div>'+legend+'</div>';
-        }
-        else if(wid==='div_history'){
-            var years2=[2018,2019,2020,2021,2022,2023,2024,2025];
-            var byYear={};years2.forEach(function(y){byYear[y]=0;});
-            allData.forEach(function(d){if(d.divHist)years2.forEach(function(y){if(d.divHist[y])byYear[y]+=d.divHist[y];});});
-            var maxV=Math.max.apply(null,years2.map(function(y){return byYear[y]||0;}))||1;
-            var barColors=['#3b5998','#4a6fa5','#5b84b1','#6c99be','#2dd4bf','#1fb3a0','#0e9f8a','#10b981'];
-            var nfS=new Intl.NumberFormat('de-DE',{maximumFractionDigits:0});
-            var W2=320,H2=80,pt2=18,pb2=14,cH2=H2-pt2-pb2,bW2=W2/years2.length,bG=2;
-            var bars='',labs='',xLabs='';
-            years2.forEach(function(y,i){
-                var v=byYear[y]||0,bh=v>0?Math.max(8,v/maxV*cH2):0;
-                var bx=i*bW2+bG/2,by=pt2+cH2-bh,bww=bW2-bG;
-                bars+='<rect x="'+bx.toFixed(1)+'" y="'+by.toFixed(1)+'" width="'+bww.toFixed(1)+'" height="'+bh.toFixed(1)+'" fill="'+barColors[i]+'" rx="1.5"/>';
-                if(v>0)labs+='<text x="'+(bx+bww/2).toFixed(1)+'" y="'+(by+bh-2).toFixed(1)+'" text-anchor="middle" font-size="6.5" fill="rgba(255,255,255,0.9)" font-family="Outfit,sans-serif" font-weight="700">'+nfS.format(v)+'</text>';
-                xLabs+='<text x="'+(bx+bww/2).toFixed(1)+'" y="'+(H2-2)+'" text-anchor="middle" font-size="6.5" fill="#6b7280" font-family="Outfit,sans-serif">'+String(y).slice(2)+'</text>';
-            });
-            h+='<div class="analyse-card"><div class="analyse-title">Dividendenentwicklung</div><svg viewBox="0 0 '+W2+' '+H2+'" style="width:100%;display:block;">'+bars+labs+xLabs+'</svg></div>';
-        }
-        else if(wid==='hist_chart'){
-            if(histData.length>1){
-                var pts=histData.map(function(r){return{x:new Date(r.datum||r.date||r[0]).getTime(),y:parseFloat((r.depotwert||r.value||r[1])||0)||0};}).filter(function(p){return p.x&&p.y;}).sort(function(a,b){return a.x-b.x;});
-                if(pts.length>1){
-                    var minX=pts[0].x,maxX=pts[pts.length-1].x,minY=Math.min.apply(null,pts.map(function(p){return p.y;})),maxY=Math.max.apply(null,pts.map(function(p){return p.y;}))||1;
-                    var WH=320,HH=80,pad=8;
-                    var px=function(x){return pad+(x-minX)/(maxX-minX||1)*(WH-2*pad);};
-                    var py=function(y){return HH-pad-(y-minY)/(maxY-minY||1)*(HH-2*pad);};
-                    var poly=pts.map(function(p){return px(p.x).toFixed(1)+','+py(p.y).toFixed(1);}).join(' ');
-                    var fillPts=px(pts[0].x).toFixed(1)+','+(HH-pad)+' '+poly+' '+px(pts[pts.length-1].x).toFixed(1)+','+(HH-pad);
-                    h+='<div class="analyse-card"><div class="analyse-title">Depotwert-Verlauf</div>'
-                      +'<svg viewBox="0 0 '+WH+' '+HH+'" style="width:100%;display:block;">'
-                      +'<polygon points="'+fillPts+'" fill="rgba(99,102,241,0.15)"/>'
-                      +'<polyline points="'+poly+'" fill="none" stroke="#6366f1" stroke-width="1.5"/>'
-                      +'</svg></div>';
-                } else h+='<div class="analyse-card"><div class="analyse-title">Depotwert-Verlauf</div><div style="color:var(--text-dim);font-size:13px;text-align:center;padding:16px;">Nicht genug historische Daten</div></div>';
-            }
-        }
-        else if(wid==='day_sim'){
-            var simV=tW*(1+dailyGrowthRate/100),simD=simV-tW,simC=dailyGrowthRate>0?'var(--positive)':dailyGrowthRate<0?'var(--negative)':'var(--text-dim)';
-            var rStr=(dailyGrowthRate>=0?'+':'')+nf2.format(dailyGrowthRate)+' %';
-            var bs3='background:var(--card-bg);border:1px solid var(--border-color);color:var(--text-main);width:30px;height:30px;border-radius:8px;cursor:pointer;font-size:20px;line-height:1;display:inline-flex;align-items:center;justify-content:center;font-family:inherit;flex-shrink:0;';
-            h+='<div class="analyse-card"><div class="analyse-title">Depot-Tagessimulation</div>'
-              +'<div style="display:flex;justify-content:space-between;margin-bottom:12px;">'
-              +'<div><div style="font-size:9px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px;">Aktuell</div><div style="font-size:1.1rem;font-weight:700;color:var(--text-main);">'+nf.format(tW)+'</div></div>'
-              +'<div style="text-align:right;"><div style="font-size:9px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px;">Simulation</div><div style="font-size:1.1rem;font-weight:700;color:'+simC+';">'+nf.format(simV)+'</div></div></div>'
-              +'<div style="display:flex;align-items:center;margin-bottom:10px;">'
-              +'<button onclick="adjustDailyRate(-0.1)" style="'+bs3+'">−</button>'
-              +'<div style="flex:1;text-align:center;"><div style="font-size:1.4rem;font-weight:900;color:'+simC+';">'+rStr+'</div><div style="font-size:9px;color:var(--text-dim);">pro Tag</div></div>'
-              +'<button onclick="adjustDailyRate(0.1)" style="'+bs3+'">+</button></div>'
-              +'<div style="display:flex;justify-content:space-between;border-top:1px solid var(--border-color);padding-top:8px;">'
-              +'<span style="font-size:11px;color:var(--text-dim);">Veränderung</span>'
-              +'<span style="font-size:12px;font-weight:700;color:'+simC+';">'+(simD>=0?'+':'')+nf.format(simD)+'</span></div></div>';
-        }
-        else if(wid==='biggest_pos'){
-            var top5=allData.slice().sort(function(a,b){return b.kurswert-a.kurswert;}).slice(0,5);
-            var rows=top5.map(function(d){var pct=tW>0?d.kurswert/tW*100:0;return'<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border-color);">'
-                +'<span style="font-size:12px;font-weight:600;color:var(--text-main);">'+d.name.split(' ').slice(0,2).join(' ')+'</span>'
-                +'<div style="text-align:right;"><div style="font-size:12px;font-weight:700;color:var(--text-main);">'+nf.format(d.kurswert)+'</div>'
-                +'<div style="font-size:10px;color:var(--text-dim);">'+pct.toFixed(1)+' %</div></div></div>';}).join('');
-            h+='<div class="analyse-card"><div class="analyse-title">Größte Positionen</div>'+rows+'</div>';
-        }
-    });
-    el.innerHTML=h;
-}
+    h+='<div class="analyse-card">';
+    h+='<div class="analyse-title">Dividendenkalender <span style="font-size:11px;font-weight:400;color:var(--text-dim);">(Brutto)</span></div>';
 
-function dbOpenConfig(){
-    var cfg=dbGetConfig();
-    var allIds=DB_WIDGETS.map(function(w){return w.id;});
-    var inactive=allIds.filter(function(id){return cfg.indexOf(id)<0;});
-    var html='<div id="db-config-overlay" style="position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,0.7);display:flex;align-items:flex-end;justify-content:center;" onclick="if(event.target===this)dbCloseConfig();">'
-        +'<div style="background:var(--card-bg);border:1px solid var(--border-color);border-radius:20px 20px 0 0;padding:24px;width:100%;max-width:480px;max-height:80vh;overflow-y:auto;">'
-        +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">'
-        +'<div style="font-size:16px;font-weight:700;color:var(--text-main);">Dashboard anpassen</div>'
-        +'<button onclick="dbCloseConfig()" style="background:none;border:none;color:var(--text-dim);font-size:22px;cursor:pointer;line-height:1;">×</button></div>'
-        +'<div style="font-size:11px;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Aktive Widgets</div>'
-        +'<div id="db-active-list">';
-    cfg.forEach(function(id,i){
-        var w=DB_WIDGETS.find(function(x){return x.id===id;});
-        if(!w)return;
-        html+='<div style="display:flex;align-items:center;gap:8px;padding:10px;background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.25);border-radius:10px;margin-bottom:6px;">'
-            +'<span style="flex:1;font-size:13px;font-weight:600;color:var(--text-main);">'+w.label+'</span>'
-            +(i>0?'<button onclick="dbMoveWidget(\''+id+'\',-1)" style="background:none;border:1px solid var(--border-color);color:var(--text-dim);width:26px;height:26px;border-radius:6px;cursor:pointer;font-size:13px;">▲</button>':'<div style="width:26px;"></div>')
-            +(i<cfg.length-1?'<button onclick="dbMoveWidget(\''+id+'\',1)" style="background:none;border:1px solid var(--border-color);color:var(--text-dim);width:26px;height:26px;border-radius:6px;cursor:pointer;font-size:13px;">▼</button>':'<div style="width:26px;"></div>')
-            +'<button onclick="dbToggleWidget(\''+id+'\')" style="background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.3);color:#f87171;width:26px;height:26px;border-radius:6px;cursor:pointer;font-size:16px;line-height:1;">−</button>'
-            +'</div>';
-    });
-    html+='</div>';
-    if(inactive.length>0){
-        html+='<div style="font-size:11px;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;margin:16px 0 8px;">Verfügbare Widgets</div>';
-        inactive.forEach(function(id){
-            var w=DB_WIDGETS.find(function(x){return x.id===id;});
-            if(!w)return;
-            html+='<div style="display:flex;align-items:center;gap:8px;padding:10px;border:1px solid var(--border-color);border-radius:10px;margin-bottom:6px;">'
-                +'<span style="flex:1;font-size:13px;color:var(--text-dim);">'+w.label+'</span>'
-                +'<button onclick="dbToggleWidget(\''+id+'\')" style="background:rgba(99,102,241,0.15);border:1px solid rgba(99,102,241,0.35);color:#a5b4fc;width:26px;height:26px;border-radius:6px;cursor:pointer;font-size:16px;line-height:1;">+</button>'
-                +'</div>';
+    if(upcoming.length>0){
+        // Group by month
+        var months={};
+        var monthNames=['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+        upcoming.forEach(function(e){
+            var k=e.date.getFullYear()+'-'+(e.date.getMonth());
+            if(!months[k])months[k]={label:monthNames[e.date.getMonth()]+' '+e.date.getFullYear(),entries:[]};
+            months[k].entries.push(e);
+        });
+        Object.keys(months).sort().forEach(function(k){
+            var grp=months[k];
+            h+='<div style="font-size:11px;font-weight:700;color:var(--accent,#6366f1);text-transform:uppercase;letter-spacing:1px;margin:12px 0 6px;">'+grp.label+'</div>';
+            grp.entries.forEach(function(e){
+                var days=Math.round((e.date-today)/(1000*60*60*24));
+                var col=days<=14?'var(--positive)':'var(--text-main)';
+                h+='<div style="display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--border-color);">'
+                  +'<div>'
+                  +'<div style="font-size:13px;font-weight:600;color:var(--text-main);">'+e.name+'</div>'
+                  +(e.amount?'<div style="font-size:11px;">'+formatDivAmount(e)+'</div>':'')
+                  +'</div>'
+                  +'<div style="text-align:right;">'
+                  +'<div style="font-size:13px;font-weight:700;color:'+col+';">'+fmt(e.date)+'</div>'
+                  +'<div style="font-size:10px;color:'+col+';">in '+days+' Tag'+(days!==1?'en':'')+'</div>'
+                  +'</div></div>';
+            });
+        });
+        var sumUp=upcoming.reduce(function(s,e){
+            var cur=e.currency||'EUR';
+            var eur=cur==='EUR'?e.total:toEur(e.total,cur);
+            return s+(eur||0);
+        },0);
+        if(sumUp>0){
+            h+='<div style="display:flex;justify-content:space-between;padding:10px 0 4px;">'
+              +'<span style="font-size:12px;font-weight:700;color:var(--text-dim);">Gesamt bevorstehend</span>'
+              +'<span style="font-size:14px;font-weight:900;color:#10b981;">'+nfC.format(sumUp)+'</span>'
+              +'</div>';
+        }
+    }
+
+    if(past.length>0){
+        h+='<div style="font-size:11px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;margin:16px 0 8px;">Vergangene Termine</div>';
+        past.slice(0,8).forEach(function(e){
+            h+='<div style="display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--border-color);opacity:0.55;">'
+              +'<div><div style="font-size:12px;font-weight:600;color:var(--text-main);">'+e.name+'</div>'
+              +(e.amount?'<div style="font-size:10px;color:var(--text-dim);">'+formatDivAmount(e)+'</div>':'')
+              +'</div>'
+              +'<div style="font-size:12px;color:var(--text-dim);text-align:right;">'+fmt(e.date)+'</div>'
+              +'</div>';
         });
     }
-    html+='</div></div>';
-    document.body.insertAdjacentHTML('beforeend',html);
+
+    // Wechselkurs-Übersicht
+    var usedCurrencies=[...new Set(all.map(function(e){return e.currency||'EUR';}))].filter(function(c){return c!=='EUR';});
+    if(usedCurrencies.length>0){
+        var nf4=new Intl.NumberFormat('de-DE',{minimumFractionDigits:4,maximumFractionDigits:4});
+        h+='<div style="margin-top:14px;padding-top:10px;border-top:1px solid var(--border-color);">';
+        h+='<div style="font-size:10px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">Wechselkurse (EZB)</div>';
+        if(fxRatesLoaded){
+            var fxParts=[];
+            usedCurrencies.forEach(function(cur){
+                var eur=toEur(1,cur);
+                if(eur===null)return;
+                fxParts.push('1 '+cur+' = <strong>'+nf4.format(eur)+' €</strong>');
+            });
+            h+='<div style="font-size:11px;color:var(--text-dim);">'+fxParts.join(' &nbsp;·&nbsp; ')+'</div>';
+            if(fxRatesDate){var dp=fxRatesDate.split('-');var fmtDate=dp.length===3?dp[2]+'.'+dp[1]+'.'+dp[0]:fxRatesDate;h+='<div style="font-size:9px;color:var(--text-dim);margin-top:4px;opacity:0.6;">Stand: '+fmtDate+' · EZB-Referenzkurs</div>';}
+        } else {
+            h+='<div style="font-size:11px;color:var(--text-dim);">Wechselkurse werden geladen\u2026</div>';
+        }
+        h+='</div>';
+    }
+
+    h+='<div style="font-size:10px;color:var(--text-dim);margin-top:12px;text-align:center;opacity:0.5;">Termine aus Depot-CSV \xb7 manuell gepflegt</div>';
+    h+='</div>';
+    el.innerHTML=h;
 }
-
-function dbCloseConfig(){
-    var el=document.getElementById('db-config-overlay');
-    if(el)el.remove();
-    renderDashboard();
-}
-
-function dbToggleWidget(id){
-    var cfg=dbGetConfig();
-    var idx=cfg.indexOf(id);
-    if(idx>-1)cfg.splice(idx,1);
-    else cfg.push(id);
-    dbSaveConfig(cfg);
-    var el=document.getElementById('db-config-overlay');
-    if(el)el.remove();
-    dbOpenConfig();
-}
-
-function dbMoveWidget(id,dir){
-    var cfg=dbGetConfig();
-    var idx=cfg.indexOf(id);
-    if(idx<0)return;
-    var newIdx=idx+dir;
-    if(newIdx<0||newIdx>=cfg.length)return;
-    cfg.splice(idx,1);cfg.splice(newIdx,0,id);
-    dbSaveConfig(cfg);
-    var el=document.getElementById('db-config-overlay');
-    if(el)el.remove();
-    dbOpenConfig();
-}
-// ────────────────────────────────────────────────────────────────────
-
-
-var PW_HASH='3fef0f09c1caba8e125e4f70f94c6333a63307f910ad25c115cd273fae3d42f7';
+// ── Passwortschutz ───────────────────────────────────────────────────
+var PW_HASH='3fef0f09c1caba8e125e4f70f94c6333a63307f910ad25c115cd273fae3d42f7'; // dagobert130122
 var PW_SESSION_KEY='dagobert-auth';
-
-var _pwReal='',_pwVisible=false;
-function pwInput(e){
-    var inp=e.target,val=inp.value,pos=inp.selectionStart;
-    // Count stars vs real chars to detect insertions/deletions
-    var newLen=val.length,oldLen=(_pwVisible?_pwReal:_pwReal).length;
-    if(!_pwVisible){
-        // Reconstruct real value from changes
-        var stars=_pwReal.length;
-        if(newLen>stars){
-            // Characters added
-            var added=val.slice(pos-(newLen-stars),pos).replace(/\*/g,'');
-            var realPos=pos-(newLen-stars);
-            _pwReal=_pwReal.slice(0,realPos)+val.slice(pos-(newLen-stars),pos)+_pwReal.slice(realPos);
-        } else if(newLen<stars){
-            // Characters removed
-            _pwReal=_pwReal.slice(0,pos)+_pwReal.slice(pos+(stars-newLen));
-        }
-        inp.value='*'.repeat(_pwReal.length);
-        inp.setSelectionRange(pos,pos);
-    } else {
-        _pwReal=val;
-    }
-}
-function pwKeydown(e){
-    if(e.key==='Enter')checkPw();
-}
-function pwToggleVis(btn){
-    var inp=document.getElementById('pw-input');
-    _pwVisible=!_pwVisible;
-    inp.value=_pwVisible?_pwReal:'*'.repeat(_pwReal.length);
-    btn.innerHTML=_pwVisible
-        ?'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>'
-        :'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
-}
-function pwLogout(){
-    try{sessionStorage.removeItem(PW_SESSION_KEY);}catch(e){}
-    _pwReal='';_pwVisible=false;
-    var inp=document.getElementById('pw-input');
-    if(inp){inp.value='';inp.type='text';}
-    document.getElementById('pw-screen').style.display='flex';
-    toggleMenu();
-    setTimeout(function(){var i=document.getElementById('pw-input');if(i)i.focus();},300);
-}
-
 var BIO_CRED_KEY='dagobert-bio-cred';
-
-function bioSupported(){
-    return !!(window.PublicKeyCredential&&navigator.credentials&&navigator.credentials.create);
-}
-
-async function registerBiometric(){
-    document.getElementById('bio-offer').style.display='none';
-    try{
-        var cred=await navigator.credentials.create({publicKey:{
-            challenge:crypto.getRandomValues(new Uint8Array(32)),
-            rp:{name:'Dagobert App',id:location.hostname},
-            user:{id:crypto.getRandomValues(new Uint8Array(16)),name:'dagobert',displayName:'Dagobert'},
-            pubKeyCredParams:[{alg:-7,type:'public-key'},{alg:-257,type:'public-key'}],
-            authenticatorSelection:{authenticatorAttachment:'platform',userVerification:'required'},
-            timeout:60000
-        }});
-        var idB64=btoa(String.fromCharCode.apply(null,new Uint8Array(cred.rawId)));
-        try{localStorage.setItem(BIO_CRED_KEY,idB64);}catch(e){}
-        updateBioBtn();
-    }catch(e){
-        if(e.name!=='NotAllowedError')alert('Biometrie konnte nicht aktiviert werden: '+e.message);
-    }
-}
-
-async function loginBiometric(){
-    var idB64;try{idB64=localStorage.getItem(BIO_CRED_KEY);}catch(e){}
-    if(!idB64)return;
-    try{
-        var credId=Uint8Array.from(atob(idB64),function(c){return c.charCodeAt(0);});
-        var assertion=await navigator.credentials.get({publicKey:{
-            challenge:crypto.getRandomValues(new Uint8Array(32)),
-            allowCredentials:[{type:'public-key',id:credId}],
-            userVerification:'required',
-            timeout:60000
-        }});
-        if(assertion){
-            try{sessionStorage.setItem(PW_SESSION_KEY,'1');}catch(e){}
-            document.getElementById('pw-screen').style.display='none';
-        }
-    }catch(e){
-        if(e.name!=='NotAllowedError'){
-            // Credential might be gone – remove it
-            try{localStorage.removeItem(BIO_CRED_KEY);}catch(e2){}
-            updateBioBtn();
-        }
-    }
-}
-
-function showBioOffer(){
-    toggleMenu();
-    setTimeout(function(){
-        var offer=document.getElementById('bio-offer');
-        if(offer)offer.style.display='flex';
-    },300);
-}
-
-function updateBioBtn(){
-    var btn=document.getElementById('bio-btn');
-    var menuBtn=document.getElementById('bio-menu-btn');
-    var hasCred=false;try{hasCred=!!localStorage.getItem(BIO_CRED_KEY);}catch(e){}
-    var supported=bioSupported();
-    if(btn)btn.style.display=(supported&&hasCred)?'flex':'none';
-    if(menuBtn)menuBtn.style.display=(supported&&!hasCred)?'flex':'none';
-}
+var _pwReal='',_pwVisible=false;
 
 async function checkPw(){
     var inp=document.getElementById('pw-input');
     var msg=document.getElementById('pw-error-msg');
-    var val=_pwReal;
+    var val=inp.value;
     if(!val)return;
     var buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(val));
     var hash=Array.from(new Uint8Array(buf)).map(function(b){return b.toString(16).padStart(2,'0');}).join('');
     if(hash===PW_HASH){
         try{sessionStorage.setItem(PW_SESSION_KEY,'1');}catch(e){}
         document.getElementById('pw-screen').style.display='none';
-        // Offer biometric registration if supported and not yet set up
         var hasCred=false;try{hasCred=!!localStorage.getItem(BIO_CRED_KEY);}catch(e){}
-        console.log('bioSupported:',bioSupported(),'hasCred:',hasCred);
         if(bioSupported()&&!hasCred){
             setTimeout(function(){
                 var offer=document.getElementById('bio-offer');
@@ -1404,7 +990,7 @@ function showPage(pageId,index,closeMenu) {
     }
     if(pageId==='changelog'||pageId==='about')return;
     if(pageId==='dashboard'){renderDashboard();return;}
-    if(pageId==='divkal'){renderDivKal();return;}
+    if(pageId==='divkal'){loadFxRates().then(function(){renderDivKal();});return;}
     var af=document.querySelector('#filter-inner .filter-btn.active');if(af)moveIndicator(af);
     render();
     var as=document.querySelector('#page-'+pageId+' .sort-bar-container .filter-btn.active');if(as)moveSortIndicator(as);
@@ -1464,6 +1050,63 @@ async function tryFetch(url) {
     return '';
 }
 
+function parseGermanDate(s){
+    if(!s)return null;
+    s=s.trim();
+    var p=s.split(/[./-]/);
+    if(p.length===3){
+        var d=parseInt(p[0]),mo=parseInt(p[1]),y=parseInt(p[2]);
+        if(y<100)y+=2000;
+        if(!isNaN(d)&&!isNaN(mo)&&!isNaN(y))return new Date(y,mo-1,d);
+    }
+    var dt=new Date(s);
+    return isNaN(dt)?null:dt;
+}
+
+var fxRates={EUR:1.0};
+var fxRatesLoaded=false;
+var fxRatesDate='';
+
+function normColName(x){return x.toLowerCase().replace(/ä/g,'ae').replace(/ö/g,'oe').replace(/ü/g,'ue').replace(/[^a-z0-9]/g,'');} function matchWaehrung(n,num){return n.indexOf('waehrung'+num)>-1||n.indexOf('wahrung'+num)>-1||n.indexOf('currency'+num)>-1;}
+function parseCurrencyAmount(s){
+    if(!s)return{amount:0,currency:'EUR'};
+    s=s.trim();
+    var m=s.match(/([A-Z]{3})/);
+    var currency=m?m[1]:'EUR';
+    var num=parseFloat(s.replace(/[^0-9.,]/g,'').replace(',','.'));
+    return{amount:isNaN(num)?0:num,currency:currency};
+}
+
+function toEur(amount,currency){
+    if(currency==='EUR'||!currency)return amount;
+    var rate=fxRates[currency];
+    return rate?amount/rate:null; // null = Kurs unbekannt
+}
+
+async function loadFxRates(){
+    if(fxRatesLoaded)return;
+    var urls=[
+        'https://api.frankfurter.app/latest?base=EUR',
+        'https://api.frankfurter.dev/v1/latest?base=EUR'
+    ];
+    for(var i=0;i<urls.length;i++){
+        try{
+            var res=await fetch(urls[i]);
+            if(!res.ok){console.log('FX HTTP',res.status,urls[i]);continue;}
+            var json=await res.json();
+            if(json&&json.rates){
+                fxRates=json.rates;
+                fxRates['EUR']=1.0;
+                fxRatesDate=json.date||'';
+                fxRatesLoaded=true;
+                console.log('FX geladen von',urls[i],'Stand:',fxRatesDate);
+                return;
+            }
+        }catch(e){console.log('FX Fehler',urls[i],e.message);}
+    }
+    console.log('FX: alle Endpunkte fehlgeschlagen');
+}
+
 async function loadData() {
     var fetchStart=Date.now();
     var results=await Promise.all([tryFetch(SHEET_URL),tryFetch(SHEET_URL_DEV),tryFetch(SHEET_URL_HIST)]);
@@ -1475,7 +1118,16 @@ async function loadData() {
         return;
     }
     var rows=parseCSV(csv),head=rows[0].map(function(x){return x.toLowerCase().trim();});
-    var m={n:head.findIndex(function(x){return x.indexOf('wertpapier')>-1;}),i:head.findIndex(function(x){return x.indexOf('isin')>-1;}),d:head.findIndex(function(x){return x.indexOf('depot')>-1;}),s:head.findIndex(function(x){return x.indexOf('stück')>-1;}),ew:head.findIndex(function(x){return x.indexOf('einstandswert')>-1;}),kw:head.findIndex(function(x){return x.indexOf('kurswert')>-1;}),kat:head.findIndex(function(x){return x.indexOf('kategorie')>-1;}),lnk:head.findIndex(function(x){return x.indexOf('link')>-1&&x.indexOf('logo')<0;}),logo:head.findIndex(function(x){return x.indexOf('code logo')>-1||x.indexOf('logo')>-1;}),div26:head.findIndex(function(x){return x.indexOf('erhaltene dividende 2026')>-1||x.indexOf('dividende 2026')>-1;}),divGes:head.findIndex(function(x){return x.indexOf('erhaltene dividende gesamt')>-1;}),w52lo:head.findIndex(function(x){return x.indexOf('52w tief')>-1||x.indexOf('tief')>-1&&x.indexOf('52')>-1;}),w52hi:head.findIndex(function(x){return x.indexOf('52w hoch')>-1||x.indexOf('hoch')>-1&&x.indexOf('52')>-1;}),ticker:head.findIndex(function(x){return x.indexOf('yahoo')>-1;})};
+    var m={n:head.findIndex(function(x){return x.indexOf('wertpapier')>-1;}),i:head.findIndex(function(x){return x.indexOf('isin')>-1;}),d:head.findIndex(function(x){return x.indexOf('depot')>-1;}),s:head.findIndex(function(x){return x.indexOf('stück')>-1;}),ew:head.findIndex(function(x){return x.indexOf('einstandswert')>-1;}),kw:head.findIndex(function(x){return x.indexOf('kurswert')>-1;}),kat:head.findIndex(function(x){return x.indexOf('kategorie')>-1;}),lnk:head.findIndex(function(x){return x.indexOf('link')>-1&&x.indexOf('logo')<0;}),logo:head.findIndex(function(x){return x.indexOf('code logo')>-1||x.indexOf('logo')>-1;}),div26:head.findIndex(function(x){return x.indexOf('erhaltene dividende 2026')>-1||x.indexOf('dividende 2026')>-1;}),divGes:head.findIndex(function(x){return x.indexOf('erhaltene dividende gesamt')>-1;}),w52lo:head.findIndex(function(x){return x.indexOf('52w tief')>-1||x.indexOf('tief')>-1&&x.indexOf('52')>-1;}),w52hi:head.findIndex(function(x){return x.indexOf('52w hoch')>-1||x.indexOf('hoch')>-1&&x.indexOf('52')>-1;}),ticker:head.findIndex(function(x){return x.indexOf('yahoo')>-1;}),
+        dt1:head.findIndex(function(x){return x.toLowerCase().replace(/[- ]/g,'').indexOf('divtermin1')>-1;}),
+        dw1:head.findIndex(function(x){return x.toLowerCase().replace(/[- ]/g,'').indexOf('divwert1')>-1;}),
+        dt2:head.findIndex(function(x){return x.toLowerCase().replace(/[- ]/g,'').indexOf('divtermin2')>-1;}),
+        dw2:head.findIndex(function(x){return x.toLowerCase().replace(/[- ]/g,'').indexOf('divwert2')>-1;}),
+        dt3:head.findIndex(function(x){return x.toLowerCase().replace(/[- ]/g,'').indexOf('divtermin3')>-1;}),
+        dw3:head.findIndex(function(x){return x.toLowerCase().replace(/[- ]/g,'').indexOf('divwert3')>-1;}),
+        dc1:head.findIndex(function(x){return matchWaehrung(normColName(x),'1');}),
+        dc2:head.findIndex(function(x){return matchWaehrung(normColName(x),'2');}),
+        dc3:head.findIndex(function(x){return matchWaehrung(normColName(x),'3');})};
     if(m.div26<0)m.div26=head.findIndex(function(x){return x.indexOf('2026')>-1;});
     // Map year columns 2017-2025
     var divYearCols={};
@@ -1495,7 +1147,20 @@ async function loadData() {
         if(rawLogo&&rawLogo.indexOf('&lt;')>-1){var ld=document.createElement('textarea');ld.innerHTML=rawLogo;rawLogo=ld.value;}
         if(rawLogo){rawLogo=rawLogo.replace(/<defs>[\s\S]*?<\/defs>/g,'').replace(/clip-path="[^"]*"/g,'');}
         var divHist={};for(var dhy=2017;dhy<=2025;dhy++){if(divYearCols[dhy]!==undefined)divHist[dhy]=parseMenge(r[divYearCols[dhy]]);}divHist[2026]=parseMenge(r[m.div26]);
-        var item={name:r[m.n],isin:r[m.i],depot:r[m.d]||'?',stück:parseMenge(r[m.s]),kurswert:parseMenge(r[m.kw]),einstand:parseMenge(r[m.ew]),kategorie:r[m.kat]||'Aktie',div2026:parseMenge(r[m.div26]),divGesamt:parseMenge(r[m.divGes]),divHist:divHist,link:m.lnk>=0?(r[m.lnk]||''):'',logo:rawLogo,w52lo:m.w52lo>=0?parse52W(r[m.w52lo]):0,w52hi:m.w52hi>=0?parse52W(r[m.w52hi]):0,ticker:m.ticker>=0?(r[m.ticker]||''):''};
+        var item={name:r[m.n],isin:r[m.i],depot:r[m.d]||'?',stück:parseMenge(r[m.s]),kurswert:parseMenge(r[m.kw]),einstand:parseMenge(r[m.ew]),kategorie:r[m.kat]||'Aktie',div2026:parseMenge(r[m.div26]),divGesamt:parseMenge(r[m.divGes]),divHist:divHist,link:m.lnk>=0?(r[m.lnk]||''):'',logo:rawLogo,w52lo:m.w52lo>=0?parse52W(r[m.w52lo]):0,w52hi:m.w52hi>=0?parse52W(r[m.w52hi]):0,ticker:m.ticker>=0?(r[m.ticker]||''):'',
+            divTermine:(function(){
+                var t=[];
+                [[m.dt1,m.dw1,m.dc1],[m.dt2,m.dw2,m.dc2],[m.dt3,m.dw3,m.dc3]].forEach(function(p){
+                    var d=p[0]>=0?r[p[0]]:'', v=p[1]>=0?r[p[1]]:'', cur=p[2]>=0?(r[p[2]]||'').trim().toUpperCase():'';
+                    var dt=parseGermanDate(d);
+                    if(dt){
+                        var ca=parseCurrencyAmount(v);
+                        if(cur&&cur.length===3)ca.currency=cur; // Separate Währungsspalte hat Vorrang
+                        t.push({date:dt,amount:ca.amount,currency:ca.currency});
+                    }
+                });
+                return t;
+            })()};
         item.diff=item.kurswert-item.einstand;item.diffP=item.einstand?(item.diff/item.einstand)*100:0;allData.push(item);depots.add(item.depot);}
     if(csvDev)devData=parseCSV(csvDev);
     if(csvHist)histData=parseCSV(csvHist);
@@ -3418,7 +3083,7 @@ function formatStueck(n){return Number.isInteger(n)?n.toString():n.toFixed(2).re
 function parseCSV(t){var rows=[],cur=[],v='',q=false;for(var i=0,len=t.length;i<len;i++){var c=t[i];if(c==='"')q=!q;else if(c===','&&!q){cur.push(v.trim());v='';}else if((c==='\n'||c==='\r')&&!q){cur.push(v.trim());rows.push(cur);cur=[];v='';if(c==='\r'&&t[i+1]==='\n')i++;}else v+=c;}if(v||cur.length){cur.push(v.trim());rows.push(cur);}return rows;}
 
 // Swipe navigation
-var swipePages=['portfolio','analyse','dividenden','div-entwicklung','ziele'];
+var swipePages=['portfolio','analyse','dividenden','div-entwicklung','divkal','ziele'];
 var swipeCurrentIdx=0;
 var swipeTouchStartX=0,swipeTouchStartY=0;
 document.addEventListener('touchstart',function(e){
