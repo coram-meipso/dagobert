@@ -146,6 +146,15 @@
         </style>
 </head>
 <body id="app-body">
+    <div id="bio-offer" style="display:none;position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,0.75);flex-direction:column;align-items:center;justify-content:center;padding:32px;">
+        <div style="background:#1a1f2e;border:1px solid rgba(99,102,241,0.3);border-radius:20px;padding:28px;max-width:320px;width:100%;text-align:center;">
+            <div style="font-size:2.5rem;margin-bottom:12px;">&#128272;</div>
+            <div style="font-size:16px;font-weight:700;color:#f1f5f9;margin-bottom:8px;">Biometrie aktivieren?</div>
+            <div style="font-size:13px;color:#64748b;margin-bottom:24px;line-height:1.5;">Beim n&#228;chsten Login einfach per Fingerabdruck oder Face ID anmelden &#8211; kein Passwort n&#246;tig.</div>
+            <button onclick="registerBiometric()" style="width:100%;background:#6366f1;border:none;border-radius:12px;padding:14px;font-size:15px;font-weight:700;color:white;cursor:pointer;font-family:inherit;margin-bottom:10px;">Aktivieren</button>
+            <button onclick="document.getElementById('bio-offer').style.display='none';" style="width:100%;background:none;border:none;color:#64748b;cursor:pointer;font-family:inherit;font-size:13px;padding:8px;">Nicht jetzt</button>
+        </div>
+    </div>
     <div id="pw-screen">
         <div class="pw-title"><span style="animation-delay:0s">D</span><span style="animation-delay:0.15s">A</span><span style="animation-delay:0.3s">G</span><span style="animation-delay:0.45s;position:relative;display:inline-block;"><span style="visibility:hidden;">O</span><span style="position:absolute;top:0;left:0;clip-path:inset(0 0 52% 0);z-index:1;color:#f1f5f9;">O</span><svg style="position:absolute;bottom:-6px;left:50%;transform:translateX(-50%);width:26px;height:48px;image-rendering:pixelated;z-index:2;" viewBox="0 0 32 32"><rect x="10" y="2" width="10" height="8" fill="#1e1e1e"/><rect x="10" y="7" width="10" height="1" fill="#ef4444"/><rect x="9" y="10" width="12" height="10" fill="#FFFFFF"/><rect x="12" y="14" width="2" height="2" fill="#000000"/><rect x="17" y="14" width="2" height="2" fill="#000000"/><rect x="8" y="17" width="14" height="3" fill="#fbbf24"/><g><rect x="22" y="8" width="6" height="8" fill="#10b981"/><rect x="21" y="13" width="3" height="4" fill="#FFFFFF"/></g><rect x="9" y="20" width="12" height="8" fill="#ef4444"/><rect x="13" y="22" width="4" height="2" fill="#3b82f6"/></svg><span style="position:absolute;top:0;left:0;clip-path:inset(48% 0 0 0);z-index:3;color:#f1f5f9;">O</span></span><span style="animation-delay:0.6s">B</span><span style="animation-delay:0.75s">E</span><span style="animation-delay:0.9s">R</span><span style="animation-delay:1.05s">T</span></div>
         <div class="pw-sub">Bitte Passwort eingeben</div>
@@ -155,6 +164,7 @@
                 <button onclick="pwToggleVis(this)" type="button" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#64748b;padding:0;display:flex;align-items:center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
             </div>
             <button id="pw-btn" onclick="checkPw()">Entsperren</button>
+            <button id="bio-btn" onclick="loginBiometric()" style="display:none;background:rgba(99,102,241,0.15);border:1px solid rgba(99,102,241,0.35);border-radius:12px;padding:14px;font-size:15px;font-weight:700;color:#a5b4fc;cursor:pointer;font-family:inherit;width:100%;align-items:center;justify-content:center;gap:8px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Mit Biometrie anmelden</button>
             <div id="pw-error-msg"></div>
         </div>
     </div>
