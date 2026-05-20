@@ -403,6 +403,27 @@ var divKalTaxStates=(function(){try{return JSON.parse(localStorage.getItem('dago
 
 function saveDivKalTax(){try{localStorage.setItem('dagobert-divkal-tax',JSON.stringify(divKalTaxStates));}catch(e){}}
 
+function activateAllTax(){
+    // Check if any entry already has tax active → then reset all, else activate all
+    var anyActive=allData.some(function(item){
+        if(!item.divTermine||!item.divTermine.length)return false;
+        return item.divTermine.some(function(t){
+            var key=item.isin+'_'+t.date.toISOString().slice(0,10);
+            return (divKalTaxStates[key]||0)>0;
+        });
+    });
+    allData.forEach(function(item){
+        if(!item.divTermine||!item.divTermine.length)return;
+        var state=anyActive?0:(item.kategorie==='ETF'?2:1);
+        item.divTermine.forEach(function(t){
+            var key=item.isin+'_'+t.date.toISOString().slice(0,10);
+            divKalTaxStates[key]=state;
+        });
+    });
+    saveDivKalTax();
+    renderDivKal();
+}
+
 function toggleDivTax(key){
     var s=(divKalTaxStates[key]||0)+1;
     if(s>2)s=0;
@@ -576,7 +597,14 @@ function renderDivKal(){
 
     h+='<div class="analyse-card">';
     h+='<div class="analyse-title" style="margin-bottom:10px;">Dividendenkalender</div>';
-    h+='<div style="margin-bottom:12px;text-align:center;"><button id="divkal-update-btn" onclick="updateDivKal()" style="background:rgba(99,102,241,0.15);border:1px solid rgba(99,102,241,0.35);color:#a5b4fc;border-radius:10px;padding:7px 14px;font-size:12px;cursor:pointer;font-family:inherit;font-weight:600;">Kalender aktualisieren</button></div>';
+    var anyTaxActive=allData.some(function(item){
+        if(!item.divTermine)return false;
+        return item.divTermine.some(function(t){return (divKalTaxStates[item.isin+'_'+t.date.toISOString().slice(0,10)]||0)>0;});
+    });
+    h+='<div style="display:flex;gap:8px;justify-content:center;margin-bottom:12px;">'
+        +'<button id="divkal-update-btn" onclick="updateDivKal()" style="background:rgba(99,102,241,0.15);border:1px solid rgba(99,102,241,0.35);color:#a5b4fc;border-radius:10px;padding:7px 14px;font-size:12px;cursor:pointer;font-family:inherit;font-weight:600;">Kalender aktualisieren</button>'
+        +'<button onclick="activateAllTax()" style="background:'+(anyTaxActive?'rgba(251,191,36,0.25)':'rgba(251,191,36,0.12)')+';border:1px solid rgba(251,191,36,0.35);color:#fbbf24;border-radius:10px;padding:7px 14px;font-size:12px;cursor:pointer;font-family:inherit;font-weight:600;">'+(anyTaxActive?'Steuerabzug zurücksetzen':'Steuerabzug aktivieren')+'</button>'
+        +'</div>';
 
     // Show: all current-month entries + recent past (≤15 days) from other months + upcoming
     var curM=today.getMonth(), curY=today.getFullYear();
@@ -602,22 +630,26 @@ function renderDivKal(){
             var hlDays=grp.entries.map(function(e){return e.date.getDate();});
             var nfMonth=new Intl.NumberFormat('de-DE',{style:'currency',currency:'EUR',maximumFractionDigits:0});
             var isCurrentMonth=calMonth===curM&&calYear===curY;
-            var monthSum=0, receivedSum=0;
+            var monthSum=0, receivedSum=0, grossSum=0;
             grp.entries.forEach(function(e){
                 var cur=e.currency||'EUR';
                 var totalNative=e.amount*(e.stück||0);
                 var eur=cur==='EUR'?totalNative:(toEur(totalNative,cur)||0);
                 var taxKey=e.isin+'_'+e.date.toISOString().slice(0,10);
                 var net=applyTax(eur,divKalTaxStates[taxKey]||0);
+                grossSum+=eur;
                 if(e.date<today) receivedSum+=net;
                 else monthSum+=net;
             });
+            var totalNet=receivedSum+monthSum;
+            var taxDeduction=grossSum-totalNet;
             h+='<div style="background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.25);border-radius:14px;padding:14px 16px;margin:24px -4px 14px -4px;display:flex;justify-content:space-between;align-items:flex-start;">'
               +'<div>'
               +'<div style="font-size:19px;font-weight:800;color:#6366f1;text-transform:uppercase;letter-spacing:1px;">'+grp.label+'</div>'
               +(isCurrentMonth&&receivedSum>0?'<div style="font-size:10px;color:var(--text-dim);margin-top:6px;">Erhaltene Einnahmen:</div><div style="font-size:14px;font-weight:900;color:#ffffff;">'+nfMonth.format(receivedSum)+'</div>':'')
               +(monthSum>0?'<div style="font-size:10px;color:var(--text-dim);margin-top:4px;">Erwartete Einnahmen:</div><div style="font-size:14px;font-weight:900;color:#10b981;">'+nfMonth.format(monthSum)+'</div>':'')
-              +(isCurrentMonth&&(receivedSum>0||monthSum>0)?'<div style="font-size:10px;color:var(--text-dim);margin-top:4px;">Gesamt:</div><div style="font-size:14px;font-weight:900;color:#a5b4fc;">'+nfMonth.format(receivedSum+monthSum)+'</div>':'')
+              +(isCurrentMonth&&(receivedSum>0||monthSum>0)?'<div style="font-size:10px;color:var(--text-dim);margin-top:4px;">Gesamt:</div><div style="font-size:14px;font-weight:900;color:#a5b4fc;">'+nfMonth.format(totalNet)+'</div>':'')
+              +(taxDeduction>0.01?'<div style="font-size:10px;color:var(--text-dim);margin-top:4px;">Steuerabzug:</div><div style="font-size:14px;font-weight:900;color:#f87171;">− '+nfMonth.format(taxDeduction)+'</div>':'')
               +'</div>'
               +'<div style="margin-top:2px;text-align:right;">'
               +miniCalendar(calYear,calMonth,hlDays)
