@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dagobert v1.28</title>
+    <title>Dagobert v1.29</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3QgeD0iMTAiIHk9IjIiIHdpZHRoPSIxMCIgaGVpZ2h0PSI4IiBmaWxsPSIjMWUxZTFlIi8+PHJlY3QgeD0iMTAiIHk9IjciIHdpZHRoPSIxMCIgaGVpZ2h0PSIxIiBmaWxsPSIjZWY0NDQ0Ii8+PHJlY3QgeD0iOSIgeT0iMTAiIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMCIgZmlsbD0iI0ZGRkZGRiIvPjxyZWN0IHg9IjEyIiB5PSIxNCIgd2lkdGg9IjIiIGhlaWdodD0iMiIgZmlsbD0iIzAwMDAwMCIvPjxyZWN0IHg9IjE3IiB5PSIxNCIgd2lkdGg9IjIiIGhlaWdodD0iMiIgZmlsbD0iIzAwMDAwMCIvPjxyZWN0IHg9IjgiIHk9IjE3IiB3aWR0aD0iMTQiIGhlaWdodD0iMyIgZmlsbD0iI2ZiYmYyNCIvPjxnIGlkPSJtb25leS1oYW5kIj48cmVjdCB4PSIyMiIgeT0iOCIgd2lkdGg9IjYiIGhlaWdodD0iOCIgZmlsbD0iIzEwYjk4MSIvPjxyZWN0IHg9IjIxIiB5PSIxMyIgd2lkdGg9IjMiIGhlaWdodD0iNCIgZmlsbD0iI0ZGRkZGRiIvPjwvZz48cmVjdCB4PSI5IiB5PSIyMCIgd2lkdGg9IjEyIiBoZWlnaHQ9IjgiIGZpbGw9IiNlZjQ0NDQiLz48cmVjdCB4PSIxMyIgeT0iMjIiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiIGZpbGw9IiMzYjgyZjYiLz48L3N2Zz4=">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
@@ -153,6 +153,114 @@
         body.light .filter-btn{color:#6b7280;}
         body.light .filter-btn.active{color:#111827;font-weight:700;}
         /* ─────────────────────────────────────────────────────── */
+
+        /* ── Modern Theme ───────────────────────────────────────────── */
+        body.modern{
+            --bg-color:#0a0f1e;
+            --card-bg:rgba(80,90,160,0.18);
+            --text-main:#ffffff;
+            --text-dim:#c8d4e8;
+            --positive:#5df0a0;
+            --negative:#ff7070;
+            --border-color:rgba(255,255,255,0.15);
+            --logo-yellow:#ff7070;
+            --color-aktie:#a0b4ff;
+            --color-etf:#c0d4ff;
+            font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',sans-serif;
+        }
+        body.modern::before{
+            content:'';
+            position:fixed;inset:0;z-index:0;pointer-events:none;
+            background:
+                radial-gradient(ellipse 60% 50% at 20% 20%, rgba(99,102,241,0.55) 0%, transparent 70%),
+                radial-gradient(ellipse 50% 60% at 80% 70%, rgba(59,130,246,0.5) 0%, transparent 70%),
+                radial-gradient(ellipse 40% 40% at 60% 10%, rgba(139,92,246,0.4) 0%, transparent 70%),
+                radial-gradient(ellipse 35% 35% at 10% 80%, rgba(16,185,129,0.25) 0%, transparent 70%);
+        }
+        body.modern::after{
+            content:'';
+            position:fixed;inset:0;z-index:0;pointer-events:none;
+            background:rgba(10,15,40,0.55);
+        }
+        body.modern header{position:relative;z-index:2;}
+        body.modern .sidebar{z-index:1000 !important;}
+        body.modern h1{letter-spacing:-0.04em;font-weight:800;color:#ffffff;text-shadow:0 2px 16px rgba(99,102,241,0.6);}
+        body.modern h1 .dag-word{color:#ffffff;}
+        body.modern h1 .title-version{color:#555555;font-size:9px;}
+        body.modern #page-title{
+            background:rgba(255,255,255,0.1);
+            border-color:rgba(255,255,255,0.2) !important;
+            border-radius:18px !important;
+            backdrop-filter:blur(24px) saturate(160%);-webkit-backdrop-filter:blur(24px) saturate(160%);
+            box-shadow:0 8px 32px rgba(0,0,0,0.35),inset 0 1px 0 rgba(255,255,255,0.2);
+        }
+        body.modern .asset-card{
+            background:rgba(255,255,255,0.08);
+            border-color:rgba(255,255,255,0.15);
+            border-radius:18px !important;
+            backdrop-filter:blur(20px) saturate(150%);-webkit-backdrop-filter:blur(20px) saturate(150%);
+            box-shadow:0 6px 24px rgba(0,0,0,0.3),inset 0 1px 0 rgba(255,255,255,0.15);
+        }
+        body.modern .analyse-card{
+            background:rgba(255,255,255,0.08);
+            border-color:rgba(255,255,255,0.15);
+            border-radius:18px !important;
+            backdrop-filter:blur(20px) saturate(150%);-webkit-backdrop-filter:blur(20px) saturate(150%);
+            box-shadow:0 6px 24px rgba(0,0,0,0.3),inset 0 1px 0 rgba(255,255,255,0.15);
+        }
+        body.modern .total-box{
+            background:rgba(80,90,160,0.25) !important;
+            border-color:rgba(255,255,255,0.2) !important;
+            border-radius:18px !important;
+            backdrop-filter:blur(20px) saturate(160%) !important;
+            -webkit-backdrop-filter:blur(20px) saturate(160%) !important;
+            box-shadow:0 8px 32px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.2) !important;
+        }
+        body.modern .asset-card,body.modern .analyse-card{
+            background:rgba(80,90,160,0.18) !important;
+            border-color:rgba(255,255,255,0.15) !important;
+        }
+        body.modern #page-title{
+            background:rgba(80,90,160,0.22) !important;
+            border-color:rgba(255,255,255,0.18) !important;
+        }
+        body.modern .filter-bar,.sort-bar-container{
+            background:rgba(80,90,160,0.18) !important;
+            border-color:rgba(255,255,255,0.15) !important;
+        }
+        body.modern .sidebar{
+            background:rgba(10,15,40,0.75);
+            border-right:1px solid rgba(255,255,255,0.15);
+            backdrop-filter:blur(32px) saturate(180%);-webkit-backdrop-filter:blur(32px) saturate(180%);
+            box-shadow:8px 0 40px rgba(0,0,0,0.5);
+        }
+        body.modern .sidebar-indicator{background:rgba(255,255,255,0.05);}
+        body.modern .menu-item{color:rgba(255,255,255,0.75);border-radius:10px !important;font-weight:500;}
+        body.modern .menu-item.active,body.modern .menu-item:hover{color:#ffffff;background:rgba(255,255,255,0.15) !important;font-weight:600;}
+        body.modern .filter-bar{
+            background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.15);border-radius:18px !important;
+            backdrop-filter:blur(20px) saturate(150%);-webkit-backdrop-filter:blur(20px) saturate(150%);
+            box-shadow:0 6px 24px rgba(0,0,0,0.3),inset 0 1px 0 rgba(255,255,255,0.15);
+        }
+        body.modern .filter-btn{border-radius:10px !important;font-weight:600;color:rgba(255,255,255,0.75);}
+        body.modern .filter-btn.active{color:#ffffff !important;background:rgba(255,255,255,0.2) !important;}
+        body.modern .refresh-btn{
+            background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.2);color:rgba(255,255,255,0.7);border-radius:12px !important;
+            backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+            box-shadow:0 4px 16px rgba(0,0,0,0.3),inset 0 1px 0 rgba(255,255,255,0.15);
+        }
+        body.modern button{border-radius:10px !important;}
+        body.modern #page-title button{
+            border-radius:10px !important;
+            background:rgba(255,255,255,0.12) !important;
+            border:1px solid rgba(255,255,255,0.2) !important;
+            box-shadow:0 2px 8px rgba(0,0,0,0.3),inset 0 1px 0 rgba(255,255,255,0.15);
+        }
+        body.modern .nav-indicator{background:rgba(255,255,255,0.12);}
+        body.modern .overlay{background:rgba(0,0,0,0.92);}
+        body.modern .analyse-title{font-size:10px;text-transform:uppercase;letter-spacing:0.12em;font-weight:700;color:rgba(255,255,255,0.6) !important;}
+        body.modern .sort-bar-container{border-radius:14px !important;}
+        /* ─────────────────────────────────────────────────────────── */
         body.blue{--bg-color:#0f1e36;--card-bg:#162540;--text-main:#e2eaf6;--text-dim:#7a9cbf;--positive:#34d399;--negative:#f87171;--border-color:#1e3558;--logo-yellow:#fbbf24;--color-aktie:#60a5fa;--color-etf:#fb923c;}
         body.blue .sidebar{box-shadow:4px 0 20px rgba(0,0,0,0.3);}
         body.blue .nav-indicator,body.blue .sidebar-indicator{background:#1e3558;}
@@ -240,6 +348,7 @@
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> About
         </button>
         <div style="height:1px;background:var(--border-color);margin:8px 0;opacity:0.5;"></div>
+        <button id="modern-theme-btn" class="menu-item" onclick="toggleModernTheme()" style="color:var(--text-dim);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg> Modern Theme <span style="font-size:9px;font-weight:700;background:rgba(136,136,204,0.15);border:1px solid rgba(136,136,204,0.4);color:#8888cc;border-radius:3px;padding:1px 5px;letter-spacing:0.5px;">BETA</span></button>
         <button id="bio-menu-btn" class="menu-item" onclick="showBioOffer()" style="display:none;">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Biometrie einrichten
         </button>
@@ -265,7 +374,7 @@
                         <rect x="10" y="2" width="10" height="8" fill="#1e1e1e"/><rect x="10" y="7" width="10" height="1" fill="#ef4444"/><rect x="9" y="10" width="12" height="10" fill="#FFFFFF"/><rect x="12" y="14" width="2" height="2" fill="#000000"/><rect x="17" y="14" width="2" height="2" fill="#000000"/><rect x="8" y="17" width="14" height="3" fill="#fbbf24"/><g id="money-hand"><rect x="22" y="8" width="6" height="8" fill="#10b981"/><rect x="21" y="13" width="3" height="4" fill="#FFFFFF"/></g><rect x="9" y="20" width="12" height="8" fill="#ef4444"/><rect x="13" y="22" width="4" height="2" fill="#3b82f6"/>
                     </svg>
                     <span class="dag-l dag-word" id="dl3b" style="position:absolute;top:0;left:0;clip-path:inset(48% 0 0 0);z-index:3;">O</span>
-                </span><span class="dag-word"><span class="dag-l" id="dl4">B</span><span class="dag-l" id="dl5">E</span><span class="dag-l" id="dl6">R</span><span class="dag-l" id="dl7">T</span></span><span class="title-version"><span>v1.28</span><span class="ver-tag">mobile</span></span>
+                </span><span class="dag-word"><span class="dag-l" id="dl4">B</span><span class="dag-l" id="dl5">E</span><span class="dag-l" id="dl6">R</span><span class="dag-l" id="dl7">T</span></span><span class="title-version"><span>v1.29</span><span class="ver-tag">mobile</span></span>
 
 </h1>
             </h1>
@@ -1109,9 +1218,27 @@ function setupFooterAnimation() {
         else{s.className='letter';s.innerText=c;}w.appendChild(s);});f.appendChild(w);
 }
 
+
+function toggleModernTheme(){
+    var body=document.getElementById('app-body');
+    var isModern=body.classList.contains('modern');
+    body.classList.remove('light','blue','modern');
+    var btn=document.getElementById('modern-theme-btn');
+    if(!isModern){
+        body.classList.add('modern');
+        try{localStorage.setItem('dagobert-theme','modern');}catch(e){}
+        if(btn)btn.style.color='#8888cc';
+    } else {
+        try{localStorage.setItem('dagobert-theme','dark');}catch(e){}
+        if(btn)btn.style.color='var(--text-dim)';
+    }
+    toggleMenu();
+}
+
 function toggleTheme() {
     var body=document.getElementById('app-body'),icon=document.getElementById('theme-icon');
-    var cur=body.classList.contains('light')?'light':body.classList.contains('blue')?'blue':'dark';
+    var cur=body.classList.contains('light')?'light':body.classList.contains('blue')?'blue':body.classList.contains('modern')?'modern':'dark';
+    if(cur==='modern')return; // Modern theme only via menu
     body.classList.remove('light','blue');
     var next=cur==='dark'?'light':cur==='light'?'blue':'dark';
     if(next!=='dark')body.classList.add(next);
@@ -3493,6 +3620,7 @@ if(_initPT){var _fSVG='<svg width="18" height="18" viewBox="0 0 24 24" fill="non
 var savedTheme=localStorage.getItem('dagobert-theme');
 if(savedTheme==='light'){document.getElementById('app-body').classList.add('light');document.getElementById('theme-icon').innerHTML='<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';}
 else if(savedTheme==='blue'){document.getElementById('app-body').classList.add('blue');document.getElementById('theme-icon').innerHTML='<circle cx="12" cy="12" r="10"/><path d="M12 2v20M2 12h20" stroke-width="1.5"/>';}
+else if(savedTheme==='modern'){document.getElementById('app-body').classList.add('modern');var _mb=document.getElementById('modern-theme-btn');if(_mb)_mb.style.color='#8888cc';}
 try{if(localStorage.getItem('dagobert-desktop')==='1'){var db=document.getElementById('desktop-btn');db.textContent='📱 Mobile-Ansicht';db.style.opacity='0.8';db.style.borderColor='var(--positive)';db.style.color='var(--positive)';document.getElementById('app-body').classList.add('desktop');applyDesktop(true);}}catch(e){}
 try{var sz=localStorage.getItem('dagobert-avgziel');if(sz&&!isNaN(parseInt(sz)))avgZielValue=parseInt(sz);}catch(e){}
 try{var saz=localStorage.getItem('dagobert-annualziel');if(saz&&!isNaN(parseInt(saz))){annualZielValue=parseInt(saz);avgZielValue=Math.round(annualZielValue/12);}}catch(e){}
