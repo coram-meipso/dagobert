@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dagobert 1.29</title>
+    <title>Dagobert v1.29</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3QgeD0iMTAiIHk9IjIiIHdpZHRoPSIxMCIgaGVpZ2h0PSI4IiBmaWxsPSIjMWUxZTFlIi8+PHJlY3QgeD0iMTAiIHk9IjciIHdpZHRoPSIxMCIgaGVpZ2h0PSIxIiBmaWxsPSIjZWY0NDQ0Ii8+PHJlY3QgeD0iOSIgeT0iMTAiIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMCIgZmlsbD0iI0ZGRkZGRiIvPjxyZWN0IHg9IjEyIiB5PSIxNCIgd2lkdGg9IjIiIGhlaWdodD0iMiIgZmlsbD0iIzAwMDAwMCIvPjxyZWN0IHg9IjE3IiB5PSIxNCIgd2lkdGg9IjIiIGhlaWdodD0iMiIgZmlsbD0iIzAwMDAwMCIvPjxyZWN0IHg9IjgiIHk9IjE3IiB3aWR0aD0iMTQiIGhlaWdodD0iMyIgZmlsbD0iI2ZiYmYyNCIvPjxnIGlkPSJtb25leS1oYW5kIj48cmVjdCB4PSIyMiIgeT0iOCIgd2lkdGg9IjYiIGhlaWdodD0iOCIgZmlsbD0iIzEwYjk4MSIvPjxyZWN0IHg9IjIxIiB5PSIxMyIgd2lkdGg9IjMiIGhlaWdodD0iNCIgZmlsbD0iI0ZGRkZGRiIvPjwvZz48cmVjdCB4PSI5IiB5PSIyMCIgd2lkdGg9IjEyIiBoZWlnaHQ9IjgiIGZpbGw9IiNlZjQ0NDQiLz48cmVjdCB4PSIxMyIgeT0iMjIiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiIGZpbGw9IiMzYjgyZjYiLz48L3N2Zz4=">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
@@ -515,6 +515,7 @@
 <script>
 
 // ── Dividendenkalender ─────────────────────────────────────────────
+// ── Steuerabzug-States (persistiert im localStorage) ────────────────────
 var divKalTaxStates=(function(){try{return JSON.parse(localStorage.getItem('dagobert-divkal-tax')||'{}');}catch(e){return{};}})();
 
 function saveDivKalTax(){try{localStorage.setItem('dagobert-divkal-tax',JSON.stringify(divKalTaxStates));}catch(e){}}
@@ -564,6 +565,7 @@ function formatTotal(e,taxState){
     return nfC.format(net);
 }
 
+// ── Dividendenbetrag formatieren (Fremdwährung + EUR-Umrechnung) ─────────
 function formatDivAmount(e){
     var nf2=new Intl.NumberFormat('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2});
     var cur=e.currency||'EUR';
@@ -629,6 +631,7 @@ async function updateDivKal(){
     renderDivKal();
 }
 
+// ── Mini-Kalender SVG für den Dividendenkalender ────────────────────────
 function miniCalendar(year,month,highlightDays){
     var dn=['Mo','Di','Mi','Do','Fr','Sa','So'];
     var first=new Date(year,month,1);
@@ -681,6 +684,7 @@ function miniCalendar(year,month,highlightDays){
     return h;
 }
 
+// ── Dividendenkalender: gruppiert nach Monat, mit Steuerabzug ───────────
 function renderDivKal(){
     var el=document.getElementById('divkal-content');
     if(!el)return;
@@ -1170,7 +1174,8 @@ async function checkPw(){
 
 var SHEET_URL_CALENDAR  = ''; // Optionale Google-Sheet-URL für manuelle Dividendentermine
 var SHEET_URL_CHANGELOG = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ9-Dk9BpSoJNbOOh1C-dDunca3ChwutowAx4tVZW6bew_2SPCx4syW7cr0h89QJ6msMhR89q6Nv5bn/pub?gid=0&single=true&output=csv';
-var SHEET_URL      = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRLJWMGwbMH9JkTW2S0ZI6tnhjxokOKjylOzuGdI2KvQEJ2FB3VsDowH3bJzPSF54bbAZhZagyda1Xk/pub?gid=0&single=true&output=csv';
+// ── CSV-Quellen ─────────────────────────────────────────────────────────
+    var SHEET_URL      = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRLJWMGwbMH9JkTW2S0ZI6tnhjxokOKjylOzuGdI2KvQEJ2FB3VsDowH3bJzPSF54bbAZhZagyda1Xk/pub?gid=0&single=true&output=csv';
 var SHEET_URL_DEV  = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQDeKsNj-NeNlTHvdzVLV8SiD-hd3fswyQz1vfWznzmJ_3WKv8gm4Q-3qYhoj5u6DRnr7XSs5tk1Bbk/pub?gid=318812401&single=true&output=csv';
 var SHEET_URL_HIST      = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRLJWMGwbMH9JkTW2S0ZI6tnhjxokOKjylOzuGdI2KvQEJ2FB3VsDowH3bJzPSF54bbAZhZagyda1Xk/pub?gid=420401453&single=true&output=csv'; // tägl. Höchststände
 var SHEET_URL_HIST_DEV  = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSKa-a1ox1GRHxqqPct8loDB3ZFi6n6lMQ4hQJLv1XwSSbLgN1H624fNMIdZHsuneo5WFgcjPETkEFN/pub?gid=318812401&single=true&output=csv'; // Depotentwicklung (Analyse)
@@ -1195,7 +1200,9 @@ function gradCol(i, n){
 var countryColors=['#c026d3','#a855f7','#818cf8','#60a5fa','#22d3ee','#2dd4bf','#818cf8','#c026d3','#a855f7','#22d3ee'];
 var depotColors   = ['#3b82f6','#f97316','#10b981','#f59e0b','#ec4899'];
 
+// ── Globale Datenhaltung ─────────────────────────────────────────────────
 var allData = [], devData = [], histData = [], histDevData = [];
+// ── Hilfsfunktion: liefert monatliche Depotdaten (bevorzugt histDevData) ─
 function getHistDev(){return histDevData&&histDevData.length>1?histDevData:getHistDev();}
 var currentFilter = 'alle', currentSort = 'name', sortAsc = true;
 var lastFetchTime = null, totalDividendsSold = 0;
@@ -1262,6 +1269,7 @@ function setupFooterAnimation() {
 }
 
 
+// ── Modern Theme (Glassmorphismus) ein-/ausschalten ─────────────────────
 function toggleModernTheme(){
     var body=document.getElementById('app-body');
     var isModern=body.classList.contains('modern');
@@ -1278,6 +1286,7 @@ function toggleModernTheme(){
     toggleMenu();
 }
 
+// ── Dark/Light/Blue Theme wechseln ──────────────────────────────────────
 function toggleTheme() {
     var body=document.getElementById('app-body'),icon=document.getElementById('theme-icon');
     var cur=body.classList.contains('light')?'light':body.classList.contains('blue')?'blue':body.classList.contains('modern')?'modern':'dark';
@@ -1474,6 +1483,7 @@ function toggleMenu() {
     document.getElementById('overlay').classList.toggle('active');
 }
 
+// ── Seitenwechsel: blendet Sektionen um, aktualisiert Titel und Filter ───
 function showPage(pageId,index,closeMenu) {
     ['portfolio','analyse','dividenden','div-entwicklung','ziele','dashboard','divkal','changelog','about'].forEach(function(p){document.getElementById('page-'+p).classList.remove('page-active');});
     document.getElementById('page-'+pageId).classList.add('page-active');
@@ -1575,32 +1585,44 @@ async function handleRefresh() {
     btn.classList.remove('spinning');checkDataFreshness();
 }
 
+// ── Proxy-Verwaltung (merkt sich den schnellsten Proxy) ─────────────────
+var _bestProxy=null;
+try{_bestProxy=localStorage.getItem('dagobert-best-proxy');}catch(e){}
+// ── HTTP-Abruf über CORS-Proxy mit Timeout, Retry und Proxy-Gedächtnis ──
 async function tryFetch(url) {
+    // Put best proxy first
+    var proxies=PROXIES.slice();
+    if(_bestProxy&&proxies.indexOf(_bestProxy)>0){
+        proxies.splice(proxies.indexOf(_bestProxy),1);
+        proxies.unshift(_bestProxy);
+    }
     for(var attempt=0;attempt<2;attempt++){
         try{
-            var result=await Promise.any(PROXIES.map(async function(proxy){
+            var result=await Promise.any(proxies.map(async function(proxy){
                 var ctrl=new AbortController();
-                var timer=setTimeout(function(){ctrl.abort();},8000);
+                var timer=setTimeout(function(){ctrl.abort();},5000);
                 try{
                     var res=await fetch(proxy+encodeURIComponent(url),{signal:ctrl.signal});
                     clearTimeout(timer);
                     if(!res.ok)throw new Error('bad');
                     var txt=await res.text();
-                    // Reject HTML error pages and empty responses
                     if(!txt||txt.length<50)throw new Error('short');
                     if(txt.trimStart().startsWith('<'))throw new Error('html');
                     if(txt.indexOf(',')<0)throw new Error('nocsv');
+                    // Remember this proxy as the best one
+                    if(_bestProxy!==proxy){_bestProxy=proxy;try{localStorage.setItem('dagobert-best-proxy',proxy);}catch(e){}}
                     return txt;
                 }catch(e){clearTimeout(timer);throw e;}
             }));
             return result;
         }catch(e){
-            if(attempt===0)await new Promise(function(r){setTimeout(r,500);});
+            if(attempt===0)await new Promise(function(r){setTimeout(r,200);});
         }
     }
     return '';
 }
 
+// ── Datum-Parser: DD.MM.YYYY → Date-Objekt ──────────────────────────────
 function parseGermanDate(s){
     if(!s)return null;
     s=s.trim();
@@ -1614,6 +1636,7 @@ function parseGermanDate(s){
     return isNaN(dt)?null:dt;
 }
 
+// ── Wechselkurse (EZB via frankfurter.app) ──────────────────────────────
 var fxRates={EUR:1.0};
 var fxRatesLoaded=false;
 var fxRatesDate='';
@@ -1634,6 +1657,7 @@ function toEur(amount,currency){
     return rate?amount/rate:null; // null = Kurs unbekannt
 }
 
+// ── Wechselkurse von api.frankfurter.app laden ──────────────────────────
 async function loadFxRates(){
     if(fxRatesLoaded)return;
     var urls=[
@@ -1658,11 +1682,12 @@ async function loadFxRates(){
     console.log('FX: alle Endpunkte fehlgeschlagen');
 }
 
+// ── Hauptladefunktion: alle CSV-Quellen abrufen und global speichern ─────
 async function loadData() {
     var fetchStart=Date.now();
     var results=await Promise.all([tryFetch(SHEET_URL),tryFetch(SHEET_URL_DEV)]);
-    // Load hist data after initial render (non-blocking)
-    setTimeout(async function(){
+    // Load hist data immediately after main data (non-blocking)
+    (async function(){
         try{
             var hResults=await Promise.all([
                 SHEET_URL_HIST?tryFetch(SHEET_URL_HIST):Promise.resolve(null),
@@ -1672,7 +1697,7 @@ async function loadData() {
             if(hResults[1])histDevData=parseCSV(hResults[1]);
             render();
         }catch(e){console.log('Hist load error:',e);}
-    },800);
+    })();
     var csv=results[0],csvDev=results[1];
     if(!csv){
         document.getElementById('status-dot').className='pulse-dot stale';
@@ -2164,6 +2189,7 @@ function buildCombinedDonut(outerSegs, tW) {
         +'</svg>';
 }
 
+// ── Meilensteine: erste Daten als Einstand und Depotwert je Schwelle ────
 function buildDepotMilestones(slot) {
     if(!slot)return;
     var milestones=[100000,200000,300000,400000,500000,600000,700000,800000,900000,1000000];
@@ -2228,6 +2254,7 @@ function buildDepotMilestones(slot) {
         +'</div>';
 }
 
+// ── Depotverlauf-Liniendiagramm (SVG) ───────────────────────────────────
 function buildDepotChart(slot) {
     var src=histDevData&&histDevData.length>1?histDevData:getHistDev();
     if(!slot||!src||src.length<2||currentFilter!=='alle'){if(slot)slot.innerHTML='';return;}
@@ -2770,6 +2797,7 @@ function toggleDevYear(y) {
     btn.style.opacity=isHidden?'1':'0.3';
 }
 
+// ── Haupt-Render: aktualisiert alle UI-Elemente nach Datenladen ──────────
 function render() {
     var filtered=currentFilter==='alle'?allData:allData.filter(function(d){return d.depot===currentFilter;});
     var sorted=filtered.slice().sort(function(a,b){
@@ -2880,7 +2908,7 @@ function render() {
     var isDivPage    =document.getElementById('page-dividenden').classList.contains('page-active');
     var isDevPage    =document.getElementById('page-div-entwicklung').classList.contains('page-active');
     var isZielePage   =document.getElementById('page-ziele').classList.contains('page-active');
-    document.getElementById('total').style.display=(isZielePage||isDashboardPage||document.getElementById('page-divkal').classList.contains('page-active'))?'none':'';
+    document.getElementById('total').style.display=(isZielePage||isDashboardPage||document.getElementById('page-divkal').classList.contains('page-active')||document.getElementById('page-about').classList.contains('page-active')||document.getElementById('page-changelog').classList.contains('page-active'))?'none':'';
     var uc=document.getElementById('last-update-container'),mc=document.getElementById('main-change'),ei=document.getElementById('total-einstand');
 
     if(isDivPage){
@@ -3243,20 +3271,21 @@ function render() {
                     var subLine=abv2>0.01
                         ?'<span style="color:var(--negative);font-size:11px;">'+new Intl.NumberFormat('de-DE',{minimumFractionDigits:1,maximumFractionDigits:1}).format(abv2)+' % bis ATH</span>'
                         :'<span style="color:var(--positive);font-size:11px;">✓ Aktuelles ATH</span>';
-                    athHtml='<div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border-color);text-align:center;">'
+                    athHtml='<div style="margin-top:10px;padding:12px 0 0;border-top:1px solid var(--border-color);text-align:center;">'
                         +'<div style="display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:3px;">'
                         +'<span style="font-size:12px;">🏆</span>'
                         +'<span style="font-size:9px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;">Depot-ATH</span>'
                         +'</div>'
                         +'<div style="font-size:1.4rem;font-weight:900;color:var(--text-main);letter-spacing:-0.02em;">'+nfA2.format(athV2)+'</div>'
-                        +'<div style="margin-top:2px;display:flex;gap:8px;align-items:center;justify-content:center;">'+subLine
-                        +'<span style="color:var(--text-dim);font-size:11px;"> · '+athD2+'</span></div>'
-                        +'</div>'
-                        +'<div style="height:6px;"></div>';
+                        +'<div style="margin-top:2px;display:flex;gap:4px;align-items:center;justify-content:center;">'+subLine
+                        +'<span style="color:var(--text-dim);font-size:11px;font-weight:400;"> &nbsp;· &nbsp;'+athD2+'</span></div>'
+                        +'</div>';
                 }
             }
             mc.className='total-change';mc.style.marginTop='4px';
             mc.innerHTML=perfHtml+athHtml;
+            // Reduce card bottom padding since ATH content is at the bottom
+            var tb=document.getElementById('total');if(tb)tb.style.paddingBottom='16px';
             // Depot chart and milestones go into depot-bar-card (separate card)
             var dbc=document.getElementById('depot-bar-card');
             if(dbc){
@@ -3271,6 +3300,7 @@ function render() {
             },0);
         } else {
             var dbc2=document.getElementById('depot-bar-card');if(dbc2)dbc2.innerHTML='';
+            var tb2=document.getElementById('total');if(tb2)tb2.style.paddingBottom='';
         }
     }
 
@@ -3321,6 +3351,7 @@ function render() {
     if(window.twemoji){var cfg={folder:'svg',ext:'.svg'};twemoji.parse(document.getElementById('list'),cfg);twemoji.parse(document.getElementById('div-list'),cfg);twemoji.parse(document.getElementById('country-legend'),cfg);}
 }
 
+// ── Interner Zinsfuß (MWRR/XIRR) via Newton-Raphson-Iteration ──────────
 function calcIRR(flows){
     var r=0.07;
     for(var it=0;it<300;it++){
@@ -3339,6 +3370,7 @@ function calcIRR(flows){
     return r;
 }
 
+// ── IZF-Cashflows: monatliche Einzahlungsdeltas + Dividenden + Endwert ──
 function buildMonthlyFlows(histData,devData,currentDep){
     // Use the passed histData parameter (may be year-filtered)
     var src=histData&&histData.length>1?histData:getHistDev();
@@ -3394,6 +3426,7 @@ function buildMonthlyFlows(histData,devData,currentDep){
 
 function renderIZF(){render();}
 
+// ── Depotanalyse: IZF, Einzahlungen, Donut-Charts, Länderverteilung ─────
 function renderAnalyse(aktien,etfs,gesamt,countries,einstand,divByYear,sumDivGesamt) {
     var pA=gesamt?(aktien/gesamt*100):0,pE=gesamt?(etfs/gesamt*100):0;
     var nf=new Intl.NumberFormat('de-DE',{style:'currency',currency:'EUR',maximumFractionDigits:0});
@@ -3735,6 +3768,7 @@ function renderAnalyse(aktien,etfs,gesamt,countries,einstand,divByYear,sumDivGes
 }
 
 function fC(v){return eurFormatter.format(v);}
+// ── Zahlen-Parser: versteht deutsches Format (1.234,56 €) ───────────────
 function parseMenge(t){
     var s=(t||'').toString().replace(/[€$£\s]/g,'').trim();
     if(!s)return 0;
@@ -3799,7 +3833,7 @@ try{var sgr=localStorage.getItem('dagobert-growthrate');if(sgr)customGrowthRate=
     var dot=document.getElementById('status-dot');
     dot.className='pulse-dot loading';
     try{
-        await loadData();
+        await Promise.all([loadData(), loadFxRates()]);
     }catch(e){
         console.error('loadData error:',e);
         dot.className='pulse-dot stale';
