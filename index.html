@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dagobert v1.21</title>
+    <title>Dagobert v1.30</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3QgeD0iMTAiIHk9IjIiIHdpZHRoPSIxMCIgaGVpZ2h0PSI4IiBmaWxsPSIjMWUxZTFlIi8+PHJlY3QgeD0iMTAiIHk9IjciIHdpZHRoPSIxMCIgaGVpZ2h0PSIxIiBmaWxsPSIjZWY0NDQ0Ii8+PHJlY3QgeD0iOSIgeT0iMTAiIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMCIgZmlsbD0iI0ZGRkZGRiIvPjxyZWN0IHg9IjEyIiB5PSIxNCIgd2lkdGg9IjIiIGhlaWdodD0iMiIgZmlsbD0iIzAwMDAwMCIvPjxyZWN0IHg9IjE3IiB5PSIxNCIgd2lkdGg9IjIiIGhlaWdodD0iMiIgZmlsbD0iIzAwMDAwMCIvPjxyZWN0IHg9IjgiIHk9IjE3IiB3aWR0aD0iMTQiIGhlaWdodD0iMyIgZmlsbD0iI2ZiYmYyNCIvPjxnIGlkPSJtb25leS1oYW5kIj48cmVjdCB4PSIyMiIgeT0iOCIgd2lkdGg9IjYiIGhlaWdodD0iOCIgZmlsbD0iIzEwYjk4MSIvPjxyZWN0IHg9IjIxIiB5PSIxMyIgd2lkdGg9IjMiIGhlaWdodD0iNCIgZmlsbD0iI0ZGRkZGRiIvPjwvZz48cmVjdCB4PSI5IiB5PSIyMCIgd2lkdGg9IjEyIiBoZWlnaHQ9IjgiIGZpbGw9IiNlZjQ0NDQiLz48cmVjdCB4PSIxMyIgeT0iMjIiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiIGZpbGw9IiMzYjgyZjYiLz48L3N2Zz4=">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
@@ -379,7 +379,7 @@
                         <rect x="10" y="2" width="10" height="8" fill="#1e1e1e"/><rect x="10" y="7" width="10" height="1" fill="#ef4444"/><rect x="9" y="10" width="12" height="10" fill="#FFFFFF"/><rect x="12" y="14" width="2" height="2" fill="#000000"/><rect x="17" y="14" width="2" height="2" fill="#000000"/><rect x="8" y="17" width="14" height="3" fill="#fbbf24"/><g id="money-hand"><rect x="22" y="8" width="6" height="8" fill="#10b981"/><rect x="21" y="13" width="3" height="4" fill="#FFFFFF"/></g><rect x="9" y="20" width="12" height="8" fill="#ef4444"/><rect x="13" y="22" width="4" height="2" fill="#3b82f6"/>
                     </svg>
                     <span class="dag-l dag-word" id="dl3b" style="position:absolute;top:0;left:0;clip-path:inset(48% 0 0 0);z-index:3;">O</span>
-                </span><span class="dag-word"><span class="dag-l" id="dl4">B</span><span class="dag-l" id="dl5">E</span><span class="dag-l" id="dl6">R</span><span class="dag-l" id="dl7">T</span></span><span class="title-version"><span>v1.21</span><span class="ver-tag">mobile</span></span>
+                </span><span class="dag-word"><span class="dag-l" id="dl4">B</span><span class="dag-l" id="dl5">E</span><span class="dag-l" id="dl6">R</span><span class="dag-l" id="dl7">T</span></span><span class="title-version"><span>v1.30</span><span class="ver-tag">mobile</span></span>
 
 </h1>
             </h1>
@@ -1855,6 +1855,7 @@ function handleDepotMove(e) {
     var cx=p.pl+(idx/(pts.length-1))*p.cW;
     var cyDep=p.pt+(1-pts[idx].dep/p.niceMax)*p.cH;
     var cyEin=p.pt+(1-pts[idx].ein/p.niceMax)*p.cH;
+    var cyGv=pts[idx].gv>0?p.pt+(1-pts[idx].gv/p.niceMax)*p.cH:-1;
     var nf=new Intl.NumberFormat('de-DE',{minimumFractionDigits:0,maximumFractionDigits:0});
     var vl=document.getElementById('depot-vline');
     vl.setAttribute('x1',cx.toFixed(1));vl.setAttribute('x2',cx.toFixed(1));
@@ -1863,6 +1864,8 @@ function handleDepotMove(e) {
     dd.setAttribute('cx',cx.toFixed(1));dd.setAttribute('cy',cyDep.toFixed(1));dd.setAttribute('r','3.5');dd.setAttribute('opacity','1');
     var de=document.getElementById('depot-dot-ein');
     de.setAttribute('cx',cx.toFixed(1));de.setAttribute('cy',cyEin.toFixed(1));de.setAttribute('r','3.5');de.setAttribute('opacity','1');
+    var dg=document.getElementById('depot-dot-gv');
+    if(dg){if(cyGv>=0){dg.setAttribute('cx',cx.toFixed(1));dg.setAttribute('cy',cyGv.toFixed(1));dg.setAttribute('r','3.5');dg.setAttribute('opacity','1');}else{dg.setAttribute('opacity','0');}}
     var anch=cx>p.pl+p.cW-90?'end':(cx<p.pl+90?'start':'middle');
     var xStr=cx.toFixed(1);
     var tl=document.getElementById('depot-tip-label');
@@ -1874,9 +1877,11 @@ function handleDepotMove(e) {
     var td=document.getElementById('depot-tip-dep');
     td.setAttribute('x',xStr);td.setAttribute('text-anchor',anch);td.setAttribute('opacity','1');
     td.textContent='Depot: '+nf.format(pts[idx].dep)+' €';
+    var tg=document.getElementById('depot-tip-gv');
+    if(tg){tg.setAttribute('x',xStr);tg.setAttribute('text-anchor',anch);if(cyGv>=0){tg.setAttribute('opacity','1');tg.textContent='Gesamt: '+nf.format(pts[idx].gv)+' €';}else{tg.setAttribute('opacity','0');}}
 }
 function handleDepotLeave() {
-    ['depot-vline','depot-dot-dep','depot-dot-ein','depot-tip-label','depot-tip-ein','depot-tip-dep'].forEach(function(id){var el=document.getElementById(id);if(el)el.setAttribute('opacity','0');});
+    ['depot-vline','depot-dot-dep','depot-dot-ein','depot-dot-gv','depot-tip-label','depot-tip-ein','depot-tip-dep','depot-tip-gv'].forEach(function(id){var el=document.getElementById(id);if(el)el.setAttribute('opacity','0');});
 }
 
 function renderZiele(einstand, divJahr, kurswert, divByYear, sumDivGesamt) {
@@ -2201,35 +2206,38 @@ function buildCombinedDonut(outerSegs, tW) {
 function buildDepotMilestones(slot) {
     if(!slot)return;
     var milestones=[100000,200000,300000,400000,500000,600000,700000,800000,900000,1000000];
-    var nfM=new Intl.NumberFormat('de-DE',{minimumFractionDigits:0,maximumFractionDigits:0});
-    var einReached={},depReached={};
+    function msLabel(ms){return(ms>=1000000?(ms/1000000).toFixed(0)+'M':(ms/1000).toFixed(0)+'k');}
+    var einReached={},depReached={},gvReached={};
 
-    function scanSource(src,iEin,iDep){
+    function scanSource(src,iEin,iDep,iGv){
         for(var i=1;i<src.length;i++){
             var r=src[i];if(!r[0])continue;
             var ein=iEin>=0?parseMenge(r[iEin]):0;
             var dep=iDep>=0?parseMenge(r[iDep]):0;
+            var gv=iGv>=0?parseMenge(r[iGv]):0;
             milestones.forEach(function(ms){
                 var label=r[0].trim();
                 if(label.length>=7&&label.indexOf('.')>-1){var parts=label.split('.');if(parts.length>=3)label=parts[1]+'/'+parts[2];}
                 if(!einReached[ms]&&ein>=ms)einReached[ms]=label;
                 if(!depReached[ms]&&dep>=ms)depReached[ms]=label;
+                if(!gvReached[ms]&&gv>=ms)gvReached[ms]=label;
             });
         }
     }
 
-    // histDevData first (monthly history: Einstand + Depotwert)
+    // histDevData first (monthly history: Einstand + Depotwert + Gesamtvermögen)
     if(histDevData&&histDevData.length>1){
         var hd=histDevData[0].map(function(h){return h.toLowerCase().trim();});
-        var iE=-1,iD=-1;
+        var iE=-1,iD=-1,iG=-1;
         for(var c=0;c<hd.length;c++){
             if(hd[c].indexOf('einstand')>-1)iE=c;
+            else if(hd[c].indexOf('gesamt')>-1&&hd[c].indexOf('verm')>-1)iG=c;
             else if(hd[c].indexOf('depot')>-1||hd[c].indexOf('wert')>-1)iD=c;
         }
         if(iE<0)iE=1;if(iD<0)iD=2;
-        scanSource(histDevData,iE,iD);
+        scanSource(histDevData,iE,iD,iG);
     }
-    // histData second (daily: Depotwert + Einstand from daily CSV)
+    // histData second (daily)
     if(histData&&histData.length>1){
         var hd2=histData[0].map(function(h){return h.toLowerCase().trim();});
         var iE2=-1,iD2=-1;
@@ -2238,27 +2246,31 @@ function buildDepotMilestones(slot) {
             else if(hd2[c2].indexOf('depot')>-1)iD2=c2;
         }
         if(iD2<0)iD2=2;
-        scanSource(histData,iE2,iD2);
+        scanSource(histData,iE2,iD2,-1);
     }
     var depReachedCount=milestones.filter(function(ms){return depReached[ms];}).length;
     var einReachedCount=milestones.filter(function(ms){return einReached[ms];}).length;
-    function msRow(ms,reached,baseHue,idx,totalReached){
-        var dot=reached?'hsl('+baseHue+','+(50+Math.round(idx/Math.max(totalReached-1,1)*30))+'%,'+(30+Math.round(idx/Math.max(totalReached-1,1)*25))+'%)':'var(--border-color)';
+    var gvReachedCount=milestones.filter(function(ms){return gvReached[ms];}).length;
+    function msRow(ms,reached,dot,idx,totalReached){
+        var dotCol=reached?dot:'var(--border-color)';
         var textCol=reached?dot:'var(--text-dim)';
-        return'<div style="display:flex;align-items:center;gap:6px;margin-bottom:5px;">'
-            +'<div style="width:7px;height:7px;border-radius:50%;background:'+dot+';flex-shrink:0;"></div>'
-            +'<div style="font-size:11px;font-weight:700;color:'+textCol+';width:70px;flex-shrink:0;">'+nfM.format(ms)+'</div>'
+        return'<div style="display:flex;align-items:center;gap:5px;margin-bottom:5px;">'
+            +'<div style="width:7px;height:7px;border-radius:50%;background:'+dotCol+';flex-shrink:0;"></div>'
+            +'<div style="font-size:11px;font-weight:700;color:'+textCol+';width:38px;flex-shrink:0;">'+msLabel(ms)+'</div>'
             +'<div style="font-size:11px;color:'+(reached?'var(--text-main)':'var(--text-dim)')+';">'+(reached||'–')+'</div>'
             +'</div>';
     }
-    var einIdx=0,depIdx=0;
-    var einRows=milestones.map(function(ms){var r=msRow(ms,einReached[ms],210,einReached[ms]?einIdx:0,einReachedCount);if(einReached[ms])einIdx++;return r;}).join('');
-    var depRows=milestones.map(function(ms){var r=msRow(ms,depReached[ms],160,depReached[ms]?depIdx:0,depReachedCount);if(depReached[ms])depIdx++;return r;}).join('');
+    var einIdx=0,depIdx=0,gvIdx=0;
+    function hueColor(baseHue,idx,total){return'hsl('+baseHue+','+(50+Math.round(idx/Math.max(total-1,1)*30))+'%,'+(30+Math.round(idx/Math.max(total-1,1)*25))+'%)';}
+    var einRows=milestones.map(function(ms){var col=einReached[ms]?hueColor(210,einIdx,einReachedCount):'var(--border-color)';var r=msRow(ms,einReached[ms],col);if(einReached[ms])einIdx++;return r;}).join('');
+    var depRows=milestones.map(function(ms){var col=depReached[ms]?hueColor(160,depIdx,depReachedCount):'var(--border-color)';var r=msRow(ms,depReached[ms],col);if(depReached[ms])depIdx++;return r;}).join('');
+    var gvRows=milestones.map(function(ms){var col=gvReached[ms]?hueColor(270,gvIdx,gvReachedCount):'var(--border-color)';var r=msRow(ms,gvReached[ms],col);if(gvReached[ms])gvIdx++;return r;}).join('');
     slot.innerHTML=''
         +'<div style="font-size:10px;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">Meilensteine</div>'
-        +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">'
+        +'<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">'
         +'<div><div style="display:flex;align-items:center;gap:5px;margin-bottom:8px;"><div style="width:10px;height:3px;background:#60a5fa;border-radius:2px;"></div><div style="font-size:10px;font-weight:600;color:#60a5fa;text-transform:uppercase;letter-spacing:0.5px;">Einstand</div></div>'+einRows+'</div>'
-        +'<div><div style="display:flex;align-items:center;gap:5px;margin-bottom:8px;"><div style="width:10px;height:3px;background:#10b981;border-radius:2px;"></div><div style="font-size:10px;font-weight:600;color:#10b981;text-transform:uppercase;letter-spacing:0.5px;">Depotwert</div></div>'+depRows+'</div>'
+        +'<div><div style="display:flex;align-items:center;gap:5px;margin-bottom:8px;"><div style="width:10px;height:3px;background:#10b981;border-radius:2px;"></div><div style="font-size:10px;font-weight:600;color:#10b981;text-transform:uppercase;letter-spacing:0.5px;">Depot</div></div>'+depRows+'</div>'
+        +(gvReachedCount>0?'<div><div style="display:flex;align-items:center;gap:5px;margin-bottom:8px;"><div style="width:10px;height:3px;background:#8b5cf6;border-radius:2px;"></div><div style="font-size:10px;font-weight:600;color:#8b5cf6;text-transform:uppercase;letter-spacing:0.5px;">Gesamt</div></div>'+gvRows+'</div>':'')
         +'</div>';
 }
 
@@ -2270,11 +2282,14 @@ function buildDepotChart(slot) {
     var iDat=0,iEin=-1,iDep=-1;
     for(var c=0;c<head.length;c++){if(head[c].indexOf('einstand')>-1)iEin=c;else if(head[c].indexOf('depot')>-1||head[c].indexOf('kurs')>-1||head[c].indexOf('wert')>-1)iDep=c;}
     if(iEin<0)iEin=1;if(iDep<0)iDep=2;
+    var iGv=-1;
+    for(var cg=0;cg<head.length;cg++){if(head[cg].indexOf('gesamt')>-1&&head[cg].indexOf('verm')>-1)iGv=cg;}
     var points=[];
-    for(var i=1;i<src.length;i++){var r=src[i];if(!r[iDat])continue;var ein=parseMenge(r[iEin]),dep=parseMenge(r[iDep]);if(ein===0&&dep===0)continue;points.push({label:r[iDat].trim(),ein:ein,dep:dep});}
+    for(var i=1;i<src.length;i++){var r=src[i];if(!r[iDat])continue;var ein=parseMenge(r[iEin]),dep=parseMenge(r[iDep]),gv=iGv>=0?parseMenge(r[iGv]):0;if(ein===0&&dep===0)continue;points.push({label:r[iDat].trim(),ein:ein,dep:dep,gv:gv});}
     if(points.length<2){slot.innerHTML='';return;}
+    var hasGv=iGv>=0&&points.some(function(p){return p.gv>0;});
     var W=380,H=180,pl=52,pr=8,pt=20,pb=28,cW=W-pl-pr,cH=H-pt-pb;
-    var maxVal=Math.max.apply(null,points.map(function(p){return Math.max(p.ein,p.dep);}));
+    var maxVal=Math.max.apply(null,points.map(function(p){return Math.max(p.ein,p.dep,p.gv||0);}));
     var mag=Math.pow(10,Math.floor(Math.log10(maxVal/4))),niceStep=Math.ceil((maxVal/4)/mag)*mag,niceMax=niceStep*4;
     function xP(i){return pl+(i/(points.length-1))*cW;}
     function yP(v){return pt+(1-v/niceMax)*cH;}
@@ -2313,6 +2328,7 @@ function buildDepotChart(slot) {
     points.forEach(function(p,i){var ratio=p.ein>0?(p.dep-p.ein)/p.ein:0,t=Math.max(0,Math.min(1,ratio*4)),hue=Math.round(t*120),color='hsl('+hue+',60%,'+(35+Math.round(t*10))+'%)';gradStops+='<stop offset="'+(i/(points.length-1)*100).toFixed(1)+'%" stop-color="'+color+'"/>';});
     var depPath=points.map(function(p,i){return(i===0?'M':'L')+xP(i).toFixed(1)+','+yP(p.dep).toFixed(1);}).join(' ');
     var einPath=points.map(function(p,i){return(i===0?'M':'L')+xP(i).toFixed(1)+','+yP(p.ein).toFixed(1);}).join(' ');
+    var gvPath=hasGv?points.filter(function(p){return p.gv>0;}).map(function(p,i,arr){var idx=points.indexOf(p);return(i===0?'M':'L')+xP(idx).toFixed(1)+','+yP(p.gv).toFixed(1);}).join(' '):'';
     var depArea=depPath+' L'+xP(points.length-1).toFixed(1)+','+(pt+cH)+' L'+pl+','+(pt+cH)+' Z';
     depotChartPoints=points;
     depotChartParams={pl:pl,pr:pr,pt:pt,cW:cW,cH:cH,W:W,H:H,niceMax:niceMax};
@@ -2324,18 +2340,22 @@ function buildDepotChart(slot) {
         +'<path d="'+depArea+'" fill="url(#depAreaGrad)"/>'
         +'<path d="'+depPath+'" fill="none" stroke="url(#depLineGrad)" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>'
         +'<path d="'+einPath+'" fill="none" stroke="#60a5fa" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/>'
+        +(hasGv&&gvPath?'<path d="'+gvPath+'" fill="none" stroke="#8b5cf6" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/>':'')
         +'<line x1="'+pl+'" y1="'+pt+'" x2="'+pl+'" y2="'+(pt+cH)+'" stroke="#363636" stroke-width="1"/>'
         +'<line id="depot-vline" x1="0" y1="0" x2="0" y2="0" stroke="#a8b8cc" stroke-width="1" stroke-dasharray="3,3" opacity="0"/>'
         +'<circle id="depot-dot-dep" r="0" fill="#10b981" stroke="#050505" stroke-width="1.5" opacity="0"/>'
         +'<circle id="depot-dot-ein" r="0" fill="#60a5fa" stroke="#050505" stroke-width="1.5" opacity="0"/>'
+        +'<circle id="depot-dot-gv" r="0" fill="#8b5cf6" stroke="#050505" stroke-width="1.5" opacity="0"/>'
         +'<text id="depot-tip-label" font-size="9" fill="#a8b8cc" font-family="Outfit,sans-serif" font-weight="600" opacity="0" y="'+(pt+12)+'"></text>'
         +'<text id="depot-tip-ein" font-size="9" fill="#60a5fa" font-family="Outfit,sans-serif" font-weight="600" opacity="0" y="'+(pt+22)+'"></text>'
         +'<text id="depot-tip-dep" font-size="9" fill="#10b981" font-family="Outfit,sans-serif" font-weight="600" opacity="0" y="'+(pt+32)+'"></text>'
+        +'<text id="depot-tip-gv" font-size="9" fill="#8b5cf6" font-family="Outfit,sans-serif" font-weight="600" opacity="0" y="'+(pt+42)+'"></text>'
         +'<rect x="'+pl+'" y="'+pt+'" width="'+cW+'" height="'+cH+'" fill="transparent" style="cursor:crosshair;" onmousemove="handleDepotMove(event)" onclick="handleDepotMove(event)" onmouseleave="handleDepotLeave()"/>'
         +'</g></svg>'
-        +'<div style="display:flex;justify-content:center;gap:20px;margin-top:10px;font-size:11px;font-weight:600;color:var(--text-dim);">'
+        +'<div style="display:flex;justify-content:center;gap:16px;flex-wrap:wrap;margin-top:10px;font-size:11px;font-weight:600;color:var(--text-dim);">'
         +'<div style="display:flex;align-items:center;gap:6px;"><div style="width:10px;height:10px;border-radius:2px;background:#60a5fa;"></div>Einstandswert</div>'
         +'<div style="display:flex;align-items:center;gap:6px;"><div style="width:10px;height:10px;border-radius:2px;background:#10b981;"></div>Depotwert</div>'
+        +(hasGv?'<div style="display:flex;align-items:center;gap:6px;"><div style="width:10px;height:10px;border-radius:2px;background:#8b5cf6;"></div>Gesamtvermögen</div>':'')
         +'</div>';
 }
 
