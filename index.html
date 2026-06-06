@@ -445,6 +445,7 @@
     <div id="pw-screen">
         <div class="pw-title"><span style="animation-delay:0s">D</span><span style="animation-delay:0.15s">A</span><span style="animation-delay:0.3s">G</span><span style="animation-delay:0.45s;position:relative;display:inline-block;"><span style="visibility:hidden;">O</span><span style="position:absolute;top:0;left:0;clip-path:inset(0 0 52% 0);z-index:1;color:#f1f5f9;">O</span><svg style="position:absolute;bottom:-6px;left:50%;transform:translateX(-50%);width:26px;height:48px;image-rendering:pixelated;z-index:2;" viewBox="0 0 32 32"><rect x="10" y="2" width="10" height="8" fill="#1e1e1e"/><rect x="10" y="7" width="10" height="1" fill="#ef4444"/><rect x="9" y="10" width="12" height="10" fill="#FFFFFF"/><rect x="12" y="14" width="2" height="2" fill="#000000"/><rect x="17" y="14" width="2" height="2" fill="#000000"/><rect x="8" y="17" width="14" height="3" fill="#fbbf24"/><g><rect x="22" y="8" width="6" height="8" fill="#10b981"/><rect x="21" y="13" width="3" height="4" fill="#FFFFFF"/></g><rect x="9" y="20" width="12" height="8" fill="#ef4444"/><rect x="13" y="22" width="4" height="2" fill="#3b82f6"/></svg><span style="position:absolute;top:0;left:0;clip-path:inset(48% 0 0 0);z-index:3;color:#f1f5f9;">O</span></span><span style="animation-delay:0.6s">B</span><span style="animation-delay:0.75s">E</span><span style="animation-delay:0.9s">R</span><span style="animation-delay:1.05s">T</span></div>
 
+        <div class="pw-sub" style="font-size:11px;color:#475569;letter-spacing:1px;margin-top:-12px;">v1.35</div>
         <div class="pw-box">
             <div style="position:relative;">
                 <svg style="position:absolute;left:14px;top:50%;transform:translateY(-50%);pointer-events:none;color:#64748b;" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
@@ -727,6 +728,16 @@
         </div>
     </section>
     <section id="page-entwickler">
+        <div class="analyse-card" style="margin-bottom:12px;">
+            <div style="font-size:12px;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;margin-bottom:14px;">Wie funktioniert Dagobert?</div>
+            <div style="font-size:13px;color:var(--text-dim);line-height:1.7;">
+                <p style="margin:0 0 10px;">Dagobert ist eine <strong style="color:var(--text-main);">einzelne HTML-Datei</strong>, die vollständig im Browser läuft – kein Server, keine Installation, keine Cloud. Alle Einstellungen und Analysen werden lokal im Browser gespeichert.</p>
+                <p style="margin:0 0 10px;"><strong style="color:var(--text-main);">Depot-Daten</strong> kommen aus einem Google Sheets, das du selbst pflegst. Die App liest die Tabelle beim Start als CSV-Datei über ein Google Apps Script, das als Mittler fungiert und das sogenannte CORS-Problem umgeht – eine Sicherheitsregel im Browser, die direkte Zugriffe auf fremde Server blockiert.</p>
+                <p style="margin:0 0 10px;"><strong style="color:var(--text-main);">Aktienanalyse:</strong> Das gleiche Apps Script holt auf Anfrage Finanzdaten (KGV, Kursziel, Analysten-Konsens, Beta, Dividende, Forward-EPS) direkt von Yahoo Finance – serverseitig, damit der Browser nicht blockiert wird. Die Ergebnisse werden 7 Tage lokal gecacht.</p>
+                <p style="margin:0 0 10px;"><strong style="color:var(--text-main);">Scoring:</strong> Jede Aktie erhält für jedes Kriterium einen Teilscore von 1–5, berechnet durch lineare Interpolation zwischen festen Schwellenwerten. Die Teilscores werden nach deiner Gewichtung zusammengerechnet. Analysten-Konsens mit weniger als 10 Empfehlungen wird automatisch schwächer gewichtet.</p>
+                <p style="margin:0 0 0;"><strong style="color:var(--text-main);">Apps Script:</strong> Ein kleines serverseitiges Programm, das kostenlos in deinem Google-Konto läuft und über eine feste URL erreichbar ist. Einmal eingerichtet, muss es nur bei Änderungen am Script-Code neu deployt werden.</p>
+            </div>
+        </div>
         <div class="analyse-card">
             <div style="font-size:12px;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;">Schnittstellen &amp; Konfiguration</div>
             <div style="margin-bottom:20px;">
