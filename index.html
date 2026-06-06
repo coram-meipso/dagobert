@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dagobert v1.34</title>
+    <title>Dagobert v1.35</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3QgeD0iMTAiIHk9IjIiIHdpZHRoPSIxMCIgaGVpZ2h0PSI4IiBmaWxsPSIjMWUxZTFlIi8+PHJlY3QgeD0iMTAiIHk9IjciIHdpZHRoPSIxMCIgaGVpZ2h0PSIxIiBmaWxsPSIjZWY0NDQ0Ii8+PHJlY3QgeD0iOSIgeT0iMTAiIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMCIgZmlsbD0iI0ZGRkZGRiIvPjxyZWN0IHg9IjEyIiB5PSIxNCIgd2lkdGg9IjIiIGhlaWdodD0iMiIgZmlsbD0iIzAwMDAwMCIvPjxyZWN0IHg9IjE3IiB5PSIxNCIgd2lkdGg9IjIiIGhlaWdodD0iMiIgZmlsbD0iIzAwMDAwMCIvPjxyZWN0IHg9IjgiIHk9IjE3IiB3aWR0aD0iMTQiIGhlaWdodD0iMyIgZmlsbD0iI2ZiYmYyNCIvPjxnIGlkPSJtb25leS1oYW5kIj48cmVjdCB4PSIyMiIgeT0iOCIgd2lkdGg9IjYiIGhlaWdodD0iOCIgZmlsbD0iIzEwYjk4MSIvPjxyZWN0IHg9IjIxIiB5PSIxMyIgd2lkdGg9IjMiIGhlaWdodD0iNCIgZmlsbD0iI0ZGRkZGRiIvPjwvZz48cmVjdCB4PSI5IiB5PSIyMCIgd2lkdGg9IjEyIiBoZWlnaHQ9IjgiIGZpbGw9IiNlZjQ0NDQiLz48cmVjdCB4PSIxMyIgeT0iMjIiIHdpZHRoPSI0IiBoZWlnaHQ9IjIiIGZpbGw9IiMzYjgyZjYiLz48L3N2Zz4=">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
@@ -122,7 +122,7 @@
         .month-group{flex:1;display:flex;align-items:flex-end;justify-content:center;gap:2px;height:100%;position:relative;}
         .bar{width:5px;border-radius:2px 2px 0 0;transition:height 0.6s cubic-bezier(0.4,0,0.2,1);}
         .month-label{position:absolute;bottom:-22px;font-size:10px;color:var(--text-dim);text-transform:uppercase;}
-        #page-portfolio,#page-analyse,#page-dividenden,#page-div-entwicklung,#page-ziele,#page-dashboard,#page-divkal,#page-changelog,#page-about{display:none;}
+        #page-portfolio,#page-analyse,#page-dividenden,#page-div-entwicklung,#page-ziele,#page-aktienanalyse,#page-dashboard,#page-divkal,#page-changelog,#page-about,#page-entwickler{display:none;}
         .page-active{display:block !important;}
         .sort-row{display:flex;gap:8px;margin-bottom:24px;}
         .sort-bar-container{flex:1;margin-bottom:0;}
@@ -381,6 +381,55 @@
         #pw-error-msg{font-size:12px;color:#ef4444;text-align:center;min-height:16px;}
         @keyframes pw-shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
 
+
+        /* ── Aktienanalyse ───────────────────────────────────────────── */
+        .aa-weight-row{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:12px;}
+        .aa-weight-item{background:var(--card-bg);border:1px solid var(--border-color);border-radius:10px;padding:7px 10px;position:relative;}
+        .aa-tooltip{display:none;position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:#1e1e2e;border:1px solid var(--border-color);border-radius:8px;padding:6px 10px;font-size:11px;color:var(--text-main);white-space:nowrap;z-index:100;pointer-events:none;box-shadow:0 4px 12px rgba(0,0,0,0.5);}
+        .aa-tooltip::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:#1e1e2e;}
+        .aa-weight-label{font-size:10px;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:2px;}
+        .aa-weight-pct{font-size:13px;font-weight:700;color:var(--text-main);margin-bottom:4px;}
+        .aa-weight-slider{width:100%;accent-color:#8b5cf6;height:3px;cursor:pointer;}
+        .aa-sum-ok{color:#10b981;font-weight:600;}
+        .aa-sum-warn{color:#f59e0b;font-weight:600;}
+        .aa-table{width:100%;border-collapse:collapse;}
+        .aa-table thead tr{height:80px;vertical-align:bottom;}
+        .aa-table th{font-size:10px;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.5px;padding:0;text-align:left;border-bottom:1px solid var(--border-color);white-space:nowrap;}
+        .aa-table th:first-child{text-align:left;vertical-align:bottom;padding:0 10px 6px 16px;white-space:nowrap;}
+        .aa-table th.aa-th-rot{width:22px;min-width:22px;max-width:22px;cursor:pointer;}
+        .aa-table th.aa-th-rot .aa-th-inner{display:inline-block;transform:rotate(-45deg);transform-origin:left bottom;margin-left:10px;margin-bottom:4px;padding-bottom:2px;font-size:9px;transition:color 0.15s;}
+        .aa-table th.aa-th-rot:hover .aa-th-inner{color:var(--text-main);}
+        .aa-table th.aa-th-sorted .aa-th-inner{color:#a78bfa;font-weight:700;}
+        .aa-table td{padding:8px 3px;border-bottom:1px solid var(--border-color);font-size:12px;text-align:center;vertical-align:middle;}
+        .aa-table td:first-child{text-align:left;padding-left:12px;padding-right:2px;}
+        .aa-table td:nth-child(2){padding-left:2px;}
+        .aa-table tr:last-child td{border-bottom:none;}
+        .aa-score-pill{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;font-size:11px;font-weight:700;color:#fff;}
+        .aa-score-green{background:#10b981;}
+        .aa-score-yellow{background:#f59e0b;}
+        .aa-score-red{background:#ef4444;}
+        .aa-score-grey{background:#6b7280;}
+        .aa-total-pill{display:inline-flex;align-items:center;justify-content:center;width:40px;height:34px;border-radius:12px;font-size:13px;font-weight:700;color:#fff;}
+        .aa-rank{width:28px;height:28px;border-radius:50%;background:var(--border-color);color:var(--text-dim);font-size:11px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;}
+        @keyframes aa-pill-spin { to { transform: rotate(360deg); } }
+        .aa-spin-svg { display:none; align-self:center; flex-shrink:0; animation:aa-pill-spin 1.2s steps(12,end) infinite; }
+        .aa-status{font-size:11px;color:var(--text-dim);}
+        .aa-analyse-btn{background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.35);border-radius:8px;padding:5px 10px;font-size:11px;font-weight:600;color:#a78bfa;cursor:pointer;font-family:inherit;white-space:nowrap;}
+        .aa-row-btn{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:8px;background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.35);color:#a78bfa;cursor:pointer;font-size:12px;font-weight:700;font-family:inherit;flex-shrink:0;}
+        .aa-row-btn:disabled{opacity:0.35;cursor:not-allowed;}
+        .aa-preset-btn{background:rgba(255,255,255,0.05);border:1px solid var(--border-color);border-radius:8px;padding:7px 6px;font-size:10px;font-weight:600;color:var(--text-dim);cursor:pointer;font-family:inherit;white-space:nowrap;transition:all 0.15s;width:100%;text-align:center;}
+        .aa-preset-btn:hover{border-color:#8b5cf6;color:#a78bfa;background:rgba(139,92,246,0.1);}
+        .aa-preset-btn.active{border-color:#8b5cf6;color:#a78bfa;background:rgba(139,92,246,0.15);}
+        @keyframes aa-btn-spin{to{transform:rotate(360deg);}}
+        .aa-btn-spinner{display:inline-block;width:12px;height:12px;border:2px solid rgba(167,139,250,0.3);border-top-color:#a78bfa;border-radius:50%;animation:aa-btn-spin 0.7s linear infinite;}
+        .aa-analyse-btn:hover{background:rgba(139,92,246,0.25);}
+        .aa-analyse-btn:disabled{opacity:0.4;cursor:not-allowed;}
+        .aa-progress{height:3px;background:var(--border-color);border-radius:2px;overflow:hidden;}
+        .aa-progress-bar{height:100%;background:linear-gradient(90deg,#8b5cf6,#10b981);border-radius:2px;transition:width 0.4s ease;}
+        @keyframes aa-indeterminate{0%{transform:translateX(-100%);}100%{transform:translateX(400%);}}
+        .aa-progress-bar.indeterminate{width:25%!important;animation:aa-indeterminate 1.4s ease-in-out infinite;transition:none;}
+        .aa-refresh-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
+        .aa-criteria-row{display:flex;gap:4px;justify-content:center;}
         </style>
 </head>
 <body id="app-body">
@@ -438,22 +487,26 @@
 <nav class="sidebar" id="sidebar">
     <div class="sidebar-nav-container">
         <div id="sidebar-indicator" class="sidebar-indicator"></div>
-        <button class="menu-item active" onclick="showPage('portfolio',0)" style="color:#f1f5f9;"><span></span> Portfolio</button>
-        <button class="menu-item" onclick="showPage('analyse',1)" style="color:#f1f5f9;"><span></span> Depotanalyse</button>
-        <button class="menu-item" onclick="showPage('dividenden',2)" style="color:#f1f5f9;"><span></span> Dividenden</button>
-        <button class="menu-item" onclick="showPage('div-entwicklung',3)" style="color:#f1f5f9;"><span></span> Dividendenentwicklung</button>
-        <button class="menu-item" onclick="showPage('divkal',4,true)" style="color:#f1f5f9;"><span></span> Dividendenkalender</button>
-        <button class="menu-item" onclick="showPage('ziele',5)" style="color:#f1f5f9;"><span></span> Ziele & Prognosen</button>
+        <button class="menu-item active" onclick="showPage('portfolio',0)" data-page="portfolio" style="color:#f1f5f9;"><span></span> Portfolio</button>
+        <button class="menu-item" onclick="showPage('analyse',1)" data-page="analyse" style="color:#f1f5f9;"><span></span> Depotanalyse</button>
+        <button class="menu-item" onclick="showPage('dividenden',2)" data-page="dividenden" style="color:#f1f5f9;"><span></span> Dividenden</button>
+        <button class="menu-item" onclick="showPage('div-entwicklung',3)" data-page="div-entwicklung" style="color:#f1f5f9;"><span></span> Dividendenentwicklung</button>
+        <button class="menu-item" onclick="showPage('divkal',4,true)" data-page="divkal" style="color:#f1f5f9;"><span></span> Dividendenkalender</button>
+        <button class="menu-item" onclick="showPage('ziele',5)" data-page="ziele" style="color:#f1f5f9;"><span></span> Ziele & Prognosen</button>
+        <button class="menu-item" onclick="showPage('aktienanalyse',6)" data-page="aktienanalyse" style="color:#f1f5f9;"><span></span> Aktienanalyse</button>
         <div style="height:1px;background:var(--border-color);margin:8px 0;opacity:0.5;"></div>
-        <button class="menu-item" onclick="showPage('dashboard',-1,true)" style="color:#2dd4bf;">
+        <button class="menu-item" onclick="showPage('dashboard',-1,true)" data-page="dashboard" style="color:#2dd4bf;">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg> Dashboard <span style="font-size:9px;font-weight:700;background:rgba(45,212,191,0.15);border:1px solid rgba(45,212,191,0.4);color:#2dd4bf;border-radius:4px;padding:1px 5px;letter-spacing:0.5px;line-height:1.4;">BETA</span>
         </button>
         <div style="height:1px;background:var(--border-color);margin:8px 0;opacity:0.5;"></div>
-        <button class="menu-item" onclick="showPage('changelog',-1,true)">
+        <button class="menu-item" onclick="showPage('changelog',-1,true)" data-page="changelog">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg> Changelog
         </button>
-        <button class="menu-item" onclick="showPage('about',-1,true)">
+        <button class="menu-item" onclick="showPage('about',-1,true)" data-page="about">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> About
+        </button>
+        <button class="menu-item" onclick="showPage('entwickler',-1,true)" data-page="entwickler">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg> Entwickler
         </button>
         <div style="height:1px;background:var(--border-color);margin:8px 0;opacity:0.5;"></div>
         <button id="modern-theme-btn" class="menu-item" onclick="toggleModernTheme()" style="color:var(--text-dim);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg> Modern Theme <span style="font-size:9px;font-weight:700;background:rgba(136,136,204,0.15);border:1px solid rgba(136,136,204,0.4);color:#8888cc;border-radius:3px;padding:1px 5px;letter-spacing:0.5px;">BETA</span></button>
@@ -482,7 +535,7 @@
                         <rect x="10" y="2" width="10" height="8" fill="#1e1e1e"/><rect x="10" y="7" width="10" height="1" fill="#ef4444"/><rect x="9" y="10" width="12" height="10" fill="#FFFFFF"/><rect x="12" y="14" width="2" height="2" fill="#000000"/><rect x="17" y="14" width="2" height="2" fill="#000000"/><rect x="8" y="17" width="14" height="3" fill="#fbbf24"/><g id="money-hand"><rect x="22" y="8" width="6" height="8" fill="#10b981"/><rect x="21" y="13" width="3" height="4" fill="#FFFFFF"/></g><rect x="9" y="20" width="12" height="8" fill="#ef4444"/><rect x="13" y="22" width="4" height="2" fill="#3b82f6"/>
                     </svg>
                     <span class="dag-l dag-word" id="dl3b" style="position:absolute;top:0;left:0;clip-path:inset(48% 0 0 0);z-index:3;">O</span>
-                </span><span class="dag-word"><span class="dag-l" id="dl4">B</span><span class="dag-l" id="dl5">E</span><span class="dag-l" id="dl6">R</span><span class="dag-l" id="dl7">T</span></span><span class="title-version"><span>v1.34</span><span class="ver-tag">mobile</span></span>
+                </span><span class="dag-word"><span class="dag-l" id="dl4">B</span><span class="dag-l" id="dl5">E</span><span class="dag-l" id="dl6">R</span><span class="dag-l" id="dl7">T</span></span><span class="title-version"><span>v1.35</span><span class="ver-tag">mobile</span></span>
 
 </h1>
             </h1>
@@ -592,6 +645,62 @@
     </section>
 
     <section id="page-ziele"></section>
+    <section id="page-aktienanalyse">
+        <div id="aa-debug-out" style="display:none;background:#0a0a0a;border:1px solid #4ade80;border-radius:10px;padding:12px;margin-bottom:12px;font-size:10px;font-family:monospace;color:#a0f0a0;white-space:pre-wrap;word-break:break-all;max-height:400px;overflow-y:auto;"></div>
+
+
+        <div id="aa-weight-container">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;"><div style="font-size:10px;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.5px;">Gewichtung</div><span id="aa-sum-display" class="aa-sum-warn" style="font-size:11px;"></span></div>
+            <div class="aa-weight-row" id="aa-weights"></div>
+            <div id="aa-preset-btns" style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:10px;"></div>
+            <div id="aa-tip-popup" onclick="this.style.display='none'" style="display:none;position:fixed;z-index:200;background:var(--card-bg);border:1px solid var(--border-color);border-radius:10px;padding:10px 14px;font-size:11px;color:var(--text-dim);max-width:240px;line-height:1.5;box-shadow:0 4px 16px rgba(0,0,0,0.5);white-space:pre-line;cursor:pointer;"></div>
+        </div>
+        <div id="aa-status-text" class="aa-status" style="display:none;"></div>
+        <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:6px;margin-top:14px;margin-bottom:10px;align-items:center;">
+            <div style="display:flex;align-items:center;gap:8px;">
+                <svg id="aa-spinner" class="aa-spin-svg" width="22" height="22" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;">
+                    <g transform-origin="12 12">
+                        <rect x="11" y="1" width="2" height="6" rx="1" fill="#1e3a8a"/>
+                        <rect x="11" y="1" width="2" height="6" rx="1" fill="#1d4ed8" transform="rotate(30,12,12)" opacity="0.85"/>
+                        <rect x="11" y="1" width="2" height="6" rx="1" fill="#2563eb" transform="rotate(60,12,12)" opacity="0.7"/>
+                        <rect x="11" y="1" width="2" height="6" rx="1" fill="#3b82f6" transform="rotate(90,12,12)" opacity="0.55"/>
+                        <rect x="11" y="1" width="2" height="6" rx="1" fill="#60a5fa" transform="rotate(120,12,12)" opacity="0.45"/>
+                        <rect x="11" y="1" width="2" height="6" rx="1" fill="#7dd3fc" transform="rotate(150,12,12)" opacity="0.35"/>
+                        <rect x="11" y="1" width="2" height="6" rx="1" fill="#93c5fd" transform="rotate(180,12,12)" opacity="0.28"/>
+                        <rect x="11" y="1" width="2" height="6" rx="1" fill="#bae6fd" transform="rotate(210,12,12)" opacity="0.22"/>
+                        <rect x="11" y="1" width="2" height="6" rx="1" fill="#bae6fd" transform="rotate(240,12,12)" opacity="0.18"/>
+                        <rect x="11" y="1" width="2" height="6" rx="1" fill="#bae6fd" transform="rotate(270,12,12)" opacity="0.14"/>
+                        <rect x="11" y="1" width="2" height="6" rx="1" fill="#bae6fd" transform="rotate(300,12,12)" opacity="0.1"/>
+                        <rect x="11" y="1" width="2" height="6" rx="1" fill="#bae6fd" transform="rotate(330,12,12)" opacity="0.07"/>
+                    </g>
+                </svg>
+                <button class="aa-analyse-btn" id="aa-btn-all" onclick="aaAnalyzeAll()" style="flex:1;">▶ Alle analysieren</button>
+            </div>
+            <button class="aa-analyse-btn" onclick="aaTestConnection()" style="background:rgba(16,185,129,0.1);border-color:rgba(16,185,129,0.3);color:#10b981;width:100%;">🔌 Verbindung testen</button>
+            <button class="aa-analyse-btn" onclick="aaClearCache()" style="background:rgba(239,68,68,0.1);border-color:rgba(239,68,68,0.3);color:#f87171;width:100%;">⟳ Cache leeren</button>
+        </div>
+        <div class="aa-progress" id="aa-progress" style="display:none;margin-bottom:10px;"><div class="aa-progress-bar" id="aa-progress-bar" style="width:0%"></div></div>
+        <div class="analyse-card" style="padding:0;overflow:hidden;">
+            <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;">
+            <table class="aa-table" id="aa-table">
+                <thead><tr>
+                    <th style="">#&nbsp;&nbsp;Aktie</th>
+                    <th class="aa-th-rot" id="aa-th-analyst" onclick="aaSetSort('analyst')"><span class="aa-th-inner">Analysten</span></th>
+                    <th class="aa-th-rot" id="aa-th-upside" onclick="aaSetSort('upside')"><span class="aa-th-inner">Kursziel</span></th>
+                    <th class="aa-th-rot" id="aa-th-valuation" onclick="aaSetSort('valuation')"><span class="aa-th-inner">Bewertung</span></th>
+                    <th class="aa-th-rot" id="aa-th-growth" onclick="aaSetSort('growth')"><span class="aa-th-inner">Wachstum</span></th>
+                    <th class="aa-th-rot" id="aa-th-dividend" onclick="aaSetSort('dividend')"><span class="aa-th-inner">Dividende</span></th>
+                    <th class="aa-th-rot" id="aa-th-stability" onclick="aaSetSort('stability')"><span class="aa-th-inner">Stabilität</span></th>
+                    <th class="aa-th-rot" id="aa-th-total" onclick="aaSetSort('total')"><span class="aa-th-inner">Score</span></th>
+                    <th></th>
+                </tr></thead>
+                <tbody id="aa-tbody"></tbody>
+            </table>
+            </div>
+        </div>
+        <div style="font-size:10px;color:var(--text-dim);margin-top:12px;text-align:center;">Daten via Google Finance (GOOGLEFINANCE) · Nur zur Information, keine Anlageberatung · Cache: 7 Tage</div>
+        <div id="aa-error-log" style="display:none;margin-top:12px;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);border-radius:12px;padding:12px;font-size:11px;font-family:monospace;color:#f87171;max-height:200px;overflow-y:auto;"></div>
+    </section>
     <section id="page-dashboard">
         <div id="dashboard-content" style="padding-bottom:24px;"></div>
     </section>
@@ -617,12 +726,837 @@
             </div>
         </div>
     </section>
+    <section id="page-entwickler">
+        <div class="analyse-card">
+            <div style="font-size:12px;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;">Schnittstellen &amp; Konfiguration</div>
+            <div style="margin-bottom:20px;">
+                <div style="font-size:13px;font-weight:600;color:var(--text-main);margin-bottom:6px;">Google Apps Script URL</div>
+                <div style="font-size:11px;color:var(--text-dim);margin-bottom:10px;">Wird für die Aktienanalyse und als zuverlässige Datenquelle genutzt (ersetzt CORS-Proxies).</div>
+                <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                    <input id="dev-script-url" type="text" placeholder="https://script.google.com/macros/s/.../exec" style="flex:1;min-width:220px;background:var(--card-bg);border:1px solid var(--border-color);border-radius:10px;padding:10px 12px;font-size:12px;color:var(--text-main);font-family:monospace;outline:none;" oninput="devSaveScriptUrl(this.value)">
+                    <span id="dev-url-status" style="font-size:11px;color:var(--text-dim);white-space:nowrap;"></span>
+                </div>
+            </div>
+            <div style="border-top:1px solid var(--border-color);padding-top:16px;margin-top:12px;">
+                <div style="font-size:13px;font-weight:600;color:var(--text-main);margin-bottom:10px;">Diagnose</div>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;">
+                    <button class="aa-analyse-btn" onclick="devTestCsv()">📋 Depot-CSV testen</button>
+                    <button class="aa-analyse-btn" onclick="devTestScript()" style="background:rgba(16,185,129,0.1);border-color:rgba(16,185,129,0.3);color:#10b981;">🔌 Script testen</button>
+                    <button class="aa-analyse-btn" onclick="devForceReload()" style="background:rgba(245,158,11,0.1);border-color:rgba(245,158,11,0.3);color:#f59e0b;">↺ Daten neu laden</button>
+                    <button class="aa-analyse-btn" onclick="devTestRender()" style="background:rgba(239,68,68,0.1);border-color:rgba(239,68,68,0.3);color:#f87171;">🔍 render() testen</button>
+                </div>
+                <div id="dev-diag-out" style="display:none;background:rgba(0,0,0,0.3);border:1px solid var(--border-color);border-radius:8px;padding:10px 12px;font-size:11px;font-family:monospace;color:var(--text-main);white-space:pre-wrap;line-height:1.6;max-height:200px;overflow-y:auto;"></div>
+            </div>
+        </div>
+    </section>
     <div style="text-align:center;padding-bottom:40px;">
         <button id="desktop-btn" onclick="toggleDesktop()" style="background:none;border:1px solid var(--border-color);color:var(--text-dim);font-family:inherit;font-size:10px;padding:4px 12px;border-radius:8px;cursor:pointer;opacity:0.4;letter-spacing:0.5px;">🖥 Desktop-Ansicht</button>
     </div>
 </div>
 
 <script>
+
+// ── Aktienanalyse ──────────────────────────────────────────────────────────
+
+var AA_WEIGHTS_KEY = 'dagobert-aa-weights';
+var AA_CACHE_KEY   = 'dagobert-aa-cache';
+var AA_CACHE_TTL   = 7 * 24 * 60 * 60 * 1000; // 7 days
+var aaRunning = false;
+
+var aaDefaultWeights = {
+    analyst:  25,  // Analystenkonsens
+    upside:   20,  // Kursziel-Upside
+    valuation:20,  // Bewertung (KGV vs Sektor)
+    growth:   20,  // EPS-Wachstum
+    dividend: 10,  // Dividendenrendite
+    stability: 5   // Stabilität (Beta)
+};
+
+var aaLabels = {
+    analyst:  'Analysten',
+    upside:   'Kursziel',
+    valuation:'Bewertung',
+    growth:   'Wachstum',
+    dividend: 'Dividende',
+    stability:'Stabilität'
+};
+
+function aaLogError(name, msg){
+    var log=document.getElementById('aa-error-log');
+    if(!log)return;
+    log.style.display='';
+    var line=document.createElement('div');
+    line.style.marginBottom='3px';
+    line.textContent='['+name+'] '+msg;
+    log.appendChild(line);
+    log.scrollTop=log.scrollHeight;
+}
+
+
+function aaGetWeights(){
+    try{
+        var w=JSON.parse(localStorage.getItem(AA_WEIGHTS_KEY));
+        if(w&&w.analyst!==undefined){
+            // Merge: Defaults zuerst, dann gespeicherte Werte – neue Keys bekommen Default-Wert
+            return Object.assign({},aaDefaultWeights,w);
+        }
+    }catch(e){}
+    return Object.assign({},aaDefaultWeights);
+}
+function aaSaveWeights(w){try{localStorage.setItem(AA_WEIGHTS_KEY,JSON.stringify(w));}catch(e){}}
+function aaGetCache(){try{return JSON.parse(localStorage.getItem(AA_CACHE_KEY))||{};}catch(e){return{};}}
+function aaSaveCache(cache){try{localStorage.setItem(AA_CACHE_KEY,JSON.stringify(cache));}catch(e){}}
+function aaClearCache(){
+    try{localStorage.removeItem(AA_CACHE_KEY);}catch(e){}
+    aaRender();
+    document.getElementById('aa-status-text').textContent='Cache geleert. Neu analysieren.';
+}
+
+function aaGetStocks(){
+    // Only Aktien (not ETFs), unique by ISIN
+    var seen={};
+    var stocks=[];
+    (allData||[]).forEach(function(d){
+        if(!d||!d.isin)return;
+        var typ=(d.typ||d.type||'').toLowerCase();
+        if(typ.indexOf('etf')>-1)return;
+        if(seen[d.isin])return;
+        seen[d.isin]=true;
+        stocks.push({name:d.name||d.bezeichnung||d.isin, isin:d.isin, typ:typ});
+    });
+    return stocks;
+}
+
+// Lineare Interpolation zwischen Stützpunkten [val, score]
+function aaInterp(val, points){
+    if(val<=points[0][0])return points[0][1];
+    if(val>=points[points.length-1][0])return points[points.length-1][1];
+    for(var i=0;i<points.length-1;i++){
+        var x0=points[i][0],y0=points[i][1],x1=points[i+1][0],y1=points[i+1][1];
+        if(val>=x0&&val<=x1){
+            var t=(val-x0)/(x1-x0);
+            return Math.round((y0+t*(y1-y0))*100)/100;
+        }
+    }
+    return points[points.length-1][1];
+}
+
+function aaScoreValue(key, val){
+    if(val===null||val===undefined||isNaN(val))return null;
+    if(key==='analyst'){
+        // Score = 1 + (Kaufquote - 20) / 20, begrenzt 1-5
+        // Stützpunkte: 20%→1, 40%→2, 60%→3, 80%→4, 100%→5
+        return aaInterp(val,[[20,1],[40,2],[60,3],[80,4],[100,5]]);
+    }
+    if(key==='upside'){
+        // -20%→1, 0%→2, 20%→3, 40%→4, ≥60%→5
+        return aaInterp(val,[[-20,1],[0,2],[20,3],[40,4],[60,5]]);
+    }
+    if(key==='valuation'){
+        if(val<=0)return null; // null/negatives KGV = Datenlücke, kein Score
+        return aaInterp(val,[[1,5],[10,5],[15,4],[20,3],[30,2],[40,1]]);
+    }
+    if(key==='growth'){
+        // -20%→1, 0%→2, 10%→3, 20%→4, ≥30%→5
+        return aaInterp(val,[[-20,1],[0,2],[10,3],[20,4],[30,5]]);
+    }
+    if(key==='dividend'){
+        // 0%→1, 2%→2, 4%→3, 6%→4, ≥8%→5; Cap bei 10% (hohe Rendite = Warnsignal)
+        var capped=Math.min(val,10);
+        return aaInterp(capped,[[0,1],[2,2],[4,3],[6,4],[8,5],[10,5]]);
+    }
+    if(key==='stability'){
+        // Beta ≤0.6→5, 0.8→4, 1.0→3, 1.3→2, ≥1.6→1
+        if(val<=0)return 3;
+        return aaInterp(val,[[0,5],[0.6,5],[0.8,4],[1.0,3],[1.3,2],[1.6,1]]);
+    }
+    return null;
+}
+
+function aaCalcScore(data, weights){
+    if(!data)return null;
+    var map={
+        analyst:  data.analyst_buy_pct,
+        upside:   data.price_target_upside,
+        valuation:data.pe_ratio,   // direkt KGV statt diskret günstig/fair/teuer
+        growth:   data.eps_growth_estimate,
+        dividend: data.dividend_yield,
+        stability:data.beta!=null?data.beta:null
+    };
+    var total=0, wSum=0;
+    var scores={};
+    var wKeys=Object.keys(weights);
+    var effectiveSum=0;
+    wKeys.forEach(function(k){effectiveSum+=Number(weights[k])||0;});
+    if(effectiveSum===0)effectiveSum=1;
+    // 3. Analysten-Vertrauensfaktor: skaliert mit Analystenanzahl (max bei 10+)
+    var analystCount=data.analyst_count!=null?Number(data.analyst_count):null;
+    var analystTrust=analystCount!=null?Math.min(analystCount/10,1):1;
+    wKeys.forEach(function(k){
+        var s=aaScoreValue(k, map[k]);
+        scores[k]=s;
+        if(s!==null){
+            var rawW=(Number(weights[k])||0)/effectiveSum;
+            // Analysten-Gewicht mit Vertrauensfaktor skalieren
+            var w=(k==='analyst')?rawW*analystTrust:rawW;
+            total+=s*w;wSum+=w;
+        }
+    });
+    scores.total=wSum>0?total/wSum*5/5:null;
+    // 2. Datenvollständigkeit: wie viele Kriterien haben Werte?
+    var dataCount=Object.keys(map).filter(function(k){
+        return map[k]!==null&&map[k]!==undefined&&!isNaN(map[k]);
+    }).length;
+    scores.dataCount=dataCount;
+    scores.dataTot=Object.keys(map).length;
+    scores.analystTrust=analystTrust;
+    return scores;
+}
+
+function aaColor(score){
+    if(score===null||score===undefined)return'aa-score-grey';
+    return score>=3.7?'aa-score-green':score>=2.7?'aa-score-yellow':'aa-score-red';
+}
+function aaColorHex(score){
+    if(score===null||score===undefined)return'#6b7280';
+    return score>=3.7?'#10b981':score>=2.7?'#f59e0b':'#ef4444';
+}
+
+
+var aaPresets={
+    growth:{
+        label:'Growth',
+        weights:{analyst:10,upside:10,valuation:15,growth:50,dividend:5,stability:10}
+    },
+    value:{
+        label:'Value',
+        weights:{analyst:10,upside:15,valuation:40,growth:20,dividend:10,stability:5}
+    },
+    dividend:{
+        label:'Dividende',
+        weights:{analyst:10,upside:5,valuation:20,growth:15,dividend:40,stability:10}
+    },
+    quality:{
+        label:'Qualität',
+        weights:{analyst:10,upside:5,valuation:20,growth:35,dividend:10,stability:20}
+    },
+    defensive:{
+        label:'Defensiv',
+        weights:{analyst:10,upside:5,valuation:15,growth:10,dividend:20,stability:40}
+    },
+    allround:{
+        label:'Allround',
+        weights:{analyst:15,upside:10,valuation:25,growth:30,dividend:10,stability:10}
+    }
+};
+
+var aaPresetLabels={
+    growth:   'Wachstumsinvestor (Growth)',
+    value:    'Value-Investor',
+    dividend: 'Dividendeninvestor',
+    quality:  'Qualitätsinvestor',
+    defensive:'Defensiver Anleger',
+    allround: 'Ausgewogener Allround-Investor'
+};
+
+function aaPresetTooltip(key){
+    var p=aaPresets[key]; if(!p)return '';
+    var w=p.weights;
+    return aaPresetLabels[key]+'\n'
+        +'Analysten:  '+w.analyst+'%\n'
+        +'Kursziel:   '+w.upside+'%\n'
+        +'Bewertung:  '+w.valuation+'%\n'
+        +'Wachstum:   '+w.growth+'%\n'
+        +'Dividende:  '+w.dividend+'%\n'
+        +'Stabilität: '+w.stability+'%';
+}
+
+function aaRenderPresets(){
+    var container=document.getElementById('aa-preset-btns');
+    if(!container)return;
+    var saved=localStorage.getItem('dagobert-aa-active-preset')||'';
+    container.innerHTML=Object.keys(aaPresets).map(function(key){
+        var p=aaPresets[key];
+        var active=saved===key?' active':'';
+        return '<button class="aa-preset-btn'+active+'" '
+            +'onclick="aaApplyPreset(\''+key+'\',event)" '
+            +'id="aa-preset-'+key+'">'+p.label+'</button>';
+    }).join('');
+}
+
+function aaApplyPreset(key, ev){
+    if(ev)ev.stopPropagation();
+    var p=aaPresets[key]; if(!p)return;
+    // Popup mit Verteilung zeigen
+    var popup=document.getElementById('aa-tip-popup');
+    if(popup&&ev){
+        var txt=aaPresetTooltip(key);
+        if(popup.style.display!=='none'&&popup.dataset.key==='preset-'+key){
+            popup.style.display='none';
+        } else {
+            popup.textContent=txt;
+            popup.dataset.key='preset-'+key;
+            popup.style.display='block';
+            var r=ev.target.getBoundingClientRect();
+            var left=r.left, top=r.bottom+6;
+            if(left+240>window.innerWidth-8)left=window.innerWidth-248;
+            if(top+120>window.innerHeight-8)top=r.top-126;
+            popup.style.left=left+'px';
+            popup.style.top=top+'px';
+        }
+    }
+    // Gewichtung setzen
+    aaSaveWeights(p.weights);
+    try{localStorage.setItem('dagobert-aa-active-preset',key);}catch(e){}
+    // Aktiven Button markieren
+    Object.keys(aaPresets).forEach(function(k){
+        var btn=document.getElementById('aa-preset-'+k);
+        if(btn)btn.className='aa-preset-btn'+(k===key?' active':'');
+    });
+    aaRenderWeights();
+    aaRender();
+}
+
+var aaTooltips={
+    analyst:  'Analystenkonsens: % Kauf-Empfehlungen.<br>Hoch = viele Analysten empfehlen Kauf.',
+    upside:   'Kursziel-Upside: Abstand zum Konsens-<br>Kursziel der Analysten in %.',
+    valuation:'KGV-Bewertung: Kurs-Gewinn-Verhältnis.<br>Niedrig = günstig bewertet.',
+    growth:   'Gewinnwachstum: Forward-EPS-Schätzung Analysten<br>(nächstes Jahr vs. aktuell). Nicht TTM.',
+    dividend: 'Dividendenrendite: Jährliche Ausschüttung<br>im Verhältnis zum Kurs in %.',
+    stability:'Stabilität (Beta): Schwankung vs. Markt.<br>Beta < 1 = stabiler als Markt.'
+};
+
+function aaRenderWeights(){
+    var w=aaGetWeights();
+    var container=document.getElementById('aa-weights');
+    if(!container)return;
+    var rawSum=0;
+    Object.keys(w).forEach(function(k){rawSum+=Number(w[k])||0;});
+    container.innerHTML=Object.keys(aaDefaultWeights).map(function(k){
+        var raw=Number(w[k])||0;
+        return '<div class="aa-weight-item" id="aa-witem-'+k+'">'
+            +'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px;">'
+            +'<div class="aa-weight-label">'+aaLabels[k]+'</div>'
+            +'<button onclick="aaShowTip(event,&apos;'+k+'&apos;)" style="background:none;border:1px solid var(--text-dim);color:var(--text-dim);border-radius:50%;width:15px;height:15px;font-size:9px;font-weight:700;cursor:pointer;font-family:inherit;padding:0;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;">?</button>'
+            +'</div>'
+            +''
+            +'<div class="aa-weight-pct" id="aa-wpct-'+k+'">'+raw+'%</div>'
+            +'<input type="range" class="aa-weight-slider" id="aa-wslider-'+k+'" min="0" max="50" step="5" value="'+raw+'" '
+            +'oninput="aaWeightChanged(\''+k+'\',this.value)">'
+            +'</div>';
+    }).join('');
+    aaUpdateSumDisplay(rawSum);
+    Object.keys(aaDefaultWeights).forEach(function(k){aaApplySliderColor(k,Number(w[k])||0);});
+    aaRenderPresets();
+}
+
+function aaShowTip(ev,key){
+    ev.stopPropagation();
+    var popup=document.getElementById('aa-tip-popup');
+    if(!popup)return;
+    var txt=(aaTooltips[key]||'').replace(/<br>/g,'\n');
+    // toggle wenn gleicher Key nochmal
+    if(popup.style.display!=='none'&&popup.dataset.key===key){
+        popup.style.display='none';return;
+    }
+    popup.textContent=txt;
+    popup.dataset.key=key;
+    popup.style.display='block';
+    // Positionierung: neben dem Button
+    var r=ev.target.getBoundingClientRect();
+    var pw=240,ph=90;
+    var left=r.right+6;
+    var top=r.top-10;
+    if(left+pw>window.innerWidth-8)left=r.left-pw-6;
+    if(top+ph>window.innerHeight-8)top=window.innerHeight-ph-8;
+    if(top<8)top=8;
+    popup.style.left=left+'px';
+    popup.style.top=top+'px';
+}
+// Popup schließen bei Klick außerhalb
+document.addEventListener('click',function(){
+    var p=document.getElementById('aa-tip-popup');
+    if(p)p.style.display='none';
+});
+function aaUpdateSumDisplay(sum){
+    var el=document.getElementById('aa-sum-display');
+    if(!el)return;
+    var ok=sum===100;
+    el.textContent='Summe: '+sum+'%'+(ok?' ✓':' ≠ 100%');
+    el.className=ok?'aa-sum-ok':'aa-sum-warn';
+}
+
+function aaSliderColor(val){
+    val=Number(val)||0;
+    if(val===0)  return{accent:'#6b7280',pct:'var(--text-dim)',border:'var(--border-color)',bg:'transparent'};
+    if(val<=5)   return{accent:'#94a3b8',pct:'#94a3b8',       border:'rgba(148,163,184,0.4)',bg:'rgba(148,163,184,0.06)'};
+    if(val<=10)  return{accent:'#f59e0b',pct:'#b45309',       border:'rgba(245,158,11,0.4)', bg:'rgba(245,158,11,0.06)'};
+    if(val<=15)  return{accent:'#a3e635',pct:'#4d7c0f',       border:'rgba(163,230,53,0.45)',bg:'rgba(163,230,53,0.07)'};
+    if(val<=20)  return{accent:'#4ade80',pct:'#15803d',       border:'rgba(74,222,128,0.45)',bg:'rgba(74,222,128,0.07)'};
+    if(val<=30)  return{accent:'#22c55e',pct:'#15803d',       border:'rgba(34,197,94,0.5)', bg:'rgba(34,197,94,0.08)'};
+    return            {accent:'#16a34a',pct:'#14532d',        border:'rgba(22,163,74,0.55)',bg:'rgba(22,163,74,0.09)'};
+}
+function aaApplySliderColor(key,val){
+    var col=aaSliderColor(val);
+    var slider=document.getElementById('aa-wslider-'+key);
+    if(slider)slider.style.accentColor=col.accent;
+}
+function aaWeightChanged(key, val){
+    var w=aaGetWeights();
+    w[key]=Number(val);
+    aaSaveWeights(w);
+    var rawSum=0;
+    Object.keys(w).forEach(function(k){rawSum+=Number(w[k])||0;});
+    // Zeige rohe Werte (unabhängig voneinander)
+    Object.keys(aaDefaultWeights).forEach(function(k){
+        var el=document.getElementById('aa-wpct-'+k);
+        if(el)el.textContent=(Number(w[k])||0)+'%';
+    });
+    aaUpdateSumDisplay(rawSum);
+    aaApplySliderColor(key,Number(val)||0);
+    // Manuelle Änderung → kein Preset mehr aktiv
+    try{localStorage.removeItem('dagobert-aa-active-preset');}catch(e){}
+    Object.keys(aaPresets||{}).forEach(function(k){
+        var btn=document.getElementById('aa-preset-'+k);
+        if(btn)btn.className='aa-preset-btn';
+    });
+    aaRender();
+}
+
+
+var aaSortKey='total', aaSortAsc=false;
+
+function aaSetSort(key){
+    if(aaSortKey===key){aaSortAsc=!aaSortAsc;}
+    else{aaSortKey=key;aaSortAsc=false;}
+    aaRender();
+}
+
+function aaUpdateSortHeaders(){
+    var keys=['analyst','upside','valuation','growth','dividend','stability','total'];
+    keys.forEach(function(k){
+        var th=document.getElementById('aa-th-'+k);
+        if(!th)return;
+        if(k===aaSortKey){
+            th.classList.add('aa-th-sorted');
+            var inner=th.querySelector('.aa-th-inner');
+            if(inner)inner.textContent=inner.textContent.replace(/ [▴▾]$/,'')+' '+(aaSortAsc?'▴':'▾');
+        } else {
+            th.classList.remove('aa-th-sorted');
+            var inner2=th.querySelector('.aa-th-inner');
+            if(inner2)inner2.textContent=inner2.textContent.replace(/ [▴▾]$/,'');
+        }
+    });
+}
+
+function aaRender(){
+    var stocks=aaGetStocks();
+    var cache=aaGetCache();
+    var w=aaGetWeights();
+    var tbody=document.getElementById('aa-tbody');
+    if(!tbody)return;
+
+    // Score all cached stocks and sort
+    var rows=stocks.map(function(s){
+        var cached=cache[s.isin];
+        var data=cached?cached.data:null;
+        var scores=data?aaCalcScore(data,w):null;
+        var age=cached?((Date.now()-cached.ts)/1000/3600):null;
+        return{s:s, data:data, scores:scores, age:age, ts:cached?cached.ts:null};
+    });
+    rows.sort(function(a,b){
+        var sa=a.scores?(a.scores[aaSortKey]!=null?a.scores[aaSortKey]:( aaSortAsc?Infinity:-Infinity)):( aaSortAsc?Infinity:-Infinity);
+        var sb=b.scores?(b.scores[aaSortKey]!=null?b.scores[aaSortKey]:( aaSortAsc?Infinity:-Infinity)):( aaSortAsc?Infinity:-Infinity);
+        return aaSortAsc?(sa-sb):(sb-sa);
+    });
+    aaUpdateSortHeaders();
+
+    tbody.innerHTML=rows.map(function(row,i){
+        var s=row.s, scores=row.scores, data=row.data;
+        var rank='';
+        var name='<strong style="font-size:13px;">'+s.name+'</strong>'
+            +'<br><span style="font-size:10px;color:var(--text-dim);">'+s.isin+'</span>';
+
+        function cell(key){
+            if(!scores||scores[key]===null||scores[key]===undefined)return'<td><span style="color:var(--text-dim);font-size:12px;">–</span></td>';
+            var sc=scores[key];
+            var display=sc!==null?sc.toFixed(1):'?';
+            // Show actual value in tooltip
+            var vals={analyst:data.analyst_buy_pct,upside:data.price_target_upside,valuation:data.pe_ratio,growth:data.eps_growth_estimate,dividend:data.dividend_yield,stability:data.beta};
+            var raw=vals[key];
+            var title=key==='analyst'?(raw!==null?raw.toFixed(0)+'% Kauf':'')
+                     :key==='upside'?(raw!==null?(raw>=0?'+':'')+raw.toFixed(1)+'%':'')
+                     :key==='valuation'?(raw!=null?(raw<0?'KGV: negativ':'KGV: '+raw.toFixed(1)):'')
+                     :key==='growth'?(raw!==null?(raw>=0?'+':'')+raw.toFixed(1)+'%':'')
+                     :key==='dividend'?(raw!==null?raw.toFixed(2)+'%':'')
+                     :key==='stability'?(raw!==null?'β '+raw.toFixed(2):''):'';
+            return'<td title="'+title+'" style="white-space:nowrap;"><span class="aa-score-pill '+aaColor(sc)+'">'+display+'</span>'
+                +(title?'<br><span style="font-size:9px;color:var(--text-dim);">'+title+'</span>':'')+'</td>';
+        }
+
+        var totalCell='<td style="white-space:nowrap;">';
+        if(scores&&scores.total!==null){
+            var tot=scores.total.toFixed(1);
+            var dc=scores.dataCount||0, dt=scores.dataTot||6;
+            var trust=scores.analystTrust!=null?scores.analystTrust:1;
+            var incomplete=dc<dt;
+            var trustLow=trust<0.5;
+            // Vollständigkeits-Hinweis als kleine Zahl
+            var badge='';
+            // Analysten-Vertrauen als kleines Symbol
+            var trustBadge=trustLow?'<span style="font-size:8px;color:#f59e0b;vertical-align:super;" title="Wenig Analysten">★</span>':'';
+            totalCell+='<span class="aa-total-pill" style="background:'+aaColorHex(scores.total)+';font-size:14px;'+(incomplete?'opacity:0.85;':'')+'">'+tot+'</span>'+badge+trustBadge;
+        } else {
+            totalCell+='<span style="color:var(--text-dim);font-size:12px;">–</span>';
+        }
+        totalCell+='</td>';
+
+        var stale=row.age!==null&&row.age>24*7;
+        var btnContent=data?(stale?'↻':'✓'):'▶';
+        var btnOpacity=data&&!stale?'opacity:0.4;':'';
+        var actionCell='<td style="padding:4px 3px;width:30px;">'
+            +'<button class="aa-row-btn" id="aa-btn-'+s.isin+'" style="'+btnOpacity+'" '
+            +'title="Analysieren" onclick="aaAnalyzeSingle(\''+s.isin+'\',\''+s.name.replace(/\'/g,'').replace(/"/g,'')+'\')">'
+            +btnContent+'</button></td>';
+
+        return'<tr>'+
+            '<td style="padding-left:16px;">'+rank+name+'</td>'+
+            cell('analyst')+cell('upside')+cell('valuation')+cell('growth')+cell('dividend')+cell('stability')+
+            totalCell+actionCell+
+            '</tr>';
+    }).join('');
+
+    var analyzed=rows.filter(function(r){return r.data;}).length;
+    if(analyzed>0){
+        // Status-Text ausgeblendet
+    }
+}
+
+function devSaveScriptUrl(val){
+    // URL bereinigen: doppelte Protokoll-Präfixe entfernen
+    var clean=(val||'').trim();
+    // Alle Protokoll-Präfixe entfernen (https:/https:// etc.), dann neu setzen
+    clean=clean.replace(/^(https?:\/+)+/,'');
+    if(clean&&!clean.startsWith('https://'))clean='https://'+clean;
+    clean=clean.replace(/\s/g,'');
+    try{if(clean)localStorage.setItem('dagobert-aa-script-url',clean);else localStorage.removeItem('dagobert-aa-script-url');}catch(e){}
+    var inp=document.getElementById('dev-script-url');
+    if(inp&&inp.value!==clean)inp.value=clean;
+    var ok=clean&&clean.startsWith('https://script.google.com');
+    var s=document.getElementById('dev-url-status');
+    if(s)s.textContent=ok?'✓ URL gesetzt':(clean?'⚠ Ungültige URL':'');
+    var s2=document.getElementById('aa-url-status');
+    if(s2)s2.textContent=ok?'✓ URL gesetzt':'';
+}
+
+function devLog(msg){
+    var el=document.getElementById('dev-diag-out');
+    if(!el)return;
+    el.style.display='block';
+    el.textContent+=msg+'\n';
+    el.scrollTop=el.scrollHeight;
+}
+function devClearLog(){
+    var el=document.getElementById('dev-diag-out');
+    if(el){el.textContent='';el.style.display='none';}
+}
+async function devTestCsv(){
+    devClearLog();
+    devLog('── Depot-CSV Ladetest ──');
+    // 1. Script-URL prüfen
+    var su='';try{su=localStorage.getItem('dagobert-aa-script-url')||'';}catch(e){}
+    devLog('Script-URL: '+(su?su.substring(0,60)+'...':'nicht gesetzt'));
+    // 2. Direkt SHEET_URL testen
+    devLog('Sheet-URL: '+SHEET_URL.substring(0,60)+'...');
+    devLog('Lade via tryFetch...');
+    try{
+        var t0=Date.now();
+        var txt=await tryFetch(SHEET_URL);
+        var ms=Date.now()-t0;
+        if(txt&&txt.length>50){
+            devLog('✓ Erfolgreich in '+ms+'ms');
+            devLog('Erste 120 Zeichen: '+txt.substring(0,120));
+        } else {
+            devLog('✗ Leer oder zu kurz ('+txt.length+' Zeichen)');
+        }
+    }catch(e){
+        devLog('✗ Fehler: '+e.message);
+    }
+    // 3. Einzelne Proxies testen
+    devLog('\n── Proxy-Test ──');
+    var proxies=[
+        ['Apps Script', su?su+'?data=csv&url='+encodeURIComponent(SHEET_URL)+'&t='+Date.now():null],
+        ['allorigins', 'https://api.allorigins.win/raw?url='+encodeURIComponent(SHEET_URL)],
+        ['corsproxy',  'https://corsproxy.io/?'+encodeURIComponent(SHEET_URL)],
+        ['codetabs',   'https://api.codetabs.com/v1/proxy?quest='+encodeURIComponent(SHEET_URL)]
+    ];
+    for(var i=0;i<proxies.length;i++){
+        var name=proxies[i][0], url=proxies[i][1];
+        if(!url){devLog(name+': nicht konfiguriert');continue;}
+        try{
+            var ctrl=new AbortController();
+            var timer=setTimeout(function(){ctrl.abort();},8000);
+            var t1=Date.now();
+            var r=await fetch(url,{signal:ctrl.signal});
+            clearTimeout(timer);
+            var txt2=await r.text();
+            var ms2=Date.now()-t1;
+            var ok=txt2&&txt2.length>50&&!txt2.trimStart().startsWith('<')&&!txt2.trimStart().startsWith('{');
+            devLog(name+': HTTP '+r.status+' | '+(ok?'✓ CSV':'✗ kein CSV')+' | '+ms2+'ms | '+txt2.length+' Bytes');
+            if(!ok&&txt2.length<200)devLog('  → '+txt2.substring(0,100));
+        }catch(e){
+            devLog(name+': ✗ '+e.message);
+        }
+    }
+}
+async function devTestScript(){
+    devClearLog();
+    devLog('── Apps Script Test ──');
+    var su='';try{su=localStorage.getItem('dagobert-aa-script-url')||'';}catch(e){}
+    if(!su){devLog('✗ Keine Script-URL gesetzt.');return;}
+    devLog('URL: '+su.substring(0,70)+'...');
+    try{
+        var ctrl=new AbortController();
+        setTimeout(function(){ctrl.abort();},10000);
+        var r=await fetch(su+'?test=1',{signal:ctrl.signal});
+        var txt=await r.text();
+        devLog('HTTP: '+r.status);
+        devLog('Antwort: '+txt.substring(0,200));
+    }catch(e){devLog('✗ '+e.message);}
+}
+async function devForceReload(){
+    devClearLog();
+    devLog('Lade Depot-Daten neu...');
+    try{
+        await loadData();
+        devLog('✓ Laden abgeschlossen. Zeilen: '+(allData?allData.length:0));
+        devLog('(render() wurde intern bereits aufgerufen)');
+    }catch(e){
+        devLog('✗ Ladefehler: '+e.message);
+    }
+}
+function devInit(){
+    var saved='';try{saved=localStorage.getItem('dagobert-aa-script-url')||'';}catch(e){}
+    // URL beim Laden ebenfalls bereinigen
+    if(saved){
+        var clean=saved.replace(/^(https?:\/)+/,'https://').replace(/\s/g,'');
+        if(clean!==saved){
+            try{localStorage.setItem('dagobert-aa-script-url',clean);}catch(e){}
+            saved=clean;
+        }
+    }
+    var inp=document.getElementById('dev-script-url');
+    if(inp)inp.value=saved||'';
+    var s=document.getElementById('dev-url-status');
+    var ok=saved&&saved.startsWith('https://script.google.com');
+    if(s)s.textContent=ok?'✓ URL gesetzt':(saved?'⚠ Ungültige URL':'');
+}
+function aaInit(){
+    aaRenderWeights();
+    aaRender();
+
+}
+
+async function aaAnalyzeSingle(isin, name){
+    var btn=document.getElementById('aa-btn-'+isin);
+    if(btn){btn.disabled=true;btn.innerHTML='<span class="aa-btn-spinner"></span>';}
+    var statusEl=document.getElementById('aa-status-text');
+    if(statusEl)statusEl.textContent='Analysiere '+name+'...';
+    try{
+        var data=await aaFetchData(isin, name, '');
+        var cache=aaGetCache();
+        cache[isin]={ts:Date.now(), data:data};
+        aaSaveCache(cache);
+    }catch(e){
+        console.error('AA Error',isin,e);
+        if(btn){btn.disabled=false;btn.innerHTML='↻';btn.title='Fehler – erneut versuchen';}
+        if(statusEl)statusEl.textContent='Fehler bei '+name+'. Bitte erneut versuchen.';
+        return;
+    }
+    aaRender();
+}
+
+async function aaTestConnection(){
+    var url=aaGetScriptUrl();
+    if(!url){aaSetStatus('⚠ Keine Apps Script URL hinterlegt.');return;}
+    var errLog=document.getElementById('aa-error-log');
+    if(errLog){errLog.innerHTML='';errLog.style.display='';}
+    aaSetStatus('Teste Verbindung zu Google Apps Script...');
+    function showResult(ok, msg){
+        aaSetStatus(ok?'✓ '+msg:'⚠ '+msg);
+        if(errLog){
+            var line=document.createElement('div');
+            line.style.color=ok?'#10b981':'#f87171';
+            line.style.marginBottom='3px';
+            line.textContent=msg;
+            errLog.appendChild(line);
+        }
+    }
+    try{
+        var ctrl=new AbortController();
+        var timer=setTimeout(function(){ctrl.abort();},15000);
+        var resp=await fetch(url+'?isins=US0378331005&t='+Date.now(),{signal:ctrl.signal});
+        clearTimeout(timer);
+        var text=await resp.text();
+        var data=null;try{data=JSON.parse(text);}catch(e){}
+        if(resp.ok&&data&&!data.error&&data['US0378331005']){
+            var d=data['US0378331005'];
+            showResult(true,'Verbindung OK – Apple Kurs: $'+(d.price||'?')+', KGV: '+(d.pe||'?'));
+        } else {
+            var msg=data&&data.error?data.error:text?text.substring(0,200):'Keine Daten';
+            showResult(false,'Fehler: '+msg);
+        }
+    }catch(e){
+        showResult(false,'Netzwerkfehler: '+e.message);
+    }
+}
+
+async function aaAnalyzeAll(){
+    if(aaRunning)return;
+    // Schneller Verbindungstest vor Bulk-Analyse
+    var scriptUrl=aaGetScriptUrl();
+    if(!scriptUrl){aaSetStatus('⚠ Keine Apps Script URL hinterlegt. Bitte oben eintragen.');return;}
+    aaRunning=true;
+    var stocks=aaGetStocks();
+    var cache=aaGetCache();
+    var toAnalyze=stocks.filter(function(s){
+        var c=cache[s.isin];
+        return!c||(Date.now()-c.ts)>AA_CACHE_TTL;
+    });
+    if(toAnalyze.length===0){
+        document.getElementById('aa-status-text').textContent='Alle Aktien sind aktuell analysiert.';
+        aaRunning=false;return;
+    }
+    var progBar=document.getElementById('aa-progress');
+    var progFill=document.getElementById('aa-progress-bar');
+    var allBtn=document.getElementById('aa-btn-all');
+    if(progBar)progBar.style.display='';
+    if(progFill)progFill.classList.add('indeterminate');
+    if(allBtn)allBtn.disabled=true;var spn=document.getElementById('aa-spinner');if(spn)spn.style.display='block';
+    var errLog=document.getElementById('aa-error-log');if(errLog){errLog.innerHTML='';errLog.style.display='none';}    // Batch-Aufruf: alle ISINs auf einmal
+    aaSetStatus('Lade Daten für alle '+toAnalyze.length+' Aktien...');
+    // Indeterminate läuft bereits
+    var batchResult={};
+    try{
+        var allIsins=toAnalyze.map(function(s){return s.isin;});
+        var allNames=toAnalyze.map(function(s){return s.name;});
+        batchResult=await aaFetchBatch(allIsins, allNames);
+    }catch(e){
+        aaLogError('Batch-Fehler',e.message||String(e));
+        aaSetStatus('⚠ Batch-Fehler: '+e.message);
+        if(progFill)progFill.classList.remove('indeterminate');
+        if(progBar)progBar.style.display='none';
+        if(allBtn)allBtn.disabled=false;var spn2=document.getElementById('aa-spinner');if(spn2)spn2.style.display='none';
+        aaRunning=false;return;
+    }
+    // Indeterminate läuft weiter
+    // Ergebnisse verarbeiten
+    var cache2=aaGetCache();
+    for(var i=0;i<toAnalyze.length;i++){
+        var s=toAnalyze[i];
+        var raw=batchResult[s.isin];
+        if(!raw||raw.error){
+            aaLogError(s.name,raw&&raw.error?raw.error:'Keine Daten');
+            continue;
+        }
+        try{
+            var data=await aaFetchData(s.isin, s.name, '', raw);
+            cache2[s.isin]={ts:Date.now(), data:data};
+        }catch(e){
+            aaLogError(s.name,e.message||String(e));
+        }
+    }
+    aaSaveCache(cache2);
+    if(progFill)progFill.classList.remove('indeterminate');
+    if(progFill)progFill.style.width='100%';
+    setTimeout(function(){if(progBar)progBar.style.display='none';if(progFill)progFill.style.width='0%';},800);
+    if(allBtn)allBtn.disabled=false;var spn3=document.getElementById('aa-spinner');if(spn3)spn3.style.display='none';
+    var statusEl2=document.getElementById('aa-status-text');
+    if(statusEl2)statusEl2.textContent=(function(){var done=Object.keys(aaGetCache()).length;return'Analyse abgeschlossen. '+done+'/'+aaGetStocks().length+' Aktien erfolgreich analysiert.';})();;
+    aaRunning=false;
+    aaRender();
+}
+
+// ── Google Apps Script – Screener (GOOGLEFINANCE) ──────────────────────────
+
+var AA_SCRIPT_URL_KEY = 'dagobert-aa-script-url';
+
+function aaGetScriptUrl(){try{return localStorage.getItem(AA_SCRIPT_URL_KEY)||'';}catch(e){return '';}}
+function aaSaveScriptUrl(v){
+    try{if(v)localStorage.setItem(AA_SCRIPT_URL_KEY,v.trim());else localStorage.removeItem(AA_SCRIPT_URL_KEY);}catch(e){}
+    var s=document.getElementById('aa-url-status');
+    if(s)s.textContent=v&&v.includes('script.google.com')?'✓ URL gesetzt':'';
+}
+
+function aaSetStatus(txt){
+    var el=document.getElementById('aa-status-text');
+    if(el)el.textContent=txt;
+}
+
+// Alle ISINs in einem Request laden
+async function aaFetchBatch(isins, names){
+    var url=aaGetScriptUrl();
+    if(!url)throw new Error('Keine Apps Script URL hinterlegt.');
+    var ctrl=new AbortController();
+    var timer=setTimeout(function(){ctrl.abort();},90000); // 90s für Batch
+    try{
+        var namesParam=names&&names.length?'&names='+names.map(function(n){return encodeURIComponent(n||'');}).join(','):'';
+        var resp=await fetch(url+'?isins='+encodeURIComponent(isins.join(','))+namesParam+'&t='+Date.now(),
+            {signal:ctrl.signal});
+        clearTimeout(timer);
+        if(!resp.ok)throw new Error('HTTP '+resp.status);
+        var json=await resp.json();
+        if(json.error)throw new Error(json.error);
+        return json;
+    }catch(e){clearTimeout(timer);throw e;}
+}
+
+async function aaFetchData(isin, name, pfx, rawData){
+    var d=rawData||null;
+    if(!d){
+        aaSetStatus((pfx||'')+'Lade Daten für '+name+'...');
+        var result=await aaFetchBatch([isin],[name]);
+        d=result[isin];
+    }
+    if(!d||d.error)throw new Error(d&&d.error?d.error:'Keine Daten für '+name);
+
+    var price=parseFloat(d.price)||null;
+    var hi52=parseFloat(d.high52)||null;
+    var lo52=parseFloat(d.low52)||null;
+
+    // Analysten: echte Daten wenn vorhanden, sonst 52W-Proxy
+    var buyPct=d.analystBuyPct!=null?parseFloat(d.analystBuyPct):
+               (price&&hi52&&lo52&&hi52>lo52)?Math.round((price-lo52)/(hi52-lo52)*100):null;
+    var analystCount=d.analystCount||null;
+
+    // Kursziel: echte Daten wenn vorhanden, sonst Upside zum 52W-Hoch
+    var upside=d.upside!=null?parseFloat(d.upside):
+               (price&&hi52&&price>0)?Math.round((hi52-price)/price*1000)/10:null;
+
+    // KGV
+    var pe=parseFloat(d.pe)||null;
+    var peScore=null;
+    if(pe&&pe>0)peScore=pe<13?-1:pe<22?0:1;
+
+    // Wachstum: EPS-Wachstum aus Yahoo
+    var epsGrowth=d.returnYTD!=null?parseFloat(d.returnYTD):null;
+
+    // Dividende
+    var divYield=parseFloat(d.dividendYield)||0;
+
+    var beta=d.beta!=null?parseFloat(d.beta):null;
+    var consensus=d.analystConsensus||
+        (buyPct!=null?(buyPct>=70?'Strong Buy':buyPct>=55?'Buy':buyPct>=40?'Hold':'Sell'):null);
+    var now=new Date();
+    return{
+        analyst_buy_pct:buyPct, analyst_consensus:consensus, analyst_count:analystCount,
+        price_target_upside:upside, pe_vs_sector:peScore, pe_ratio:pe,
+        eps_growth_estimate:epsGrowth, dividend_yield:divYield, beta:beta,
+        ticker:d.ticker||isin,
+        data_date:String(now.getMonth()+1).padStart(2,'0')+'/'+now.getFullYear()
+    };
+}
+
 
 // ── Dividendenkalender ─────────────────────────────────────────────
 // ── Steuerabzug-States (persistiert im localStorage) ────────────────────
@@ -1067,6 +2001,8 @@ function pwLogout(){
 }
 
 (function initAuth(){
+    // Stale proxy cache bereinigen
+    try{localStorage.removeItem('dagobert-best-proxy');}catch(e){}
     var authed=false;
     try{authed=sessionStorage.getItem(PW_SESSION_KEY)==='1';}catch(e){}
     if(!authed){
@@ -1341,6 +2277,7 @@ var SHEET_URL_HIST_DEV  = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSKa-
 var PROXIES = [
     'https://api.allorigins.win/raw?url=',
     'https://api.codetabs.com/v1/proxy?quest=',
+    'https://api.cors.lol/?url=',
     'https://corsproxy.io/?'
 ];
 var countryToFlag = {'DE':'🇩🇪','US':'🇺🇸','GB':'🇬🇧','FR':'🇫🇷','NL':'🇳🇱','IE':'🇮🇪','LU':'🇱🇺','CH':'🇨🇭','JP':'🇯🇵','CN':'🇨🇳','KR':'🇰🇷','IN':'🇮🇳','BR':'🇧🇷','CA':'🇨🇦','AU':'🇦🇺','SG':'🇸🇬','HK':'🇭🇰','SE':'🇸🇪','NO':'🇳🇴','DK':'🇩🇰','FI':'🇫🇮','AT':'🇦Ť','BE':'🇧🇪','ES':'🇪🇸','IT':'🇮🇹','PT':'🇵🇹','GR':'🇬🇷','PL':'🇵🇱','CZ':'🇨🇿','HU':'🇭🇺','TW':'🇹🇼','MX':'🇲🇽','ZA':'🇿🇦','SA':'🇸🇦','AE':'🇦ZW','IL':'🇮🇱'};
@@ -1644,17 +2581,17 @@ function toggleMenu() {
 
 // ── Seitenwechsel: blendet Sektionen um, aktualisiert Titel und Filter ───
 function showPage(pageId,index,closeMenu) {
-    ['portfolio','analyse','dividenden','div-entwicklung','ziele','dashboard','divkal','changelog','about'].forEach(function(p){document.getElementById('page-'+p).classList.remove('page-active');});
+    ['portfolio','analyse','dividenden','div-entwicklung','ziele','aktienanalyse','dashboard','divkal','changelog','about','entwickler'].forEach(function(p){document.getElementById('page-'+p).classList.remove('page-active');});
     document.getElementById('page-'+pageId).classList.add('page-active');
     // Hide total box on changelog
     var totalBox=document.getElementById('total');
-    if(totalBox)totalBox.style.display=(pageId==='changelog'||pageId==='about'||pageId==='dashboard'||pageId==='divkal')?'none':'';
+    if(totalBox)totalBox.style.display=(pageId==='changelog'||pageId==='about'||pageId==='dashboard'||pageId==='divkal'||pageId==='aktienanalyse'||pageId==='entwickler')?'none':'';
     var trEl=document.getElementById('total-right');if(trEl&&pageId!=='portfolio')trEl.style.display='none';
     document.getElementById('filter-container').style.display='none';
     var pt=document.getElementById('page-title');
     if(pt){
         pt.textContent='';
-        var pageTitles={'portfolio':'Portfolio','analyse':'Depotanalyse','dividenden':'Dividenden','div-entwicklung':'Dividendenentwicklung','ziele':'Ziele & Prognosen','changelog':'Changelog','about':'About','dashboard':'Dashboard','divkal':'Dividendenkalender'};
+        var pageTitles={'portfolio':'Portfolio','analyse':'Depotanalyse','dividenden':'Dividenden','div-entwicklung':'Dividendenentwicklung','ziele':'Ziele & Prognosen','aktienanalyse':'Aktienanalyse','changelog':'Changelog','about':'About','entwickler':'Entwickler','dashboard':'Dashboard','divkal':'Dividendenkalender'};
         var titleText=pageTitles[pageId]||'';
         var showFilter=filterPages.indexOf(pageId)>-1||pageId==='analyse';
         var filterBtnHtml=showFilter?'<button onclick="toggleFilterDropdown(event)" style="position:absolute;left:0;background:rgba(99,102,241,0.15);border:1px solid rgba(99,102,241,0.35);color:#a5b4fc;width:28px;height:28px;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;padding:0;">'+funnelSVG+'</button>':'';
@@ -1683,9 +2620,15 @@ function showPage(pageId,index,closeMenu) {
     }
     var items=document.querySelectorAll('.menu-item');
     items.forEach(function(it){it.classList.remove('active');});
-    if(index>=0&&items[index]){
-        items[index].classList.add('active');
-        document.getElementById('sidebar-indicator').style.transform='translateY('+(index*52)+'px)';
+    var activeBtn=document.querySelector('.menu-item[data-page="'+pageId+'"]');
+    if(activeBtn){
+        activeBtn.classList.add('active');
+        var ind=document.getElementById('sidebar-indicator');
+        if(ind){
+            // offsetTop ist relativ zum offsetParent (sidebar-nav-container),
+            // exakt identisch mit dem Rendering der Flexbox inkl. gap und padding
+            ind.style.transform='translateY('+activeBtn.offsetTop+'px)';
+        }
     }
     if(closeMenu!==false)toggleMenu();
     // Load changelog on first visit
@@ -1712,6 +2655,8 @@ function showPage(pageId,index,closeMenu) {
 
     if(pageId==='dashboard'){renderDashboard();return;}
     if(pageId==='divkal'){loadFxRates().then(function(){renderDivKal();});return;}
+    if(pageId==='aktienanalyse'){aaInit();return;}
+    if(pageId==='entwickler'){devInit();return;}
     var af=document.querySelector('#filter-inner .filter-btn.active');if(af)moveIndicator(af);
     render();
     var as=document.querySelector('#page-'+pageId+' .sort-bar-container .filter-btn.active');if(as)moveSortIndicator(as);
@@ -1746,37 +2691,46 @@ async function handleRefresh() {
 }
 
 // ── Proxy-Verwaltung (merkt sich den schnellsten Proxy) ─────────────────
-var _bestProxy=null;
-try{_bestProxy=localStorage.getItem('dagobert-best-proxy');}catch(e){}
 // ── HTTP-Abruf über CORS-Proxy mit Timeout, Retry und Proxy-Gedächtnis ──
 async function tryFetch(url) {
-    // Put best proxy first
-    var proxies=PROXIES.slice();
-    if(_bestProxy&&proxies.indexOf(_bestProxy)>0){
-        proxies.splice(proxies.indexOf(_bestProxy),1);
-        proxies.unshift(_bestProxy);
+    // ── Primär: Apps Script (zuverlässig, kein CORS, kein Proxy nötig) ──
+    var scriptUrl='';
+    try{scriptUrl=localStorage.getItem('dagobert-aa-script-url')||'';}catch(e){}
+    if(scriptUrl){
+        try{
+            var ctrl0=new AbortController();
+            var t0=setTimeout(function(){ctrl0.abort();},15000);
+            var r0=await fetch(scriptUrl+'?data=csv&url='+encodeURIComponent(url)+'&t='+Date.now(),{signal:ctrl0.signal});
+            clearTimeout(t0);
+            if(r0.ok){
+                var txt0=await r0.text();
+                var t0s=txt0.trimStart();if(txt0&&txt0.length>50&&!t0s.startsWith('<')&&!t0s.startsWith('{')&&txt0.indexOf(',')>=0)return txt0;
+            }
+        }catch(e0){console.warn('Script-Proxy fehlgeschlagen:',e0.message);}
     }
+    // ── Fallback: CORS-Proxies ────────────────────────────────────────────
+    var proxies=PROXIES.slice();
     for(var attempt=0;attempt<2;attempt++){
         try{
             var result=await Promise.any(proxies.map(async function(proxy){
                 var ctrl=new AbortController();
-                var timer=setTimeout(function(){ctrl.abort();},5000);
+                var timer=setTimeout(function(){ctrl.abort();},6000);
                 try{
                     var res=await fetch(proxy+encodeURIComponent(url),{signal:ctrl.signal});
                     clearTimeout(timer);
                     if(!res.ok)throw new Error('bad');
                     var txt=await res.text();
                     if(!txt||txt.length<50)throw new Error('short');
-                    if(txt.trimStart().startsWith('<'))throw new Error('html');
+                    var ts=txt.trimStart();
+                    if(ts.startsWith('<'))throw new Error('html');
+                    if(ts.startsWith('{'))throw new Error('json');
                     if(txt.indexOf(',')<0)throw new Error('nocsv');
-                    // Remember this proxy as the best one
-                    if(_bestProxy!==proxy){_bestProxy=proxy;try{localStorage.setItem('dagobert-best-proxy',proxy);}catch(e){}}
                     return txt;
                 }catch(e){clearTimeout(timer);throw e;}
             }));
             return result;
         }catch(e){
-            if(attempt===0)await new Promise(function(r){setTimeout(r,200);});
+            if(attempt===0)await new Promise(function(r){setTimeout(r,300);});
         }
     }
     return '';
@@ -1861,7 +2815,15 @@ async function loadData() {
     var csv=results[0],csvDev=results[1];
     if(!csv){
         document.getElementById('status-dot').className='pulse-dot stale';
-        document.getElementById('update-time').innerText='Laden fehlgeschlagen – bitte Refresh';
+        document.getElementById('update-time').innerText='Laden fehlgeschlagen';
+        var ut2=document.getElementById('update-time');
+        if(ut2&&!ut2.querySelector('button')){
+            var rb=document.createElement('button');
+            rb.textContent='↺ Neu laden';
+            rb.style.cssText='margin-left:8px;background:none;border:1px solid #f59e0b;color:#f59e0b;border-radius:8px;padding:2px 8px;cursor:pointer;font-size:11px;font-family:inherit;';
+            rb.onclick=function(){location.reload();};
+            ut2.appendChild(rb);
+        }
         var le=document.getElementById('load-error');if(le)le.style.display='flex';
         return;
     }
@@ -1920,7 +2882,7 @@ async function loadData() {
     updateFilters(depots);
     var asb=document.querySelectorAll('.sort-bar-container .filter-btn.active');
     asb.forEach(function(b){b.innerText=b.innerText.split(' ')[0]+(sortAsc?' ▴':' ▾');});
-    try{render();}catch(e){console.error('render error:',e);}
+    try{render();}catch(e){console.error('render error:',e.message, e.stack);}
     checkDataFreshness();
     setTimeout(function(){asb.forEach(function(b){moveSortIndicator(b);});},100);
 }
@@ -2369,7 +3331,10 @@ function buildDepotMilestones(slot) {
             var gv=iGv>=0?parseMenge(r[iGv]):0;
             milestones.forEach(function(ms){
                 var label=r[0].trim();
-                if(label.length>=7&&label.indexOf('.')>-1){var parts=label.split('.');if(parts.length>=3)label=parts[1]+'/'+parts[2];}
+                var lparts=label.split('.');
+                if(lparts.length>=3)label=lparts[1]+'/'+lparts[2];
+                else if(lparts.length===2)label=lparts[0]+'/'+lparts[1];
+                else label=label.replace('.','/');
                 if(!einReached[ms]&&ein>=ms)einReached[ms]=label;
                 if(!depReached[ms]&&dep>=ms)depReached[ms]=label;
                 if(!gvReached[ms]&&gv>=ms)gvReached[ms]=label;
@@ -3101,7 +4066,7 @@ function render() {
     var isDivPage    =document.getElementById('page-dividenden').classList.contains('page-active');
     var isDevPage    =document.getElementById('page-div-entwicklung').classList.contains('page-active');
     var isZielePage   =document.getElementById('page-ziele').classList.contains('page-active');
-    document.getElementById('total').style.display=(isZielePage||isDashboardPage||document.getElementById('page-divkal').classList.contains('page-active')||document.getElementById('page-about').classList.contains('page-active')||document.getElementById('page-changelog').classList.contains('page-active'))?'none':'';
+    document.getElementById('total').style.display=(isZielePage||isDashboardPage||document.getElementById('page-divkal').classList.contains('page-active')||document.getElementById('page-about').classList.contains('page-active')||document.getElementById('page-changelog').classList.contains('page-active')||document.getElementById('page-aktienanalyse').classList.contains('page-active')||document.getElementById('page-entwickler').classList.contains('page-active'))?'none':'';
     var uc=document.getElementById('last-update-container'),mc=document.getElementById('main-change'),ei=document.getElementById('total-einstand');
 
     if(isDivPage){
@@ -3805,7 +4770,8 @@ function renderAnalyse(aktien,etfs,gesamt,countries,einstand,divByYear,sumDivGes
                 var parts=dateStr.split('.');
                 var yr=-1;
                 if(parts.length>=3)yr=parseInt(parts[2]);
-                else if(dateStr.length===7&&dateStr.indexOf('/')>-1)yr=parseInt(dateStr.split('/')[1]);
+                else if(parts.length===2)yr=parseInt(parts[1]);
+                else if(dateStr.indexOf('/')>-1)yr=parseInt(dateStr.split('/').pop());
                 if(yr>=2017&&yr<=2025){
                     var dv=parseMenge(hr[iDep]);
                     if(dv>0)yearEndVals[yr]=dv;
@@ -4037,8 +5003,6 @@ try{var sgr=localStorage.getItem('dagobert-growthrate');if(sgr)customGrowthRate=
     }catch(e){
         console.error('loadData error:',e);
         dot.className='pulse-dot stale';
-        var ut=document.getElementById('update-time');
-        if(ut)ut.innerText='Laden fehlgeschlagen – bitte Refresh';
     }
     checkDataFreshness();
 })();
