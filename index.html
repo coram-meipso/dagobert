@@ -382,12 +382,12 @@
 
         /* ── Gesamtwert-Box ────────────────────────────────────────────────── */
         #total-box{background:var(--card-bg);border:1px solid var(--border-color);border-radius:24px;padding:24px 24px;margin-bottom:20px;box-shadow:0 2px 16px rgba(0,0,0,0.3),0 1px 0 rgba(255,255,255,0.03) inset;}
-        #total-midrow{margin-bottom:10px;display:flex;justify-content:center;align-items:center;}
+        #total-midrow{margin-bottom:10px;display:flex;justify-content:center;align-items:flex-start;}
 
         /* ── Theme-Toggle & Refresh ────────────────────────────────────────── */
         .light-btn{background:var(--card-bg);border:1px solid var(--border-color);border-radius:12px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s;color:var(--text-dim);font-size:16px;}
         .light-btn:active{transform:scale(0.92);}
-        #refresh-btn{background:var(--card-bg);border:1px solid var(--border-color);border-radius:12px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s;color:var(--text-dim);font-size:16px;}
+        #refresh-btn{background:var(--card-bg);border:1px solid var(--border-color);border-radius:14px;width:44px;height:44px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s;color:var(--text-dim);font-size:16px;}
         #refresh-btn.spinning svg{animation:spin 0.8s linear infinite;}
         @keyframes spin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
 </style>
@@ -527,14 +527,14 @@
     <div id="total" class="total-box">
         <div id="total-label" class="total-label">Gesamtwert</div>
         <div id="main-value" class="total-value teal-metallic">0,00 €</div>
-        <div id="total-midrow" style="margin-bottom:10px;display:flex;justify-content:center;align-items:center;">
+        <div id="total-midrow" style="margin-bottom:10px;display:flex;justify-content:center;align-items:flex-start;">
             <div id="total-left" style="text-align:right;padding-right:14px;">
                 <div id="total-einstand" style="font-size:13px;color:var(--text-dim);margin-bottom:3px;"></div>
                 <div id="main-change" class="total-change" style="font-size:14px;"></div>
             </div>
             <div id="total-right" style="display:none;text-align:left;padding-left:14px;border-left:1px solid var(--border-color);">
-                <div id="daily-change-label" style="font-size:13px;color:var(--text-dim);">vs. Vortag</div>
-                <div id="daily-change" style="font-size:13px;"></div>
+                <div id="daily-change-label" style="font-size:13px;color:var(--text-dim);margin-bottom:3px;">vs. Vortag</div>
+                <div id="daily-change" style="font-size:14px;margin-top:2px;"></div>
             </div>
         </div>
         <div id="total-ath" style="display:none;font-size:12px;color:var(--text-dim);margin-top:6px;padding-top:6px;border-top:1px solid var(--border-color);"></div>
@@ -680,28 +680,80 @@
     </section>
 
     <section id="page-about">
-        <div id="about-content" style="padding-bottom:24px;">
-            <div class="analyse-card" style="line-height:1.7;font-size:14px;color:var(--text-main);">
-                Das Projekt &bdquo;Dagobert-App&ldquo; entstand im April 2026. Der Code wird hauptsächlich realisiert mithilfe von <strong>Anthropic Claude</strong>, die Daten werden mittels CSV-Dateien geliefert, die in <strong>Google Sheets</strong> erstellt wurden, und die App enthält Links zur Seite <a href="https://divvydiary.com" target="_blank" style="color:#5eead4;text-decoration:none;">divvydiary.com</a>.
-                <div style="display:flex;align-items:center;justify-content:center;gap:24px;margin-top:24px;">
-                    <img src="https://www.google.com/favicon.ico" style="width:40px;height:40px;object-fit:contain;" alt="Google">
-                    <img src="https://wpforms.com/wp-content/uploads/2024/08/claude-logo.png" style="width:40px;height:40px;object-fit:contain;" alt="Claude">
-                    <img src="https://divvydiary.com/logo.svg" style="width:40px;height:40px;object-fit:contain;" alt="Divvydiary">
+
+        <!-- Karte 1: Das Projekt -->
+        <div class="analyse-card" style="margin-bottom:14px;">
+            <div style="font-size:11px;font-weight:700;color:#2dd4bf;text-transform:uppercase;letter-spacing:2px;margin-bottom:16px;">Das Projekt</div>
+            <p style="font-size:14px;color:var(--text-dim);line-height:1.75;margin:0 0 20px;">Das Projekt <strong style="color:var(--text-main);">Dagobert-App</strong> entstand im April 2026. Der Code wird mithilfe von <strong style="color:var(--text-main);">Anthropic Claude</strong> realisiert, die Daten kommen aus <strong style="color:var(--text-main);">Google Sheets</strong> als CSV-Dateien, und die App enthält Links zu <a href="https://divvydiary.com" target="_blank" style="color:#5eead4;text-decoration:none;">divvydiary.com</a>.</p>
+
+            <!-- Tool-Reihe -->
+            <div style="display:flex;gap:10px;flex-direction:column;">
+                <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:rgba(255,255,255,0.04);border-radius:12px;border:1px solid var(--border-color);">
+                    <img src="https://www.google.com/favicon.ico" style="width:28px;height:28px;object-fit:contain;flex-shrink:0;" alt="Google">
+                    <div>
+                        <div style="font-size:13px;font-weight:600;color:var(--text-main);">Google Sheets</div>
+                        <div style="font-size:11px;color:var(--text-dim);">Datenquelle · CSV-Export</div>
+                    </div>
                 </div>
-                <p style="margin-top:20px;line-height:1.7;">GitHub dient als Code Repository und das Hosten der App erfolgt über <strong>Vercel</strong>.</p>
-                <div style="display:flex;align-items:center;justify-content:center;gap:24px;margin-top:16px;">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" style="width:40px;height:40px;object-fit:contain;filter:invert(1);" alt="GitHub">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Vercel_logo_black.svg/960px-Vercel_logo_black.svg.png" style="width:80px;height:40px;object-fit:contain;filter:invert(1);" alt="Vercel">
+                <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:rgba(255,255,255,0.04);border-radius:12px;border:1px solid var(--border-color);">
+                    <img src="https://wpforms.com/wp-content/uploads/2024/08/claude-logo.png" style="width:28px;height:28px;object-fit:contain;flex-shrink:0;border-radius:6px;" alt="Claude">
+                    <div>
+                        <div style="font-size:13px;font-weight:600;color:var(--text-main);">Anthropic Claude</div>
+                        <div style="font-size:11px;color:var(--text-dim);">KI-Entwicklungsassistent</div>
+                    </div>
+                </div>
+                <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:rgba(255,255,255,0.04);border-radius:12px;border:1px solid var(--border-color);">
+                    <img src="https://divvydiary.com/logo.svg" style="width:28px;height:28px;object-fit:contain;flex-shrink:0;" alt="Divvydiary" onerror="this.style.display='none'">
+                    <div>
+                        <div style="font-size:13px;font-weight:600;color:var(--text-main);">divvydiary.com</div>
+                        <div style="font-size:11px;color:var(--text-dim);">Dividenden-Tracking · Verlinkung</div>
+                    </div>
+                </div>
+                <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:rgba(255,255,255,0.04);border-radius:12px;border:1px solid var(--border-color);">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" style="width:28px;height:28px;object-fit:contain;flex-shrink:0;filter:invert(0.7);" alt="GitHub">
+                    <div>
+                        <div style="font-size:13px;font-weight:600;color:var(--text-main);">GitHub + Vercel</div>
+                        <div style="font-size:11px;color:var(--text-dim);">Code-Repository · Hosting</div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="analyse-card" style="line-height:1.7;font-size:13px;color:var(--text-dim);margin-top:0;">
-            <div style="font-size:12px;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;margin-bottom:14px;">Wie funktioniert Dagobert?</div>
-            <p style="margin:0 0 10px;">Dagobert ist eine <strong style="color:var(--text-main);">einzelne HTML-Datei</strong>, die vollständig im Browser läuft – kein Server, keine Installation, keine Cloud. Alle Einstellungen und Analysen werden lokal im Browser gespeichert.</p>
-            <p style="margin:0 0 10px;"><strong style="color:var(--text-main);">Depot-Daten</strong> kommen aus Google Sheets, die du selbst pflegst. Die App liest diese beim Start als CSV-Dateien über ein Google Apps Script, das als Mittler fungiert und das CORS-Problem umgeht.</p>
-            <p style="margin:0 0 10px;"><strong style="color:var(--text-main);">Aktienanalyse:</strong> Das Apps Script holt Finanzdaten (KGV, Kursziel, Analysten-Konsens, Beta, Dividende, Forward-EPS) von Yahoo Finance. Die Ergebnisse werden 7 Tage lokal gecacht.</p>
-            <p style="margin:0 0 0;"><strong style="color:var(--text-main);">Scoring:</strong> Jede Aktie erhält für jedes Kriterium einen Teilscore von 1–5 (lineare Interpolation). Die Teilscores werden nach deiner Gewichtung zusammengerechnet.</p>
+
+        <!-- Karte 2: Wie funktioniert Dagobert? -->
+        <div class="analyse-card">
+            <div style="font-size:11px;font-weight:700;color:#2dd4bf;text-transform:uppercase;letter-spacing:2px;margin-bottom:16px;">Wie funktioniert Dagobert?</div>
+            <div style="display:flex;flex-direction:column;gap:12px;">
+                <div style="display:flex;gap:12px;align-items:flex-start;">
+                    <div style="width:32px;height:32px;border-radius:10px;background:rgba(13,148,136,0.15);border:1px solid rgba(13,148,136,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:15px;">📄</div>
+                    <div>
+                        <div style="font-size:13px;font-weight:600;color:var(--text-main);margin-bottom:3px;">Einzelne HTML-Datei</div>
+                        <div style="font-size:13px;color:var(--text-dim);line-height:1.65;">Läuft vollständig im Browser – kein Server, keine Installation, keine Cloud. Einstellungen werden lokal gespeichert.</div>
+                    </div>
+                </div>
+                <div style="display:flex;gap:12px;align-items:flex-start;">
+                    <div style="width:32px;height:32px;border-radius:10px;background:rgba(13,148,136,0.15);border:1px solid rgba(13,148,136,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:15px;">📊</div>
+                    <div>
+                        <div style="font-size:13px;font-weight:600;color:var(--text-main);margin-bottom:3px;">Depot-Daten</div>
+                        <div style="font-size:13px;color:var(--text-dim);line-height:1.65;">Kommen aus Google Sheets. Die App liest CSV-Dateien über ein Google Apps Script, das als Mittler das CORS-Problem umgeht.</div>
+                    </div>
+                </div>
+                <div style="display:flex;gap:12px;align-items:flex-start;">
+                    <div style="width:32px;height:32px;border-radius:10px;background:rgba(13,148,136,0.15);border:1px solid rgba(13,148,136,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:15px;">📈</div>
+                    <div>
+                        <div style="font-size:13px;font-weight:600;color:var(--text-main);margin-bottom:3px;">Aktienanalyse</div>
+                        <div style="font-size:13px;color:var(--text-dim);line-height:1.65;">Das Apps Script holt KGV, Kursziel, Analysten-Konsens, Beta, Dividende und Forward-EPS von Yahoo Finance. Ergebnisse werden 7 Tage gecacht.</div>
+                    </div>
+                </div>
+                <div style="display:flex;gap:12px;align-items:flex-start;">
+                    <div style="width:32px;height:32px;border-radius:10px;background:rgba(13,148,136,0.15);border:1px solid rgba(13,148,136,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:15px;">⭐</div>
+                    <div>
+                        <div style="font-size:13px;font-weight:600;color:var(--text-main);margin-bottom:3px;">Scoring</div>
+                        <div style="font-size:13px;color:var(--text-dim);line-height:1.65;">Jede Aktie erhält pro Kriterium einen Teilscore 1–5 (lineare Interpolation), gewichtet nach eigener Einstellung.</div>
+                    </div>
+                </div>
+            </div>
         </div>
+
     </section>
     <section id="page-entwickler">
 
@@ -2368,6 +2420,13 @@ async function loginBiometric(){
             if(lastUser&&VALID_USERS.indexOf(lastUser)>=0){try{sessionStorage.setItem(USER_SESSION_KEY,lastUser);}catch(e){}selectedUser=lastUser;}
             document.getElementById('pw-screen').style.display='none';
             updateBioBtn();
+            // Daten nach Biometrie-Login laden
+            (async function(){
+                var dot=document.getElementById('status-dot');
+                if(dot)dot.className='pulse-dot loading';
+                try{await Promise.all([loadData(), loadFxRates()]);}catch(e){console.error(e);}
+                checkDataFreshness();
+            })();
         }
     }catch(e){console.log('Bio login error:',e.message);}
 }
@@ -2598,6 +2657,18 @@ async function checkPw(){
         try{localStorage.setItem('dagobert-last-user',selectedUser);}catch(e){}
         document.getElementById('pw-screen').style.display='none';
         newCaptcha();
+        // Daten nach Login laden
+        (async function(){
+            var dot=document.getElementById('status-dot');
+            if(dot)dot.className='pulse-dot loading';
+            try{
+                await Promise.all([loadData(), loadFxRates()]);
+            }catch(e){
+                console.error('Post-login load error:',e);
+                if(dot)dot.className='pulse-dot stale';
+            }
+            checkDataFreshness();
+        })();
         var hasCred=false;try{hasCred=!!localStorage.getItem(BIO_CRED_KEY);}catch(e){}
         if(bioSupported()&&!hasCred){
             setTimeout(function(){
@@ -3124,7 +3195,7 @@ async function tryFetch(url) {
     if(scriptUrl){
         try{
             var ctrl0=new AbortController();
-            var t0=setTimeout(function(){ctrl0.abort();},15000);
+            var t0=setTimeout(function(){ctrl0.abort();},20000);
             var r0=await fetch(scriptUrl+'?data=csv&url='+encodeURIComponent(url)+'&t='+Date.now(),{signal:ctrl0.signal});
             clearTimeout(t0);
             if(r0.ok){
@@ -3133,13 +3204,26 @@ async function tryFetch(url) {
             }
         }catch(e0){console.warn('Script-Proxy fehlgeschlagen:',e0.message);}
     }
+    // ── Direktfetch (ohne Proxy) ─────────────────────────────────────────
+    try{
+        var ctrlD=new AbortController();
+        var tD=setTimeout(function(){ctrlD.abort();},8000);
+        var rD=await fetch(url,{signal:ctrlD.signal,mode:'cors'});
+        clearTimeout(tD);
+        if(rD.ok){
+            var txtD=await rD.text();
+            var tsD=txtD.trimStart();
+            if(txtD&&txtD.length>50&&!tsD.startsWith('<')&&!tsD.startsWith('{')&&txtD.indexOf(',')>=0)
+                return txtD;
+        }
+    }catch(eD){}
     // ── Fallback: CORS-Proxies ────────────────────────────────────────────
     var proxies=(typeof PROXIES!=='undefined'?PROXIES:['https://api.allorigins.win/raw?url=','https://api.codetabs.com/v1/proxy?quest=']).slice();
-    for(var attempt=0;attempt<2;attempt++){
+    for(var attempt=0;attempt<3;attempt++){
         try{
             var result=await Promise.any(proxies.map(async function(proxy){
                 var ctrl=new AbortController();
-                var timer=setTimeout(function(){ctrl.abort();},6000);
+                var timer=setTimeout(function(){ctrl.abort();},12000);
                 try{
                     var res=await fetch(proxy+encodeURIComponent(url),{signal:ctrl.signal});
                     clearTimeout(timer);
@@ -3250,7 +3334,7 @@ async function loadData() {
             var rb=document.createElement('button');
             rb.textContent='↺ Neu laden';
             rb.style.cssText='margin-left:8px;background:none;border:1px solid #f59e0b;color:#f59e0b;border-radius:8px;padding:2px 8px;cursor:pointer;font-size:11px;font-family:inherit;';
-            rb.onclick=function(){location.reload();};
+            rb.onclick=function(){handleRefresh();};
             ut2.appendChild(rb);
         }
         var le=document.getElementById('load-error');if(le)le.style.display='flex';
@@ -3957,7 +4041,7 @@ function renderTTMCard(ttmYield) {
         +'<span onclick="document.getElementById(\'ttm-modal\').classList.add(\'active\')" style="width:14px;height:14px;border-radius:50%;border:1px solid var(--text-dim);color:var(--text-dim);font-size:9px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;">?</span>'
         +'</div>'
         +'<div style="display:flex;align-items:center;justify-content:center;position:relative;">'
-        +'<div style="font-size:2.2rem;font-weight:700;color:'+dotColor+';">'+valStr+'</div>'
+        +'<div style="font-size:2.2rem;font-weight:700;color:var(--text-main);">'+valStr+'</div>'
         +'<div style="position:absolute;left:calc(50% + '+Math.round((valStr.length*0.6+0.5))+'ch);display:flex;align-items:center;">'+trendHtml+'</div>'
         +'</div>'
         +rangeHtml
@@ -3971,7 +4055,7 @@ function renderAnnualIncomeCard(sum12) {
     var col='hsl('+Math.min(120,pct*1.2)+',80%,45%)';
     return '<div style="text-align:center;padding-bottom:20px;margin-bottom:20px;border-bottom:1px solid var(--border-color);">'
         +'<div style="font-size:var(--base-font-size);font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">\u00d8 passives Jahresnettoeinkommen</div>'
-        +'<div style="font-size:2rem;font-weight:700;color:'+col+';">'+nf.format(Math.round(sum12))+' \u20ac</div>'
+        +'<div style="font-size:2rem;font-weight:700;color:var(--text-main);">'+nf.format(Math.round(sum12))+' \u20ac</div>'
         +'<div style="font-size:11px;color:var(--text-dim);margin-top:6px;opacity:0.7;">Summe der letzten 12 Monate</div>'
         +'<div style="display:flex;align-items:center;justify-content:center;margin-top:14px;"><div class="pb3" style="flex:1;max-width:250px;;border-radius:8px;height:10px;overflow:hidden;"><div style="width:'+Math.min(100,pct).toFixed(1)+'%;background-color:'+col+';background-image:linear-gradient(90deg,transparent 0%,rgba(255,255,255,0.4) 50%,transparent 100%);background-size:200% 100%;height:100%;border-radius:8px;animation:glow-sheen 2s linear infinite;"></div></div></div>'
         +'<div style="font-size:11px;color:var(--text-dim);margin-top:10px;font-weight:600;letter-spacing:0.5px;display:flex;align-items:center;justify-content:center;gap:6px;">'
@@ -4088,7 +4172,7 @@ function renderAvgIncomeCard(avgMonthly,avgProzent,avgColor,bestAvg,bestPeriod,m
     }
     var avgHtml='<div style="text-align:center;">'
         +'<div style="font-size:var(--base-font-size);font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">\u00d8 passives monatliches Nettoeinkommen</div>'
-        +'<div style="font-size:2rem;font-weight:700;color:'+avgColor+';">'+fC(avgMonthly)+'</div>'
+        +'<div style="font-size:2rem;font-weight:700;color:var(--text-main);">'+fC(avgMonthly)+'</div>'
         +'<div style="font-size:11px;color:var(--text-dim);margin-top:6px;opacity:0.7;">auf Basis der letzten 12 Monate</div>'
         +'<div style="display:flex;align-items:center;justify-content:center;margin-top:14px;"><div class="pb3" style="flex:1;max-width:250px;;border-radius:8px;height:10px;overflow:hidden;"><div style="width:'+Math.min(100,avgProzent)+'%;background-color:'+avgColor+';background-image:linear-gradient(90deg,transparent 0%,rgba(255,255,255,0.4) 50%,transparent 100%);background-size:200% 100%;height:100%;border-radius:8px;animation:glow-sheen 2s linear infinite;"></div></div></div>'
         +'<div style="font-size:11px;color:var(--text-dim);margin-top:10px;font-weight:600;letter-spacing:0.5px;display:flex;align-items:center;justify-content:center;gap:6px;">'
@@ -5454,7 +5538,7 @@ function renderAnalyse(aktien,etfs,gesamt,countries,einstand,divByYear,sumDivGes
         h2+='<div id="izf-tip" style="display:none;position:absolute;top:22px;left:50%;transform:translateX(-50%);z-index:99;background:var(--card-bg);border:1px solid var(--border-color);border-radius:10px;padding:10px 12px;font-size:11px;color:var(--text-dim);max-width:260px;line-height:1.5;box-shadow:0 4px 16px rgba(0,0,0,0.4);white-space:pre-line;text-align:left;">'+izfTip+'</div>';
         h2+='</div>';
         h2+='<div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:4px;">';
-        h2+='<div style="font-size:2.8rem;font-weight:900;color:'+irrCol+';letter-spacing:-1px;">'+nfp.format(irrTotal)+'&nbsp;%</div>';
+        h2+='<div style="font-size:2.8rem;font-weight:900;color:var(--text-main);letter-spacing:-1px;">'+nfp.format(irrTotal)+'&nbsp;%</div>';
         h2+='<div style="font-size:11px;color:var(--text-dim);line-height:1.5;">p.a.<br>MWRR</div>';
         h2+='</div>';
         h2+='<div style="font-size:11px;color:var(--text-dim);text-align:center;margin-bottom:14px;">Zeitraum: 2017 – heute · '+nfp.format(irrT)+' Jahre</div>';
@@ -5635,6 +5719,10 @@ try{var sgr=localStorage.getItem('dagobert-growthrate');if(sgr)customGrowthRate=
 initAuth(); // Erst hier aufrufen - nach allen globalen Variablen
 renderSkeleton();
 (async function init(){
+    // Nur laden wenn bereits authentifiziert (z.B. nach Seiten-Reload)
+    var alreadyAuthed=false;
+    try{alreadyAuthed=sessionStorage.getItem('dagobert-auth')==='1';}catch(e){}
+    if(!alreadyAuthed)return; // Nach Login lädt checkPw() die Daten
     var dot=document.getElementById('status-dot');
     dot.className='pulse-dot loading';
     try{
