@@ -205,16 +205,16 @@
         body.light .nav-indicator,.light .sidebar-indicator{background:#e5e7eb;}
         body.light #nav-indicator{background:#e5e7eb;}
         body.light .sort-bar-container{background:#ffffff;border-color:#e5e7eb;}
-        body.light .refresh-btn{background:#f8fafc;border-color:#e5e7eb;color:#374151;}
-        body.light .refresh-btn svg{stroke:#374151;}
-        body.light button[onclick*="toggleMenu"] svg{stroke:#374151;}
-        body.light .theme-btn{background:#f8fafc;border-color:#e5e7eb;color:#374151;}
-        body.light .theme-btn svg{stroke:#374151;}
+        body.light .refresh-btn{background:#f8fafc;border-color:#e5e7eb;color:#394151;}
+        body.light .refresh-btn svg{stroke:#394151;}
+        body.light button[onclick*="toggleMenu"] svg{stroke:#394151;}
+        body.light .theme-btn{background:#f8fafc;border-color:#e5e7eb;color:#394151;}
+        body.light .theme-btn svg{stroke:#394151;}
         body.light .overlay{background:rgba(0,0,0,0.3);}
         body.light .analyse-card table td{border-radius:3px;}
         body.light .page-title-card{background:#ffffff;}
         /* Ensure all SVG icons are visible in light mode */
-        body.light svg[stroke="currentColor"]{color:#374151;}
+        body.light svg[stroke="currentColor"]{color:#394151;}
         body.light .filter-btn{color:#6b7280;}
         body.light .filter-btn.active{color:#111827;font-weight:700;}
         /* ─────────────────────────────────────────────────────── */
@@ -858,7 +858,7 @@ window.onerror=function(msg,src,line,col,err){
 };
 
 // ═══════════════════════════════════════════════════════════════════════════
-// DAGOBERT v1.37 – Persönliches Depot-Dashboard
+// DAGOBERT v1.39 – Persönliches Depot-Dashboard
 // ─────────────────────────────────────────────────────────────────────────
 // FRÜH-INITIALISIERUNG: Kritische Globals sofort setzen (vor möglichem Fehler)
 // ── Datenquellen (Google Sheets CSV-URLs) ────────────────────────────────────
@@ -1801,12 +1801,12 @@ async function aaTestConnection(){
     try{
         var ctrl=new AbortController();
         var timer=setTimeout(function(){ctrl.abort();},15000);
-        var resp=await fetch(url+'?isins=US0378331005&t='+Date.now(),{signal:ctrl.signal});
+        var resp=await fetch(url+'?isins=US0398331005&t='+Date.now(),{signal:ctrl.signal});
         clearTimeout(timer);
         var text=await resp.text();
         var data=null;try{data=JSON.parse(text);}catch(e){}
-        if(resp.ok&&data&&!data.error&&data['US0378331005']){
-            var d=data['US0378331005'];
+        if(resp.ok&&data&&!data.error&&data['US0398331005']){
+            var d=data['US0398331005'];
             showResult(true,'Verbindung OK – Apple Kurs: $'+(d.price||'?')+', KGV: '+(d.pe||'?'));
         } else {
             var msg=data&&data.error?data.error:text?text.substring(0,200):'Keine Daten';
@@ -4462,7 +4462,7 @@ function renderHeatmap() {
             if(t<0.80)return'background:#40a85a;color:#ffffff;font-weight:700;';
             return'background:#1e7e34;color:#ffffff;font-weight:700;';
         } else if(isBlue){
-            if(t<0.1)return'background:#0d2137;color:#3d6a9e;font-weight:600;';
+            if(t<0.1)return'background:#0d2139;color:#3d6a9e;font-weight:600;';
             if(t<0.25)return'background:#0e3460;color:#2dd4bf;font-weight:600;';
             if(t<0.45)return'background:#0e4d3a;color:#34d399;font-weight:600;';
             if(t<0.65)return'background:#065f46;color:#6ee7b7;font-weight:700;';
@@ -4868,7 +4868,7 @@ function render() {
                         var v=vals[i];
                         var bh=v>0?Math.max(10,v/maxV*cH):0;
                         var bx=pl+i*bW+bGap/2,by=pt+cH-bh,bww=bW-bGap;
-                        var col=barColors[i]||'#374151';
+                        var col=barColors[i]||'#394151';
                         var lc=labelColors[i]||'rgba(255,255,255,0.9)';
                         bars+='<rect x="'+bx.toFixed(1)+'" y="'+by.toFixed(1)+'" width="'+bww.toFixed(1)+'" height="'+bh.toFixed(1)+'" fill="'+col+'" rx="1.5"/>';
                         var prevV=i===0?(item.divHist[2017]||0):(y===2026?vals[i-1]:vals[i-1]);
@@ -5159,7 +5159,7 @@ function render() {
                 var nfD=new Intl.NumberFormat('de-DE',{style:'currency',currency:'EUR',maximumFractionDigits:2});
                 var arrow2=delta>=0?'▲':'▼';
                 var bg2=delta>=0?'rgba(16,185,129,0.15)':'rgba(239,68,68,0.15)';
-                dcEl2.innerHTML='<span style="display:inline-flex;align-items:center;gap:4px;background:'+bg2+';color:'+col2+';font-weight:600;border-radius:6px;padding:2px 7px;">'+arrow2+' '+sign2+nfD.format(delta)+' ('+sign2+deltaP.toFixed(2)+'%)</span>';
+                dcEl2.innerHTML='<span style="display:inline-flex;align-items:center;gap:4px;background:'+bg2+';color:'+col2+';font-weight:600;border-radius:6px;padding:2px 7px;white-space:nowrap;">'+arrow2+' '+sign2+nfD.format(delta)+' ('+sign2+deltaP.toFixed(2)+'%)</span>';
                 if(rightEl)rightEl.style.display='';
             } else {
                 if(rightEl)rightEl.style.display='none';
@@ -5175,7 +5175,7 @@ function render() {
         var arrowM=diff>=0?'▲':'▼';
         var bgM=diff>=0?'rgba(16,185,129,0.15)':'rgba(239,68,68,0.15)';
         var colM=diff>=0?'var(--positive)':'var(--negative)';
-        mc.innerHTML='<span style="display:inline-flex;align-items:center;gap:4px;background:'+bgM+';color:'+colM+';font-weight:600;border-radius:6px;padding:2px 7px;">'+arrowM+' '+(diff>=0?'+':'')+fC(diff)+' ('+perc.toFixed(2)+'%)</span>';
+        mc.innerHTML='<span style="display:inline-flex;align-items:center;gap:4px;background:'+bgM+';color:'+colM+';font-weight:600;border-radius:6px;padding:2px 7px;white-space:nowrap;">'+arrowM+' '+(diff>=0?'+':'')+fC(diff)+' ('+perc.toFixed(2)+'%)</span>';
         uc.style.display='flex';
         if(isAnalysePage&&currentFilter==='alle'){
             uc.style.display='none';
@@ -5439,8 +5439,8 @@ function renderIZF(){render();}
 var ISO_NUM={276:'DE',840:'US',250:'FR',826:'GB',528:'NL',756:'CH',752:'SE',
     208:'DK',578:'NO',246:'FI',40:'AT',56:'BE',724:'ES',380:'IT',392:'JP',
     410:'KR',156:'CN',356:'IN',76:'BR',124:'CA',36:'AU',702:'SG',344:'HK',
-    442:'LU',372:'IE',616:'PL',203:'CZ',348:'HU',158:'TW',484:'MX',710:'ZA',
-    682:'SA',784:'AE',376:'IL',620:'PT',300:'GR',348:'HU',792:'TR',818:'EG',
+    442:'LU',392:'IE',616:'PL',203:'CZ',348:'HU',158:'TW',484:'MX',710:'ZA',
+    682:'SA',784:'AE',396:'IL',620:'PT',300:'GR',348:'HU',792:'TR',818:'EG',
     643:'RU',804:'UA',32:'AR',170:'CO',152:'CL',604:'PE',566:'NG',404:'KE'};
 
 function renderCountryMap(el, countryShare, gesamt){
